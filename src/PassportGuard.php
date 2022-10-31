@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Traits\Macroable;
 
 class PassportGuard implements Guard
@@ -53,10 +54,14 @@ class PassportGuard implements Guard
      *
      * @return Authenticatable|null
      */
-    public function user() : Authenticatable|null
+    public function user() : Authenticatable|RedirectResponse|null
     {
         if (! is_null($this->user)) {
             return $this->user;
+        }
+        
+        if(!$this->broker->isAttached()) {
+            redirect(config('app.url').'/sso/client/attach?return_url='.$this->request->fullUrl())->send();
         }
 
         if ($payload = $this->broker->profile($this->request)) {

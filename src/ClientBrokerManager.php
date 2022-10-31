@@ -119,7 +119,7 @@ class ClientBrokerManager
      *
      * @return string
      */
-    public function getClientToken(): string
+    public function getClientToken(): mixed
     {
         return $this->session->get($this->sessionName());
     }

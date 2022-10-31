@@ -51,7 +51,7 @@ abstract class AbstractSessionManager
      *
      * @return mixed
      */
-    public function get($key, $default = null): string
+    public function get($key, $default = null): mixed
     {
         return $this->store()->get($key, $default);
     }

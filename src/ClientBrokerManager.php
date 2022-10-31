@@ -4,6 +4,7 @@ namespace Jurager\Passport;
 
 use Jurager\Passport\Exceptions\InvalidClientException;
 use Jurager\Passport\Session\ClientSessionManager;
+use Jurager\Passport\Exceptions\NotAttachedException;
 use Illuminate\Http\Request;
 
 /**
@@ -36,6 +37,7 @@ class ClientBrokerManager
         $this->encryption = new Encryption;
         $this->session = new ClientSessionManager;
         $this->requester = new Requester($httpClient);
+
     }
 
     /**
@@ -153,6 +155,16 @@ class ClientBrokerManager
     }
 
     /**
+     * Check if session is attached
+     *
+     * @return bool
+     */
+    public function sessionReattach($request)
+    {
+        return redirect(config('app.url').'/sso/client/attach?return_url='.$request->fullUrl())->send();
+    }
+
+    /**
      * Return the session id
      *
      * @param string $token The client generated token
@@ -206,12 +218,17 @@ class ClientBrokerManager
      */
     public function profile(Request $request = null): bool|string|array
     {
-        $url   = $this->serverUrl('/profile');
-        $token = $this->getClientToken();
-        $sid   = $this->sessionId($token);
+        $url     = $this->serverUrl('/profile');
+        $token   = $this->getClientToken();
+        $sid     = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
-        return $this->requester->request($sid, 'GET', $url, [], $headers);
+        try {
+            return $this->requester->request($sid, 'GET', $url, [], $headers);
+        }
+        catch (NotAttachedException $e) {
+            $this->sessionReattach($request);
+        }
     }
 
     /**

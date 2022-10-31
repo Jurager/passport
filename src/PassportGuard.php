@@ -61,8 +61,9 @@ class PassportGuard implements Guard
         }
         
         if(!$this->broker->isAttached()) {
-            redirect(config('app.url').'/sso/client/attach?return_url='.$this->request->fullUrl())->send();
+            $this->broker->sessionReattach($this->request);
         }
+
 
         if ($payload = $this->broker->profile($this->request)) {
             $this->user = $this->loginFromPayload($payload);

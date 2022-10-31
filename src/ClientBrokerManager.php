@@ -204,7 +204,7 @@ class ClientBrokerManager
      *
      * @return false|string
      */
-    public function profile(Request $request = null): bool|string
+    public function profile(Request $request = null): bool|string|array
     {
         $url   = $this->serverUrl('/profile');
         $token = $this->getClientToken();

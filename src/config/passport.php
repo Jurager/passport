@@ -57,7 +57,7 @@ return [
     'broker_return_url' => true,
 
     /**
-     * Session live time Default to 60 minutes. Set to null to store forever
+     * Session live time Default to 60 seconds. Set to null to store forever
      */
     'session_ttl' => 60,
 

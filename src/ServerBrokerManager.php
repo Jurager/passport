@@ -108,7 +108,7 @@ class ServerBrokerManager
             'session', $token, $secret
         );
 
-        return "SSO-$broker_id-$token-$checksum";
+        return "Passport-$broker_id-$token-$checksum";
     }
 
     /**
@@ -135,7 +135,7 @@ class ServerBrokerManager
      */
     public function getBrokerInfoFromSessionId(string $sid): array
     {
-        if (!preg_match('/^SSO-(\w*+)-(\w*+)-([a-z0-9]*+)$/', $sid, $matches)) {
+        if (!preg_match('/^Passport-(\w*+)-(\w*+)-([a-z\d]*+)$/', $sid, $matches)) {
             throw new InvalidSessionIdException('Invalid session id');
         }
 
@@ -175,7 +175,8 @@ class ServerBrokerManager
     public function getBrokerFromRequest(Request $request): mixed
     {
         $sid = $this->getBrokerSessionId($request);
-        list($broker_id) = $this->getBrokerInfoFromSessionId($sid);
+
+        [$broker_id] = $this->getBrokerInfoFromSessionId($sid);
 
         return $this->findBrokerById($broker_id);
     }

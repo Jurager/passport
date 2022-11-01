@@ -8,7 +8,7 @@ return [
     'server' => [
 
         /**
-        * Paspport server driver, used to store brokers
+        * Passport server driver, used to store brokers
         * Supported drivers: "model", "array",
         */
         'driver' => env('PASSPORT_SERVER_DRIVER', 'model'),
@@ -40,8 +40,7 @@ return [
     'broker' => [
 
         /**
-        * Broker id for client configuration. Must be null on SSO Server. Must
-        * match any word [a-zA-Z0-9_]
+        * Broker id for client configuration. Must be null on Server. Must match any word [a-zA-Z0-9_]
         */
         'client_id' => env('PASSPORT_BROKER_CLIENT_ID'),
 
@@ -72,15 +71,25 @@ return [
     'debug' => env('PASSPORT_DEBUG', false),
 
     /**
-     * Session live time Default to 60 seconds. Set to null to store forever
-     */
+    * Session live time Default to 60 seconds. Set to null to store forever
+    */
     'session_ttl' => env('PASSPORT_SESSION_TTL', 60),
+
+    /**
+     * Prefix used to declare client routes
+     */
+    'routes_prefix_client' => env('PASSPORT_ROUTES_PREFIX_CLIENT', 'sso/client'),
+
+    /**
+     * Prefix used to declare server routes
+     */
+    'routes_prefix_server' => env('PASSPORT_ROUTES_PREFIX_SERVER', 'sso/server'),
 
     /**
      * Closure that return the user info from server. This function allows you
      * to return additional payload data to the clients. By default, the user
      * attributes are returned by calling $user->toArray().
-     * Eg. 'user_info' => function($user, $broker, $request) {
+     * E.g. 'user_info' => function($user, $broker, $request) {
      *      $payload = $user->toArray();
      *      $payload['roles'] = $user->getRolesByApp($broker->id);
      *
@@ -101,7 +110,7 @@ return [
 
     /**
      * Closure that save the user in the client local database.
-     * Eg. 'user_create_strategy' => function ($data) {
+     * E.g. 'user_create_strategy' => function ($data) {
      *    return \App\Models\User::create([
      *        'username' => $data['username'],
      *        'email' => $data['email'],

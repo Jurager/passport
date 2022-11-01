@@ -25,10 +25,11 @@ class ServerAuthenticate
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @param Closure $next
-     * @param string|null  $guard
+     * @param null $guard
      * @return mixed
+     * @throws \JsonException
      */
     public function handle($request, Closure $next, $guard = null): mixed
     {
@@ -44,6 +45,7 @@ class ServerAuthenticate
 
             if ($user = $this->check($guard, $sid, $request)) {
                 event(new Events\Authenticated($user, $request));
+
                 return $next($request);
             }
 
@@ -57,10 +59,10 @@ class ServerAuthenticate
 
     protected function check($guard, $sid)
     {
-        $attrs = json_decode($this->session->getUserData($sid), true);
+        $attributes = json_decode($this->session->getUserData($sid), true, 512, JSON_THROW_ON_ERROR);
 
-        if (!empty($attrs)) {
-            $user = $guard->getProvider()->retrieveByCredentials($attrs);
+        if (!empty($attributes)) {
+            $user = $guard->getProvider()->retrieveByCredentials($attributes);
 
             if ($user && $guard->onceUsingId($user->id)) {
                 return $user;

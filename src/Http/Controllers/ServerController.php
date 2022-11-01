@@ -7,7 +7,7 @@ use Jurager\Passport\ServerBrokerManager;
 use Jurager\Passport\SessionManager;
 use Jurager\Passport\Http\Middleware\ValidateBroker;
 use Jurager\Passport\Http\Middleware\ServerAuthenticate;
-use Jurager\Passport\Http\Concerns\AuthenticateUsers;
+use Jurager\Passport\Http\Concerns\Authenticate;
 use Jurager\Passport\Events;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ServerController extends Controller
 {
-    use AuthenticateUsers;
+    use Authenticate;
 
     protected ServerBrokerManager $broker;
 
@@ -37,8 +37,9 @@ class ServerController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @throws \JsonException
      */
-    public function attach(Request $request)
+    public function attach(Request $request): \Illuminate\Http\Response
     {
         $validator = Validator::make($request->all(), [
             'broker' => 'required',
@@ -59,6 +60,8 @@ class ServerController extends Controller
         $broker_id = $request->input('broker');
         $token     = $request->input('token');
         $checksum  = $request->input('checksum');
+        $callback = $request->input('callback');
+        $return_url = $request->input('return_url');
 
         $gen_checksum = $this->broker->generateAttachChecksum($broker_id, $token);
 
@@ -67,9 +70,22 @@ class ServerController extends Controller
         }
 
         $sid = $this->broker->generateSessionId($broker_id, $token);
+
         $this->session->start($sid);
 
-        return $this->outputAttachSuccess($request);
+
+        if ($this->return_type === 'json') {
+            return response()->json(['success' => 'attached']);
+        }
+
+        if ($this->return_type === 'jsonp') {
+            $data = json_encode(['success' => 'attached'], JSON_THROW_ON_ERROR);
+            return response("$callback($data, 200)");
+        }
+
+        if ($this->return_type === 'redirect') {
+            return redirect()->away($return_url);
+        }
     }
 
     /**
@@ -77,6 +93,7 @@ class ServerController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws \JsonException
      */
     public function login(Request $request): JsonResponse
     {
@@ -140,7 +157,13 @@ class ServerController extends Controller
         return response()->json(['success' => true]);
     }
 
-    protected function detectReturnType(Request $request)
+    /**
+     * Set return_type based on request
+     *
+     * @param Request $request
+     * @return void
+     */
+    protected function detectReturnType(Request $request): void
     {
         if ($request->has('return_url')) {
             $this->return_type = 'redirect';
@@ -148,25 +171,6 @@ class ServerController extends Controller
             $this->return_type = 'jsonp';
         } elseif ($request->expectsJson()) {
             $this->return_type = 'json';
-        }
-    }
-
-    protected function outputAttachSuccess($request)
-    {
-        $callback = $request->input('callback');
-        $return_url = $request->input('return_url');
-
-        if ($this->return_type === 'json') {
-            return response()->json(['success' => 'attached']);
-        }
-
-        if ($this->return_type === 'jsonp') {
-            $data = json_encode(['success' => 'attached']);
-            return response("$callback($data, 200)");
-        }
-
-        if ($this->return_type === 'redirect') {
-            return redirect()->away($return_url);
         }
     }
 

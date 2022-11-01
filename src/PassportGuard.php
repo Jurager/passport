@@ -52,7 +52,8 @@ class PassportGuard implements Guard
     /**
      * Get the currently authenticated user.
      *
-     * @return Authenticatable|null
+     * @return Authenticatable|RedirectResponse|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function user() : Authenticatable|RedirectResponse|null
     {
@@ -77,6 +78,7 @@ class PassportGuard implements Guard
      * @param array $credentials
      * @param bool $remember
      * @return Authenticatable|bool|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function attempt(array $credentials = [], bool $remember = false): Authenticatable|bool|null
     {
@@ -237,6 +239,7 @@ class PassportGuard implements Guard
      * Logout user.
      *
      * @return void
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function logout(): void
     {

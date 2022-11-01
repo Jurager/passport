@@ -156,11 +156,12 @@ class ClientBrokerManager
     /**
      * Reattach session to client
      *
-     * @return bool
+     * @param $request
+     * @return void
      */
-    public function sessionReattach($request)
+    public function sessionReattach($request): void
     {
-        return redirect(config('app.url').'/sso/client/attach?return_url='.$request->fullUrl())->send();
+        redirect(config('app.url').'/sso/client/attach?return_url='.$request->fullUrl())->send();
     }
 
     /**
@@ -175,7 +176,7 @@ class ClientBrokerManager
             'session', $token, $this->clientSecret()
         );
 
-        return "SSO-{$this->clientId()}-$token-$checksum";
+        return "Passport-{$this->clientId()}-$token-$checksum";
     }
 
     /**
@@ -198,6 +199,7 @@ class ClientBrokerManager
      * @param Request|null $request
      *
      * @return bool|array
+     * @throws \GuzzleHttp\Exception\GuzzleException|\JsonException
      */
     public function login(array $credentials, Request $request = null): bool|array
     {
@@ -213,7 +215,8 @@ class ClientBrokerManager
      * Send profile request
      * @param Request|null $request
      *
-     * @return false|string
+     * @return bool|string|array
+     * @throws \GuzzleHttp\Exception\GuzzleException|\JsonException
      */
     public function profile(Request $request = null): bool|string|array
     {
@@ -237,6 +240,7 @@ class ClientBrokerManager
      * @param Request|null $request
      *
      * @return bool
+     * @throws \GuzzleHttp\Exception\GuzzleException|\JsonException
      */
     public function logout(Request $request = null): bool
     {
@@ -271,6 +275,7 @@ class ClientBrokerManager
      * @param Request|null $request
      *
      * @return false|string
+     * @throws \GuzzleHttp\Exception\GuzzleException|\JsonException
      */
     public function commands(string $command, array $params = [], Request $request = null): bool|string
     {
@@ -294,8 +299,8 @@ class ClientBrokerManager
 
         if ($request) {
             $headers = [
-                'SSO-User-Agent' => $request->userAgent(),
-                'SSO-REMOTE-ADDR' => $request->ip()
+                'Passport-User-Agent'     => $request->userAgent(),
+                'Passport-Remote-Address' => $request->ip()
             ];
         }
 

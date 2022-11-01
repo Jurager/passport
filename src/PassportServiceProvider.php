@@ -25,7 +25,7 @@ class PassportServiceProvider extends ServiceProvider
      * @var array
      */
     protected array $middlewareGroups = [
-        'sso-api' => [
+        'passport' => [
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class

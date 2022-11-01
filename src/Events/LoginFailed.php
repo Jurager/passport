@@ -9,25 +9,24 @@ class LoginFailed
     use SerializesModels;
 
     /**
-     * The creadentials.
+     * The credentials.
      *
      * @var array
      */
-    public $credentials;
+    public array $credentials;
 
     /**
      * The request object.
      *
-     * @var \Illuminate\Http\Request
+     * @var \Illuminate\Http\Request|null
      */
-    public $request;
+    public ?\Illuminate\Http\Request $request;
 
     /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable|null $user
-     * @param  \Illuminate\Http\Request $request
-     * @return void
+     * @param $credentials
+     * @param null $request
      */
     public function __construct($credentials, $request = null)
     {

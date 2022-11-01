@@ -33,6 +33,7 @@ class ClientController extends Controller
 
     /**
      * Attach client to server
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -47,6 +48,7 @@ class ClientController extends Controller
 
     /**
      * Return attack url with params
+     *
      * @param array $params
      *
      * @return string

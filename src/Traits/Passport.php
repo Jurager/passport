@@ -3,9 +3,9 @@
 namespace Jurager\Passport\Traits;
 
 /**
- * PassportUser trait
+ * Passport trait
  */
-trait PassportUser
+trait Passport
 {
     /**
      * The sso payload data

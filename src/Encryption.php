@@ -17,7 +17,7 @@ class Encryption
      */
     public function generateChecksum(string $type, string $token, string $secret): string
     {
-        return hash('sha256', $type . $token . $secret);
+        return password_hash($type . $token . $secret, PASSWORD_ARGON2ID);
     }
 
     /**
@@ -30,9 +30,9 @@ class Encryption
      */
     public function verifyAttachChecksum(string $token, string $secret, string $checksum): bool
     {
-        $gen_checksum = $this->generateChecksum('attach', $token, $secret);
+        $generate_checksum = $this->generateChecksum('attach', $token, $secret);
 
-        return $checksum && $checksum === $gen_checksum;
+        return $checksum && $checksum === $generate_checksum;
     }
 
     /**

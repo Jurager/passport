@@ -18,9 +18,7 @@ class Logout
     /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable $user
-     * @param  \Illuminate\Http\Request $request
-     * @return void
+     * @param \Illuminate\Contracts\Auth\Authenticatable $user
      */
     public function __construct($user)
     {

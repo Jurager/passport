@@ -10,6 +10,6 @@ class ClientSessionManager extends AbstractSessionManager
      */
     protected function store()
     {
-        return app()->session;
+        return app()->cache;
     }
 }

@@ -29,11 +29,14 @@ return [
         'secret_field' => env('PASSPORT_SERVER_SECRET_FIELD', 'secret'),
 
         /**
-         * Broker's list, required for list driver. ['id' => 'secret']
+         * Array of available brokers and it's secrets, required for "array" driver. ['id' => 'secret']
          */
-        'list' => [],
+        'brokers' => [],
     ],
 
+    /**
+    * Configurations for SSO Client
+    */
     'broker' => [
 
         /**

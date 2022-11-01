@@ -161,7 +161,7 @@ class ClientBrokerManager
      */
     public function sessionReattach($request): void
     {
-        redirect(config('app.url').'/sso/client/attach?return_url='.$request->fullUrl())->send();
+        redirect()->route('sso.client.attach', ['return_url' => $request->fullUrl()])->send();
     }
 
     /**

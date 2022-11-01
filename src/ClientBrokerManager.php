@@ -66,7 +66,7 @@ class ClientBrokerManager
      */
     public function clientSecret(): string
     {
-        $client_secret = config('passport.broker_client_secret');
+        $client_secret = config('passport.broker.client_secret');
 
         if (empty($client_secret)) {
             throw new InvalidClientException(

@@ -30,13 +30,13 @@ class ClientBrokerManager
     /**
      * Constructor
      *
-     * @param Requester|null $httpClient
+     * @param Requester|null $requester
      */
-    public function __construct(Requester $httpClient = null)
+    public function __construct(Requester $requester = null)
     {
         $this->encryption = new Encryption;
-        $this->session = new ClientSessionManager;
-        $this->requester = new Requester($httpClient);
+        $this->session    = new ClientSessionManager;
+        $this->requester  = new Requester($requester);
 
     }
 
@@ -155,7 +155,7 @@ class ClientBrokerManager
     }
 
     /**
-     * Check if session is attached
+     * Reattach session to client
      *
      * @return bool
      */
@@ -223,12 +223,14 @@ class ClientBrokerManager
         $sid     = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
-        try {
-            return $this->requester->request($sid, 'GET', $url, [], $headers);
-        }
-        catch (NotAttachedException $e) {
-            $this->sessionReattach($request);
-        }
+        return $this->requester->request($sid, 'GET', $url, [], $headers);
+
+        //try {
+        //    return $this->requester->request($sid, 'GET', $url, [], $headers);
+        //}
+        //catch (NotAttachedException $e) {
+        //    $this->sessionReattach($request);
+        //}
     }
 
     /**
@@ -246,7 +248,20 @@ class ClientBrokerManager
 
         $response = $this->requester->request($sid, 'POST', $url, [], $headers);
 
-        return $response['success'] === true;
+        if($response['success'] === true) {
+
+            // Clear current client session on broker
+            //
+            $this->clearClientToken();
+
+            // Success
+            //
+            return true;
+        }
+
+        // Error when attempting logout on server
+        //
+        return false;
     }
 
     /**

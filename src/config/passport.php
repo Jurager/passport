@@ -12,7 +12,7 @@ return [
         /**
          * Broker model class, required for model driver.
          */
-        'model' => 'App\Models\App',
+        'model' => 'App\Models\Broker',
 
         /**
          * Broker model id field, required for model driver.

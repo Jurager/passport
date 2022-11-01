@@ -29,9 +29,9 @@ class ServerControllerTest extends TestCase
         $this->session = new SessionManager;
 
         $this->app['config']->set('auth.providers.users.model', Models\User::class);
-        $this->app['config']->set('passport.brokers.model', Models\App::class);
-        $this->app['config']->set('passport.brokers.id_field', 'app_id');
-        $this->app['config']->set('passport.brokers.secret_field', 'secret');
+        $this->app['config']->set('passport.server.model', Models\App::class);
+        $this->app['config']->set('passport.server.id_field', 'app_id');
+        $this->app['config']->set('passport.server.secret_field', 'secret');
     }
 
     public function testShouldThrownExceptionIfParamsAreNotDefined()

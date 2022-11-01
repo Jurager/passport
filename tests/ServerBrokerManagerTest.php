@@ -20,14 +20,14 @@ class ServerBrokerManagerTest extends TestCase
         $this->expectException(InvalidSessionIdException::class);
         $this->expectExceptionMessage('Class Models\TestApp does not exist');
 
-        $this->app['config']->set('passport.brokers.model', 'Models\TestApp');
+        $this->app['config']->set('passport.server.model', 'Models\TestApp');
 
         $this->broker->brokerModel();
     }
 
     public function testShouldNotThrownExceptionIfBrokerModelExists()
     {
-        $this->app['config']->set('passport.brokers.model', Models\App::class);
+        $this->app['config']->set('passport.server.model', Models\App::class);
 
         $class = $this->broker->brokerModel();
         $this->assertEquals($class, Models\App::class);
@@ -38,16 +38,16 @@ class ServerBrokerManagerTest extends TestCase
         $this->expectException(InvalidSessionIdException::class);
         $this->expectExceptionMessage('Class Models\TestApp does not exist');
 
-        $this->app['config']->set('passport.brokers.model', 'Models\TestApp');
+        $this->app['config']->set('passport.server.model', 'Models\TestApp');
 
         $this->broker->findBrokerById(1);
     }
 
     public function testShouldNotThrownExceptionIfModelExists()
     {
-        $this->app['config']->set('passport.brokers.model', Models\App::class);
-        $this->app['config']->set('passport.brokers.id_field', 'app_id');
-        $this->app['config']->set('passport.brokers.secret_field', 'secret');
+        $this->app['config']->set('passport.server.model', Models\App::class);
+        $this->app['config']->set('passport.server.id_field', 'app_id');
+        $this->app['config']->set('passport.server.secret_field', 'secret');
 
         Models\App::create(['app_id' => 'app-id', 'secret' => 'SeCrEt']);
 
@@ -63,9 +63,9 @@ class ServerBrokerManagerTest extends TestCase
         $this->expectException(InvalidSessionIdException::class);
         $this->expectExceptionMessage('Invalid session id');
 
-        $this->app['config']->set('passport.brokers.model', Models\App::class);
-        $this->app['config']->set('passport.brokers.id_field', 'app_id');
-        $this->app['config']->set('passport.brokers.secret_field', 'secret');
+        $this->app['config']->set('passport.server.model', Models\App::class);
+        $this->app['config']->set('passport.server.id_field', 'app_id');
+        $this->app['config']->set('passport.server.secret_field', 'secret');
 
         $this->broker->validateBrokerSessionId('SSO-FakeSessionID');
     }
@@ -75,9 +75,9 @@ class ServerBrokerManagerTest extends TestCase
         $this->expectException(InvalidSessionIdException::class);
         $this->expectExceptionMessage('Checksum failed: Client IP address may have changed');
 
-        $this->app['config']->set('passport.brokers.model', Models\App::class);
-        $this->app['config']->set('passport.brokers.id_field', 'app_id');
-        $this->app['config']->set('passport.brokers.secret_field', 'secret');
+        $this->app['config']->set('passport.server.model', Models\App::class);
+        $this->app['config']->set('passport.server.id_field', 'app_id');
+        $this->app['config']->set('passport.server.secret_field', 'secret');
 
         Models\App::create(['app_id' => 'appid', 'secret' => 'SeCrEt']);
 
@@ -89,9 +89,9 @@ class ServerBrokerManagerTest extends TestCase
 
     public function testShouldValidateBrokerSessionId()
     {
-        $this->app['config']->set('passport.brokers.model', Models\App::class);
-        $this->app['config']->set('passport.brokers.id_field', 'app_id');
-        $this->app['config']->set('passport.brokers.secret_field', 'secret');
+        $this->app['config']->set('passport.server.model', Models\App::class);
+        $this->app['config']->set('passport.server.id_field', 'app_id');
+        $this->app['config']->set('passport.server.secret_field', 'secret');
 
         Models\App::create(['app_id' => 'appid', 'secret' => 'SeCrEt']);
 
@@ -115,9 +115,9 @@ class ServerBrokerManagerTest extends TestCase
 
     public function testShouldReturnBrokerInfoFromSessionId()
     {
-        $this->app['config']->set('passport.brokers.model', Models\App::class);
-        $this->app['config']->set('passport.brokers.id_field', 'app_id');
-        $this->app['config']->set('passport.brokers.secret_field', 'secret');
+        $this->app['config']->set('passport.server.model', Models\App::class);
+        $this->app['config']->set('passport.server.id_field', 'app_id');
+        $this->app['config']->set('passport.server.secret_field', 'secret');
 
         Models\App::create(['app_id' => 'appid', 'secret' => 'SeCrEt']);
 
@@ -131,9 +131,9 @@ class ServerBrokerManagerTest extends TestCase
 
     public function testShouldReturnBrokerFromRequest()
     {
-        $this->app['config']->set('passport.brokers.model', Models\App::class);
-        $this->app['config']->set('passport.brokers.id_field', 'app_id');
-        $this->app['config']->set('passport.brokers.secret_field', 'secret');
+        $this->app['config']->set('passport.server.model', Models\App::class);
+        $this->app['config']->set('passport.server.id_field', 'app_id');
+        $this->app['config']->set('passport.server.secret_field', 'secret');
 
         Models\App::create(['app_id' => 'appid', 'secret' => 'SeCrEt']);
 

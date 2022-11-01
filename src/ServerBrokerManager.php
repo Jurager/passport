@@ -30,7 +30,7 @@ class ServerBrokerManager
      */
     public function brokerModel(): mixed
     {
-        $class = config('passport.brokers.model');
+        $class = config('passport.server.model');
 
         if (!class_exists($class)) {
             throw new InvalidSessionIdException("Class $class does not exist");
@@ -49,7 +49,7 @@ class ServerBrokerManager
     public function findBrokerById($id): mixed
     {
         $class    = $this->brokerModel();
-        $id_field = config('passport.brokers.id_field');
+        $id_field = config('passport.server.id_field');
         $model    = $class::where($id_field, $id)->first();
 
         if (!$model) {
@@ -68,7 +68,7 @@ class ServerBrokerManager
      */
     public function findBrokerSecret($model): string
     {
-        $secret_field = config('passport.brokers.secret_field');
+        $secret_field = config('passport.server.secret_field');
 
         return $model->$secret_field;
     }

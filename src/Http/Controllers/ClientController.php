@@ -3,7 +3,7 @@
 namespace Jurager\Passport\Http\Controllers;
 
 use Jurager\Passport\ClientBrokerManager;
-use Jurager\Passport\Session\ClientSessionManager;
+use Jurager\Passport\SessionManager;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
@@ -15,17 +15,17 @@ class ClientController extends Controller
     protected ClientBrokerManager $broker;
 
     /**
-     * @var ClientSessionManager
+     * @var SessionManager
      */
-    protected ClientSessionManager $session;
+    protected SessionManager $session;
 
     /**
      * Constructor
      *
      * @param ClientBrokerManager $broker
-     * @param ClientSessionManager $session
+     * @param SessionManager $session
      */
-    public function __construct(ClientBrokerManager $broker, ClientSessionManager $session)
+    public function __construct(ClientBrokerManager $broker, SessionManager $session)
     {
         $this->broker  = $broker;
         $this->session = $session;

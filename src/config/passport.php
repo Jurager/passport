@@ -3,26 +3,30 @@
 return [
 
     /**
-     * Brokers configurations for SSO Server
+     * Configurations for SSO Server
      */
-    'brokers' => [
-
-        'driver' => 'model', // Use model or array driver
+    'server' => [
 
         /**
-         * Broker model class, required for model driver.
+        * Paspport server driver, used to store brokers
+        * Supported drivers: "model", "array",
+        */
+        'driver' => env('PASSPORT_SERVER_DRIVER', 'model'),
+
+        /**
+         * Broker model class, required for "model" driver.
          */
-        'model' => 'App\Models\Broker',
+        'model' => env('PASSPORT_SERVER_MODEL', 'App\Models\Broker'),
 
         /**
          * Broker model id field, required for model driver.
          */
-        'id_field' => 'app_id',
+        'id_field' => env('PASSPORT_SERVER_ID_FIELD', 'field'),
 
         /**
          * Broker model secret field, required for model driver.
          */
-        'secret_field' => 'secret',
+        'secret_field' => env('PASSPORT_SERVER_SECRET_FIELD', 'secret'),
 
         /**
          * Broker's list, required for list driver. ['id' => 'secret']
@@ -30,36 +34,44 @@ return [
         'list' => [],
     ],
 
-    /**
-     * Broker id for client configuration. Must be null on SSO Server. Must
-     * match any word [a-zA-Z0-9_]
-     */
-    'broker_client_id' => null,
+    'broker' => [
+
+        /**
+        * Broker id for client configuration. Must be null on SSO Server. Must
+        * match any word [a-zA-Z0-9_]
+        */
+        'client_id' => env('PASSPORT_BROKER_CLIENT_ID'),
+
+        /**
+        * Broker secret for client configuration. Must be null on SSO Server
+        */
+        'client_secret' => env('PASSPORT_BROKER_CLIENT_SECRET'),
+
+        /**
+        * Broker client unique username
+        */
+        'client_username' => env('PASSPORT_BROKER_CLIENT_USERNAME', 'email'),
+
+        /**
+        * The server Url. Required for clients.
+        */
+        'server_url' => env('PASSPORT_BROKER_SERVER_URL'),
+
+        /**
+        * The return Url. Required for clients.
+        */
+        'return_url' => env('PASSPORT_BROKER_RETURN_URL', true),
+    ],
 
     /**
-     * Broker secret for client configuration. Must be null on SSO Server
-     */
-    'broker_client_secret' => null,
-
-    /**
-     * Broker client unique username
-     */
-    'broker_client_username' => 'email',
-
-    /**
-     * The server Url. Required for clients.
-     */
-    'broker_server_url' => '',
-
-    /**
-     * The return Url. Required for clients.
-     */
-    'broker_return_url' => true,
+    * Enable debug mode
+    */
+    'debug' => env('PASSPORT_DEBUG', false),
 
     /**
      * Session live time Default to 60 seconds. Set to null to store forever
      */
-    'session_ttl' => 60,
+    'session_ttl' => env('PASSPORT_SESSION_TTL', 60),
 
     /**
      * Closure that return the user info from server. This function allows you
@@ -83,11 +95,6 @@ return [
      * }
      */
     'after_authenticating' => null,
-
-    /**
-     * Enable debug mode
-     */
-    'debug' => false,
 
     /**
      * Closure that save the user in the client local database.

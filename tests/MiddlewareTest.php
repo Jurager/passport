@@ -3,7 +3,7 @@
 namespace Jurager\Passport\Test;
 
 use Jurager\Passport\ServerBrokerManager;
-use Jurager\Passport\Session\ServerSessionManager;
+use Jurager\Passport\SessionManager;
 use Jurager\Passport\Http\Middleware\ServerAuthenticate;
 use Jurager\Passport\Http\Middleware\ValidateBroker;
 use Jurager\Passport\Exceptions\UnauthorizedException;
@@ -26,15 +26,15 @@ class MiddlewareTest extends TestCase
         parent::setUp();
 
         $this->broker = new ServerBrokerManager;
-        $this->session = new ServerSessionManager;
+        $this->session = new SessionManager;
 
         $this->authenticateMiddleware = new ServerAuthenticate($this->broker, $this->session);
         $this->validateBrokerMiddleware = new ValidateBroker($this->broker);
 
         $this->app['config']->set('auth.providers.users.model', Models\User::class);
-        $this->app['config']->set('passport.brokers.model', Models\App::class);
-        $this->app['config']->set('passport.brokers.id_field', 'app_id');
-        $this->app['config']->set('passport.brokers.secret_field', 'secret');
+        $this->app['config']->set('passport.server.model', Models\App::class);
+        $this->app['config']->set('passport.server.id_field', 'app_id');
+        $this->app['config']->set('passport.server.secret_field', 'secret');
     }
 
     public function testShouldThrownExceptionIfBrokerIsNotValid()

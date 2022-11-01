@@ -4,7 +4,7 @@ namespace Jurager\Passport\Http\Middleware;
 
 use Closure;
 use Jurager\Passport\ServerBrokerManager;
-use Jurager\Passport\Session\ServerSessionManager;
+use Jurager\Passport\SessionManager;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Events;
 
@@ -14,9 +14,9 @@ class ServerAuthenticate
 {
     protected ServerBrokerManager $broker;
 
-    protected ServerSessionManager $session;
+    protected SessionManager $session;
 
-    public function __construct(ServerBrokerManager $broker, ServerSessionManager $session)
+    public function __construct(ServerBrokerManager $broker, SessionManager $session)
     {
         $this->broker = $broker;
         $this->session = $session;

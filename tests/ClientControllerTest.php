@@ -25,15 +25,15 @@ class ClientControllerTest extends TestCase
         parent::setUp();
 
         // Client config
-        $this->app['config']->set('passport.broker_client_id', 'appid');
-        $this->app['config']->set('passport.broker_client_secret', 'SeCrEt');
-        $this->app['config']->set('passport.broker_server_url', 'http://localhost/sso/server');
+        $this->app['config']->set('passport.broker.client_id', 'appid');
+        $this->app['config']->set('passport.broker.client_secret', 'SeCrEt');
+        $this->app['config']->set('passport.broker.server_url', 'http://localhost/sso/server');
 
         // Server config
         $this->app['config']->set('auth.providers.users.model', Models\User::class);
-        $this->app['config']->set('passport.brokers.model', Models\App::class);
-        $this->app['config']->set('passport.brokers.id_field', 'app_id');
-        $this->app['config']->set('passport.brokers.secret_field', 'secret');
+        $this->app['config']->set('passport.server.model', Models\App::class);
+        $this->app['config']->set('passport.server.id_field', 'app_id');
+        $this->app['config']->set('passport.server.secret_field', 'secret');
     }
 
     /**

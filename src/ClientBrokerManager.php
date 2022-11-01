@@ -3,7 +3,6 @@
 namespace Jurager\Passport;
 
 use Jurager\Passport\Exceptions\InvalidClientException;
-use Jurager\Passport\Session\ClientSessionManager;
 use Jurager\Passport\Exceptions\NotAttachedException;
 use Illuminate\Http\Request;
 
@@ -18,9 +17,9 @@ class ClientBrokerManager
     protected Encryption $encryption;
 
     /**
-     * @var ClientSessionManager
+     * @var SessionManager
      */
-    protected ClientSessionManager $session;
+    protected SessionManager $session;
 
     /**
      * @var Requester
@@ -35,7 +34,7 @@ class ClientBrokerManager
     public function __construct(Requester $requester = null)
     {
         $this->encryption = new Encryption;
-        $this->session    = new ClientSessionManager;
+        $this->session    = new SessionManager;
         $this->requester  = new Requester($requester);
 
     }
@@ -48,7 +47,7 @@ class ClientBrokerManager
      */
     public function clientId(): string
     {
-        $client_id = config('passport.broker_client_id');
+        $client_id = config('passport.broker.client_id');
 
         if (empty($client_id)) {
             throw new InvalidClientException(

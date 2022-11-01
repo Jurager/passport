@@ -89,9 +89,9 @@ class ClientBrokerManagerTest extends TestCase
 
     public function testShouldValidateClientConfiguration()
     {
-        $this->app['config']->set('passport.broker_client_id', 'app_id');
-        $this->app['config']->set('passport.broker_client_secret', 'app_secret');
-        $this->app['config']->set('passport.broker_server_url', 'http://localhost');
+        $this->app['config']->set('passport.broker.client_id', 'app_id');
+        $this->app['config']->set('passport.broker.client_secret', 'app_secret');
+        $this->app['config']->set('passport.broker.server_url', 'http://localhost');
 
         $this->broker->clientId();
         $this->broker->clientSecret();
@@ -102,8 +102,8 @@ class ClientBrokerManagerTest extends TestCase
 
     public function testShouldReturnSessionId()
     {
-        $this->app['config']->set('passport.broker_client_id', 'app_id');
-        $this->app['config']->set('passport.broker_client_secret', 'app_secret');
+        $this->app['config']->set('passport.broker.client_id', 'app_id');
+        $this->app['config']->set('passport.broker.client_secret', 'app_secret');
 
         $this->assertEquals(
             $this->broker->sessionId('token'),
@@ -113,9 +113,9 @@ class ClientBrokerManagerTest extends TestCase
 
     public function testShouldSendLoginRequest()
     {
-        $this->app['config']->set('passport.broker_client_id', 'app_id');
-        $this->app['config']->set('passport.broker_client_secret', 'app_secret');
-        $this->app['config']->set('passport.broker_server_url', 'http://localhost/sso/server');
+        $this->app['config']->set('passport.broker.client_id', 'app_id');
+        $this->app['config']->set('passport.broker.client_secret', 'app_secret');
+        $this->app['config']->set('passport.broker.server_url', 'http://localhost/sso/server');
 
         $client = $this->mockHttpClient(200, ['success' => true]);
 
@@ -134,9 +134,9 @@ class ClientBrokerManagerTest extends TestCase
 
     public function testShouldSendLoginRequestWithHeader()
     {
-        $this->app['config']->set('passport.broker_client_id', 'app_id');
-        $this->app['config']->set('passport.broker_client_secret', 'app_secret');
-        $this->app['config']->set('passport.broker_server_url', 'http://localhost/sso/server');
+        $this->app['config']->set('passport.broker.client_id', 'app_id');
+        $this->app['config']->set('passport.broker.client_secret', 'app_secret');
+        $this->app['config']->set('passport.broker.server_url', 'http://localhost/sso/server');
 
         $client = $this->mockHttpClient(200, ['success' => true]);
 
@@ -160,9 +160,9 @@ class ClientBrokerManagerTest extends TestCase
 
     public function testShouldSendProfileRequest()
     {
-        $this->app['config']->set('passport.broker_client_id', 'app_id');
-        $this->app['config']->set('passport.broker_client_secret', 'app_secret');
-        $this->app['config']->set('passport.broker_server_url', 'http://localhost/sso/server');
+        $this->app['config']->set('passport.broker.client_id', 'app_id');
+        $this->app['config']->set('passport.broker.client_secret', 'app_secret');
+        $this->app['config']->set('passport.broker.server_url', 'http://localhost/sso/server');
 
         $client = $this->mockHttpClient(200);
 
@@ -181,9 +181,9 @@ class ClientBrokerManagerTest extends TestCase
 
     public function testShouldSendProfileRequestWithHeaders()
     {
-        $this->app['config']->set('passport.broker_client_id', 'app_id');
-        $this->app['config']->set('passport.broker_client_secret', 'app_secret');
-        $this->app['config']->set('passport.broker_server_url', 'http://localhost/sso/server');
+        $this->app['config']->set('passport.broker.client_id', 'app_id');
+        $this->app['config']->set('passport.broker.client_secret', 'app_secret');
+        $this->app['config']->set('passport.broker.server_url', 'http://localhost/sso/server');
 
         $client = $this->mockHttpClient(200);
 
@@ -206,9 +206,9 @@ class ClientBrokerManagerTest extends TestCase
 
     public function testShouldSendLogoutRequest()
     {
-        $this->app['config']->set('passport.broker_client_id', 'app_id');
-        $this->app['config']->set('passport.broker_client_secret', 'app_secret');
-        $this->app['config']->set('passport.broker_server_url', 'http://localhost/sso/server');
+        $this->app['config']->set('passport.broker.client_id', 'app_id');
+        $this->app['config']->set('passport.broker.client_secret', 'app_secret');
+        $this->app['config']->set('passport.broker.server_url', 'http://localhost/sso/server');
 
         $client = $this->mockHttpClient(200, ['success' => true]);
 
@@ -227,9 +227,9 @@ class ClientBrokerManagerTest extends TestCase
 
     public function testShouldSendLogoutRequestWithHeaders()
     {
-        $this->app['config']->set('passport.broker_client_id', 'app_id');
-        $this->app['config']->set('passport.broker_client_secret', 'app_secret');
-        $this->app['config']->set('passport.broker_server_url', 'http://localhost/sso/server');
+        $this->app['config']->set('passport.broker.client_id', 'app_id');
+        $this->app['config']->set('passport.broker.client_secret', 'app_secret');
+        $this->app['config']->set('passport.broker.server_url', 'http://localhost/sso/server');
 
         $client = $this->mockHttpClient(200, ['success' => true]);
 
@@ -252,9 +252,9 @@ class ClientBrokerManagerTest extends TestCase
 
     public function testShouldSendCommandRequest()
     {
-        $this->app['config']->set('passport.broker_client_id', 'app_id');
-        $this->app['config']->set('passport.broker_client_secret', 'app_secret');
-        $this->app['config']->set('passport.broker_server_url', 'http://localhost/sso/server');
+        $this->app['config']->set('passport.broker.client_id', 'app_id');
+        $this->app['config']->set('passport.broker.client_secret', 'app_secret');
+        $this->app['config']->set('passport.broker.server_url', 'http://localhost/sso/server');
 
         $client = $this->mockHttpClient(200, ['success' => true]);
 

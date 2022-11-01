@@ -64,7 +64,6 @@ class PassportGuard implements Guard
             $this->broker->sessionReattach($this->request);
         }
 
-
         if ($payload = $this->broker->profile($this->request)) {
             $this->user = $this->loginFromPayload($payload);
         }

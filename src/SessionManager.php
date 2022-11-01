@@ -44,15 +44,15 @@ class SessionManager
         }
     }
 
+
     /**
      * Return session value of the key $key
      *
-     * @return string $key
-     * @return mixed $default
-     * 
+     * @param $key
+     * @param $default
      * @return mixed
      */
-    public function get($key, $default = null): string
+    public function get($key, $default = null): mixed
     {
         return Cache::get($key, $default);
     }

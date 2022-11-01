@@ -156,7 +156,7 @@ class PassportGuard implements Guard
      */
     protected function retrieveByCredentials(mixed $payload): ?Authenticatable
     {
-        $username = config('passport.broker_client_username', 'email');
+        $username = config('passport.broker.client_username', 'email');
 
         return $this->provider->retrieveByCredentials([
             $username => $payload[$username]
@@ -171,7 +171,7 @@ class PassportGuard implements Guard
      */
     protected function usernameExistsInPayload(mixed $payload): bool
     {
-        $username = config('passport.broker_client_username', 'email');
+        $username = config('passport.broker.client_username', 'email');
 
         return array_key_exists($username, $payload);
     }

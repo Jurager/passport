@@ -86,7 +86,7 @@ class ClientBrokerManager
      */
     public function serverUrl(string $path = ''): string
     {
-        $server_url = config('passport.broker_server_url');
+        $server_url = config('passport.broker.server_url');
 
         if (empty($server_url)) {
             throw new InvalidClientException(

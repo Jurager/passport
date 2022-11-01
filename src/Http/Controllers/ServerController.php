@@ -3,6 +3,7 @@
 namespace Jurager\Passport\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Jurager\Passport\ServerBrokerManager;
 use Jurager\Passport\SessionManager;
 use Jurager\Passport\Http\Middleware\ValidateBroker;
@@ -12,6 +13,7 @@ use Jurager\Passport\Events;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ServerController extends Controller
 {
@@ -36,10 +38,10 @@ class ServerController extends Controller
      * Attach client broker to server
      *
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response|RedirectResponse
      * @throws \JsonException
      */
-    public function attach(Request $request): \Illuminate\Http\Response
+    public function attach(Request $request): Response|RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'broker' => 'required',

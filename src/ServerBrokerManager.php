@@ -83,7 +83,7 @@ class ServerBrokerManager
      */
     public function validateBrokerSessionId(string $sid): string
     {
-        list($broker_id, $token) = $this->getBrokerInfoFromSessionId($sid);
+        [$broker_id, $token] = $this->getBrokerInfoFromSessionId($sid);
 
         if ($this->generateSessionId($broker_id, $token) != $sid) {
             throw new InvalidSessionIdException('Checksum failed: Client IP address may have changed');

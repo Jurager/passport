@@ -17,7 +17,7 @@ class Encryption
      */
     public function generateChecksum(string $type, string $token, string $secret): string
     {
-        return password_hash($type . $token . $secret, PASSWORD_ARGON2ID);
+        return hash('sha256', $type . $token . $secret);
     }
 
     /**

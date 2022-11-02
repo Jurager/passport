@@ -4,6 +4,7 @@ namespace Jurager\Passport\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Jurager\Passport\ServerBrokerManager;
 use Jurager\Passport\SessionManager;
 use Jurager\Passport\Http\Middleware\ValidateBroker;
@@ -122,7 +123,7 @@ class ServerController extends Controller
 
             // Get the currently authenticated user
             //
-            $user = $this->guard()->user();
+            $user = Auth::guard()->user();
 
             //  Succeeded auth event
             //
@@ -152,7 +153,7 @@ class ServerController extends Controller
     {
         // Additional verification
         //
-        $user = $this->afterAuthenticatingUser($this->guard()->user(), $request);
+        $user = $this->afterAuthenticatingUser(Auth::guard()->user(), $request);
 
         // Failed verification
         //

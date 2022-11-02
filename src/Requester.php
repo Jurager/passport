@@ -12,25 +12,18 @@ use Jurager\Passport\Exceptions\InvalidClientException;
 use Jurager\Passport\Exceptions\NotAttachedException;
 use Jurager\Passport\Exceptions\UnauthorizedException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
 use RuntimeException;
 
 class Requester
 {
     protected mixed $client;
+    protected bool $debug;
 
     public function __construct($client = null)
     {
         $this->client = $client ?: new Client;
-    }
-
-    /**
-     * Check if debug mode is enabled
-     *
-     * @return bool
-     */
-    public function debugEnabled(): bool
-    {
-        return config('passport.debug') === true;
+        $this->debug  = Config::get('passport.debug');
     }
 
     /**
@@ -43,7 +36,7 @@ class Requester
      * @param array $headers
      * @return bool|string|array
      * @throws GuzzleException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function request($sid, $method, $url, array $params = [], array $headers = []): bool|string|array
     {
@@ -66,7 +59,7 @@ class Requester
             $req = $e->getRequest();
             $res = $e->getResponse();
 
-            if ($this->debugEnabled()) {
+            if ($this->debug) {
                 if ($req) {
                     Log::debug(Psr7\Message::toString($req));
                 }
@@ -99,7 +92,7 @@ class Requester
         $body   = $response->getBody();
         $body->rewind();
 
-        $jsonResponse = json_decode($body->getContents(), true, 512);
+        $jsonResponse = json_decode($body->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         if ($jsonResponse && array_key_exists('code', $jsonResponse)) {
 

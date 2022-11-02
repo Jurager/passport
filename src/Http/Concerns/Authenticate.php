@@ -5,6 +5,7 @@ namespace Jurager\Passport\Http\Concerns;
 use Jurager\Passport\Events;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 trait Authenticate
 {
@@ -13,17 +14,28 @@ trait Authenticate
      */
     protected function authenticate(Request $request, $broker): bool
     {
+        // Attempt to authenticate
+        //
         if ($user = $this->attemptLogin($request)) {
 
+            //  Succeeded auth event
+            //
             event(new Events\Authenticated($user, $request));
 
+            // Retrieve broker session
+            //
             $sid = $this->broker->getBrokerSessionId($request);
+
+            // Retrieve credentials from session
+            //
             $credentials = json_encode($this->sessionCredentials($request), JSON_THROW_ON_ERROR);
 
             // @todo: Manage to use remember $request->has('remember')
             //
             $this->session->setUserData($sid, $credentials);
 
+            // Success
+            //
             return true;
         }
 
@@ -39,10 +51,16 @@ trait Authenticate
      */
     protected function attemptLogin(Request $request)
     {
-        if ($this->guard()->once(
-            $this->loginCredentials($request)
-        )) {
-            $user = $this->guard()->user();
+        // Trying to authenticate
+        //
+        if (Auth::guard()->once($this->loginCredentials($request))) {
+
+            // Retrieve current user
+            //
+            $user = Auth::guard()->user();
+
+            // Return with additional verification
+            //
             return $this->afterAuthenticatingUser($user, $request);
         }
 
@@ -89,15 +107,6 @@ trait Authenticate
     }
 
     /**
-     * Return default guard
-     *
-     */
-    protected function guard()
-    {
-        return Auth::guard();
-    }
-
-    /**
      * Return user info
      *
      * @param mixed $user
@@ -106,15 +115,26 @@ trait Authenticate
      */
     protected function userInfo(mixed $user, Request $request): mixed
     {
-        $closure = config('passport.user_info');
+        // Retrieve user_info closure from configuration
+        //
+        $closure = Config::get('passport.user_info');
 
+        // Return closure if it is callable
+        //
         if (is_callable($closure)) {
+
+            // Retrieve broker model from request
+            //
             $broker = $this->broker->getBrokerFromRequest($request);
 
+            // Return closure if it is callable
+            //
             return $closure($user, $broker, $request);
         }
 
-        return $user->toArray();
+        // Return current user
+        //
+        return $user;
     }
 
     /**
@@ -126,9 +146,16 @@ trait Authenticate
      */
     protected function afterAuthenticatingUser($user, $request)
     {
-        $closure = config('passport.after_authenticating');
+        // Retrieve after_authenticating closure from configuration
+        //
+        $closure = Config::get('passport.after_authenticating');
+
+        // Retrieve broker model from request
+        //
         $broker = $this->broker->getBrokerFromRequest($request);
 
+        // Return closure if it is callable
+        //
         if ($user && is_callable($closure) && !$closure($user, $broker, $request)) {
 
             // Reset user to null if closure return false
@@ -136,6 +163,8 @@ trait Authenticate
             return null;
         }
 
+        // Return current user
+        //
         return $user;
     }
 }

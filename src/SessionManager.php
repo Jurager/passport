@@ -4,6 +4,7 @@ namespace Jurager\Passport;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Config;
 
 class SessionManager
 {
@@ -14,7 +15,7 @@ class SessionManager
      */
     protected function getSessionTTL(): int
     {
-        return config('passport.session_ttl');
+        return Config::get('passport.session_ttl');
     }
 
     /**
@@ -93,7 +94,7 @@ class SessionManager
         Session::setId($id);
         Session::start();
 
-        Session::put('sso_user', $value);
+        Session::put('passport_user', $value);
         Session::save();
     }
 
@@ -110,7 +111,7 @@ class SessionManager
         Session::setId($id);
         Session::start();
 
-        return Session::get('sso_user');
+        return Session::get('passport_user');
     }
 
     /**

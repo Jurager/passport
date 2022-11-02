@@ -3,12 +3,9 @@
 namespace Jurager\Passport;
 
 use Jurager\Passport\Exceptions\InvalidClientException;
-use Jurager\Passport\Exceptions\NotAttachedException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
-/**
- * Class ClientBrokerManager
- */
 class ClientBrokerManager
 {
     /**
@@ -37,6 +34,11 @@ class ClientBrokerManager
     public string $client_secret;
 
     /**
+     * @var string client_secret
+     */
+    public string $server_url;
+
+    /**
      * Constructor
      *
      * @param Requester|null $requester
@@ -47,8 +49,9 @@ class ClientBrokerManager
         $this->session    = new SessionManager;
         $this->requester  = new Requester($requester);
 
-        $this->client_id     = config('passport.broker.client_id');
-        $this->client_secret = config('passport.broker.client_secret');
+        $this->client_id     = Config::get('passport.broker.client_id');
+        $this->client_secret = Config::get('passport.broker.client_secret');
+        $this->server_url    = Config::get('passport.broker.server_url');
 
         if (empty($this->client_id)) {
             throw new InvalidClientException('Invalid client id. Please make sure the client id is defined in config.');
@@ -57,24 +60,10 @@ class ClientBrokerManager
         if (empty($this->client_secret)) {
             throw new InvalidClientException('Invalid client secret. Please make sure the client secret is defined in config.');
         }
-    }
 
-    /**
-     * Return the server url
-     *
-     * @param string $path
-     * @return string
-     * @throw Jurager\Passport\Exceptions\InvalidClientException
-     */
-    public function serverUrl(string $path = ''): string
-    {
-        $server_url = config('passport.broker.server_url');
-
-        if (empty($server_url)) {
+        if (empty($this->server_url)) {
             throw new InvalidClientException('Invalid server url. Please make sure the server url is defined in config.');
         }
-
-        return $server_url . $path;
     }
 
     /**
@@ -84,6 +73,8 @@ class ClientBrokerManager
      */
     public function generateClientToken(): string
     {
+        // Return random client token
+        //
         return $this->encryption->randomToken();
     }
 
@@ -92,6 +83,8 @@ class ClientBrokerManager
      */
     public function saveClientToken($token): void
     {
+        // Save client token in storage
+        //
         $this->session->set($this->sessionName(), $token);
     }
 
@@ -102,6 +95,8 @@ class ClientBrokerManager
      */
     public function getClientToken(): mixed
     {
+        // Get client token from storage
+        //
         return $this->session->get($this->sessionName());
     }
 
@@ -110,6 +105,8 @@ class ClientBrokerManager
      */
     public function clearClientToken(): void
     {
+        // Clear client token in storage
+        //
         $this->session->forget($this->sessionName());
     }
 
@@ -120,28 +117,9 @@ class ClientBrokerManager
      */
     public function sessionName(): string
     {
+        // Return session name based on client id
+        //
         return 'sso_token_' . preg_replace('/[_\W]+/', '_', strtolower($this->client_id));
-    }
-
-    /**
-     * Check if session is attached
-     *
-     * @return bool
-     */
-    public function isAttached(): bool
-    {
-        return !is_null($this->getClientToken());
-    }
-
-    /**
-     * Reattach session to client
-     *
-     * @param $request
-     * @return void
-     */
-    public function sessionReattach($request): void
-    {
-        redirect()->route('sso.client.attach', ['return_url' => $request->fullUrl()])->send();
     }
 
     /**
@@ -152,11 +130,38 @@ class ClientBrokerManager
      */
     public function sessionId(string $token): string
     {
-        $checksum = $this->encryption->generateChecksum(
-            'session', $token, $this->client_secret
-        );
+        // Generate new client checksum
+        //
+        $checksum = $this->encryption->generateChecksum('session', $token, $this->client_secret);
 
+        // Return session id string
+        //
         return "Passport-{$this->client_id}-$token-$checksum";
+    }
+
+    /**
+     * Attach session to client
+     *
+     * @param $request
+     * @return mixed
+     */
+    public function sessionAttach($request): mixed
+    {
+        // Redirect to client attachment with return route
+        //
+        return redirect()->route('sso.client.attach', ['return_url' => $request->fullUrl()])->send();
+    }
+
+    /**
+     * Check if session is attached
+     *
+     * @return bool
+     */
+    public function isAttached(): bool
+    {
+        // Check if client token is exists
+        //
+        return !is_null($this->getClientToken());
     }
 
     /**
@@ -167,9 +172,9 @@ class ClientBrokerManager
      */
     public function generateAttachChecksum(string $token): string
     {
-        return $this->encryption->generateChecksum(
-            'attach', $token, $this->client_secret
-        );
+        // Create new checksum based on client secret and token
+        //
+        return $this->encryption->generateChecksum('attach', $token, $this->client_secret);
     }
 
     /**
@@ -183,7 +188,7 @@ class ClientBrokerManager
      */
     public function login(array $credentials, Request $request = null): bool|array
     {
-        $url   = $this->serverUrl('/login');
+        $url   = $this->server_url . '/login';
         $token = $this->getClientToken();
         $sid   = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
@@ -200,7 +205,7 @@ class ClientBrokerManager
      */
     public function profile(Request $request = null): bool|string|array
     {
-        $url     = $this->serverUrl('/profile');
+        $url     = $this->server_url . '/profile';
         $token   = $this->getClientToken();
         $sid     = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
@@ -217,7 +222,7 @@ class ClientBrokerManager
      */
     public function logout(Request $request = null): bool
     {
-        $url   = $this->serverUrl('/logout');
+        $url   = $this->server_url . '/logout';
         $token = $this->getClientToken();
         $sid   = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
@@ -252,7 +257,7 @@ class ClientBrokerManager
      */
     public function commands(string $command, array $params = [], Request $request = null): bool|string
     {
-        $url   = $this->serverUrl("/commands/$command");
+        $url   = $this->server_url . '/commands/' .$command;
         $token = $this->getClientToken();
         $sid   = $this->sessionId($token);
         $headers = $this->agentHeaders($request);

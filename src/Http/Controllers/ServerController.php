@@ -13,6 +13,8 @@ use Jurager\Passport\Events;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ServerController extends Controller
@@ -207,7 +209,7 @@ class ServerController extends Controller
     {
         // Retrieve commands from configuration
         //
-        $commands = config('passport.commands', []);
+        $commands = Config::get('passport.commands', []);
 
         // Command not found in configuration
         //

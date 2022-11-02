@@ -27,18 +27,29 @@ class ValidateBroker
     public function handle(\Illuminate\Http\Request $request, Closure $next, $guard = null): mixed
     {
         try {
+
+            // Retrieve broker session
+            //
             $sid = $this->broker->getBrokerSessionId($request);
-    
+
+            // Validate broker session
+            //
             $this->broker->validateBrokerSessionId($sid);
-    
+
+            // Next
+            //
             return $next($request);
 
         } catch(InvalidClientException $e) {
 
+            // Invalid client exception
+            //
             return response()->json(['code' => 'invalid_client_id', 'message' => 'Invalid client id.'], 403);
 
         } catch(InvalidSessionIdException $e) {
 
+            // Invalid session exception
+            //
             return response()->json(['code' => 'invalid_session_id', 'message' => $e->getMessage()], 403);
         }
     }

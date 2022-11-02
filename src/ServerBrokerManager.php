@@ -2,7 +2,9 @@
 
 namespace Jurager\Passport;
 
+use Jurager\Passport\Exceptions\InvalidServerException;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
 
 /**
@@ -16,28 +18,60 @@ class ServerBrokerManager
     protected Encryption $encryption;
 
     /**
+     * @var
+     */
+    private $model;
+
+    /**
+     * @var string
+     */
+    private string $id_field;
+
+    /**
+     * @var string
+     */
+    private string $secret_field;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
+        // Encryption
+        //
         $this->encryption = new Encryption;
-    }
-    /**
-     * Return broker model
-     *
-     * @return mixed
-     * @throw \Jurager\Passport\Exceptions\InvalidSessionIdException
-     */
-    public function brokerModel(): mixed
-    {
-        $class = config('passport.server.model');
 
-        if (!class_exists($class)) {
-            throw new InvalidSessionIdException("Class $class does not exist");
+        // Model brokers
+        //
+        $this->model = Config::get('passport.server.model');
+
+        // Model brokers id field
+        //
+        $this->id_field = Config::get('passport.server.id_field');
+
+        // Model brokers secret field
+        //
+        $this->secret_field = Config::get('passport.server.secret_field');
+
+        // Model brokers not found
+        //
+        if (!class_exists($this->model)) {
+            throw new InvalidSessionIdException("Class $this->model does not exist");
         }
 
-        return $class;
+        // Server model id field not found
+        //
+        if (empty($this->id_field)) {
+            throw new InvalidServerException('Invalid server model field id. Please make sure the server field id is defined in config.');
+        }
+
+        // Server model secret field not found
+        //
+        if (empty($this->secret_field)) {
+            throw new InvalidServerException('Invalid server model field secret. Please make sure the server field secret is defined in config.');
+        }
     }
+
 
     /**
      * Find broker by id
@@ -48,29 +82,22 @@ class ServerBrokerManager
      */
     public function findBrokerById($id): mixed
     {
-        $class    = $this->brokerModel();
-        $id_field = config('passport.server.id_field');
-        $model    = $class::where($id_field, $id)->first();
+        // Get broker model from database
+        //
+        $model = $this->model::where($this->id_field, $id)->first();
 
+        // Check if broker exists
+        //
         if (!$model) {
-            throw new InvalidSessionIdException("Model $class with $id_field:$id not found");
+
+            // Broker not exists exception
+            //
+            throw new InvalidSessionIdException("Model $this->model with $this->id_field:$id not found");
         }
 
+        // Return broker model
+        //
         return $model;
-    }
-
-    /**
-     * Find broker secret
-     *
-     * @param $model
-     * @return string
-     * @throw \Jurager\Passport\Exceptions\InvalidSessionIdException
-     */
-    public function findBrokerSecret($model): string
-    {
-        $secret_field = config('passport.server.secret_field');
-
-        return $model->$secret_field;
     }
 
     /**
@@ -83,12 +110,18 @@ class ServerBrokerManager
      */
     public function validateBrokerSessionId(string $sid): string
     {
+        // Get broker and token from session
+        //
         [$broker_id, $token] = $this->getBrokerInfoFromSessionId($sid);
 
-        if ($this->generateSessionId($broker_id, $token) != $sid) {
+        // Compare checksum with session
+        //
+        if ($this->generateSessionId($broker_id, $token) !== $sid) {
             throw new InvalidSessionIdException('Checksum failed: Client IP address may have changed');
         }
 
+        // Return broker identification
+        //
         return $broker_id;
     }
 
@@ -102,12 +135,16 @@ class ServerBrokerManager
      */
     public function generateSessionId(string $broker_id, string $token): string
     {
-        $model  = $this->findBrokerById($broker_id);
-        $secret = $this->findBrokerSecret($model);
-        $checksum = $this->encryption->generateChecksum(
-            'session', $token, $secret
-        );
+        // Get broker secret field
+        //
+        $secret = $this->findBrokerById($broker_id)->{$this->secret_field};
 
+        // Generate broker checksum
+        //
+        $checksum = $this->encryption->generateChecksum('session', $token, $secret);
+
+        // Return session identification
+        //
         return "Passport-$broker_id-$token-$checksum";
     }
 
@@ -121,9 +158,12 @@ class ServerBrokerManager
      */
     public function generateAttachChecksum(string $broker_id, string $token): string
     {
-        $model  = $this->findBrokerById($broker_id);
-        $secret = $this->findBrokerSecret($model);
+        // Get broker secret field
+        //
+        $secret = $this->findBrokerById($broker_id)->{$this->secret_field};
 
+        // Return generated checksum
+        //
         return $this->encryption->generateChecksum('attach', $token, $secret);
     }
 
@@ -135,12 +175,21 @@ class ServerBrokerManager
      */
     public function getBrokerInfoFromSessionId(string $sid): array
     {
+        // Check session matching
+        //
         if (!preg_match('/^Passport-(\w*+)-(\w*+)-([a-z\d]*+)$/', $sid, $matches)) {
+
+            // Invalid session identification exception
+            //
             throw new InvalidSessionIdException('Invalid session id');
         }
 
+        // Get the first match
+        //
         array_shift($matches);
 
+        // Return broker identification
+        //
         return $matches;
     }
 
@@ -152,6 +201,8 @@ class ServerBrokerManager
      */
     public function getBrokerSessionId($request): string
     {
+        // Get bearer token from request
+        //
         $token = $request->bearerToken();
 
         if (!$token) {
@@ -174,10 +225,16 @@ class ServerBrokerManager
      */
     public function getBrokerFromRequest(Request $request): mixed
     {
+        // Retrieve broker session
+        //
         $sid = $this->getBrokerSessionId($request);
 
+        // Return broker info from session identification
+        //
         [$broker_id] = $this->getBrokerInfoFromSessionId($sid);
 
+        // Return broker model
+        //
         return $this->findBrokerById($broker_id);
     }
 }

@@ -2,17 +2,14 @@
 
 namespace Jurager\Passport\Traits;
 
-/**
- * Passport trait
- */
 trait Passport
 {
     /**
-     * The sso payload data
+     * The passport payload data
      *
      * @var mixed
      */
-    protected mixed $sso_payload;
+    protected mixed $passport_payload;
 
     /**
      * Set sso payload data
@@ -21,7 +18,7 @@ trait Passport
      */
     public function setPayload(mixed $payload): void
     {
-        $this->sso_payload = $payload;
+        $this->passport_payload = $payload;
     }
 
     /**
@@ -31,6 +28,6 @@ trait Passport
      */
     public function getPayload(): mixed
     {
-        return $this->sso_payload;
+        return $this->passport_payload;
     }
 }

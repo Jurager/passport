@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Traits\Macroable;
+use Illuminate\Support\Facades\Config;
 
 class PassportGuard implements Guard
 {
@@ -62,7 +63,7 @@ class PassportGuard implements Guard
         }
         
         if(!$this->broker->isAttached()) {
-            $this->broker->sessionReattach($this->request);
+            $this->broker->sessionAttach($this->request);
         }
 
         if ($payload = $this->broker->profile($this->request)) {
@@ -138,7 +139,7 @@ class PassportGuard implements Guard
         $user = $this->retrieveByCredentials($payload);
 
         if (!$user) {
-            $userCreateStrategy = config('passport.user_create_strategy');
+            $userCreateStrategy = Config::get('passport.user_create_strategy');
 
             if (is_callable($userCreateStrategy) && $userCreateStrategy($payload)) {
                 $user = $this->retrieveByCredentials($payload);
@@ -156,11 +157,9 @@ class PassportGuard implements Guard
      */
     protected function retrieveByCredentials(mixed $payload): ?Authenticatable
     {
-        $username = config('passport.broker.client_username', 'email');
+        $username = Config::get('passport.broker.client_username', 'email');
 
-        return $this->provider->retrieveByCredentials([
-            $username => $payload[$username]
-        ]);
+        return $this->provider->retrieveByCredentials([$username => $payload[$username]]);
     }
 
     /**
@@ -171,7 +170,7 @@ class PassportGuard implements Guard
      */
     protected function usernameExistsInPayload(mixed $payload): bool
     {
-        $username = config('passport.broker.client_username', 'email');
+        $username = Config::get('passport.broker.client_username', 'email');
 
         return array_key_exists($username, $payload);
     }

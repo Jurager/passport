@@ -56,12 +56,12 @@ class ClientController extends Controller
 
         // Get the server attachment route
         //
-        $attach_url = $this->broker->serverUrl('/attach?' . http_build_query([
-                'broker'   => $this->broker->client_id,
-                'token'    => $token,
-                'checksum' => $checksum,
-                ...$params
-            ]));
+        $attach_url = $this->broker->server_url . '/attach?' . http_build_query([
+            'broker'   => $this->broker->client_id,
+            'token'    => $token,
+            'checksum' => $checksum,
+            ...$params
+        ]);
 
         // Redirect to server attachment route
         //

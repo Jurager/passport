@@ -39,15 +39,19 @@ class PassportServiceProvider extends ServiceProvider
         ]);
 
         // Add Guard
+        //
         $this->extendAuthGuard();
 
         // Register Middlewares
+        //
         $this->registerRouteMiddlewares();
 
         // Register Middleware Groups
+        //
         $this->registerMiddlewareGroups();
 
         // Attach Routes
+        //
         $this->loadRoutesFrom(__DIR__.'/routes.php');
     }
 
@@ -68,15 +72,20 @@ class PassportServiceProvider extends ServiceProvider
      */
     protected function extendAuthGuard(): void
     {
+        // Extending Guards
+        //
         $this->app['auth']->extend('sso', function ($app, $name, array $config) {
-            $guard = new PassportGuard(
-                $app['auth']->createUserProvider($config['provider']),
-                new ClientBrokerManager,
-                $app['request']
-            );
 
+            // Register new Guard
+            //
+            $guard = new PassportGuard($app['auth']->createUserProvider($config['provider']), new ClientBrokerManager, $app['request']);
+
+            // Update current request instance
+            //
             $app->refresh('request', $guard, 'setRequest');
 
+            // Return created Guard
+            //
             return $guard;
         });
     }
@@ -88,12 +97,8 @@ class PassportServiceProvider extends ServiceProvider
      */
     protected function registerRouteMiddlewares(): void
     {
-        $router = $this->app['router'];
-
-        $method = method_exists($router, 'aliasMiddleware') ? 'aliasMiddleware' : 'middleware';
-
         foreach ($this->routeMiddleware as $alias => $middleware) {
-            $router->$method($alias, $middleware);
+            $this->app['router']->aliasMiddleware($alias, $middleware);
         }
     }
 
@@ -104,10 +109,8 @@ class PassportServiceProvider extends ServiceProvider
      */
     protected function registerMiddlewareGroups(): void
     {
-        $router = $this->app['router'];
-
         foreach ($this->middlewareGroups as $group => $middlewares) {
-            $router->middlewareGroup($group, $middlewares);
+            $this->app['router']->middlewareGroup($group, $middlewares);
         }
     }
 }

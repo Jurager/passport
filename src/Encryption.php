@@ -30,9 +30,7 @@ class Encryption
      */
     public function verifyAttachChecksum(string $token, string $secret, string $checksum): bool
     {
-        $generate_checksum = $this->generateChecksum('attach', $token, $secret);
-
-        return $checksum && $checksum === $generate_checksum;
+        return $checksum && $checksum === $this->generateChecksum('attach', $token, $secret);
     }
 
     /**

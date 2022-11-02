@@ -23,8 +23,10 @@ class ServerController extends Controller
 
     protected SessionManager $session;
 
-    protected $return_type = null;
-
+    /**
+     * @param ServerBrokerManager $broker
+     * @param SessionManager $session
+     */
     public function __construct(ServerBrokerManager $broker, SessionManager $session)
     {
         $this->middleware(ValidateBroker::class)->except('attach');
@@ -44,50 +46,51 @@ class ServerController extends Controller
     public function attach(Request $request): Response|RedirectResponse
     {
         $validator = Validator::make($request->all(), [
-            'broker' => 'required',
-            'token' => 'required',
-            'checksum' => 'required'
+            'broker' => 'required|string',
+            'token' => 'required|string',
+            'checksum' => 'required|string',
+            'return_url' => 'nullable|string'
         ]);
 
          if ($validator->fails()) {
             return response($validator->errors() . '', 400);
         }
 
-        $this->detectReturnType($request);
-
-        if (!$this->return_type) {
-            return response('No return url specified', 400);
-        }
-
         $broker_id = $request->input('broker');
         $token     = $request->input('token');
         $checksum  = $request->input('checksum');
-        $callback = $request->input('callback');
         $return_url = $request->input('return_url');
 
-        $gen_checksum = $this->broker->generateAttachChecksum($broker_id, $token);
+        // Generate attach checksum
+        //
+        $generated = $this->broker->generateAttachChecksum($broker_id, $token);
 
-        if (!$checksum || $checksum !== $gen_checksum) {
+        // Compare generated and received checksum
+        //
+        if (!$checksum || $checksum !== $generated) {
+
+            // Failed checksum comprehension
+            //
             return response('Invalid checksum', 400);
         }
 
+        // Generate new session
+        //
         $sid = $this->broker->generateSessionId($broker_id, $token);
 
+        // Start a new session
+        //
         $this->session->start($sid);
 
-
-        if ($this->return_type === 'json') {
+        // Response, if request not containing redirecting route
+        //
+        if (!$return_url) {
             return response()->json(['success' => 'attached']);
         }
 
-        if ($this->return_type === 'jsonp') {
-            $data = json_encode(['success' => 'attached'], JSON_THROW_ON_ERROR);
-            return response("$callback($data, 200)");
-        }
-
-        if ($this->return_type === 'redirect') {
-            return redirect()->away($return_url);
-        }
+        // Redirect to
+        //
+        return redirect()->away($return_url);
     }
 
     /**
@@ -99,25 +102,42 @@ class ServerController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
+        // Retrieve broker session from request
+        //
         $sid = $this->broker->getBrokerSessionId($request);
 
-        if (is_null($this->session->get($sid))) {
-            return response()->json([
-                'code' => 'not_attached',
-                'message' => 'Client broker not attached.'
-            ], 403);
+        // Check if session exists in storage
+        //
+        if (!$this->session->has($sid)) {
+
+            // Broker must be attached before authenticating users
+            //
+            return response()->json(['code' => 'not_attached', 'message' => 'Client broker not attached.'], 403);
         }
 
+        // Authenticate user from request
+        //
         if ($this->authenticate($request, $this)) {
+
+            // Get the currently authenticated user
+            //
             $user = $this->guard()->user();
 
-            event(new Events\LoginSucceeded($user, $request));
+            //  Succeeded auth event
+            //
+            event(new Events\AuthSucceeded($user, $request));
 
+            // Return current user information
+            //
             return response()->json($this->userInfo($user, $request));
         }
 
-        event(new Events\LoginFailed($this->loginCredentials($request), $request));
+        //  Failed auth event
+        //
+        event(new Events\AuthFailed($this->loginCredentials($request), $request));
 
+        //  Return unauthenticated response
+        //
         return response()->json([], 401);
     }
 
@@ -129,15 +149,22 @@ class ServerController extends Controller
      */
     public function profile(Request $request): JsonResponse
     {
+        // Additional verification
+        //
         $user = $this->afterAuthenticatingUser($this->guard()->user(), $request);
 
+        // Failed verification
+        //
         if (!$user) {
+
+            //  Return unauthenticated response
+            //
             return response()->json([], 401);
         }
 
-        return response()->json(
-            $this->userInfo($user, $request)
-        );
+        // Return current user information
+        //
+        return response()->json($this->userInfo($user, $request));
     }
 
     /**
@@ -148,32 +175,25 @@ class ServerController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
+        // Retrieve current user
+        //
         $user = $request->user();
 
+        // Retrieve broker session
+        //
         $sid = $this->broker->getBrokerSessionId($request);
 
+        // Reset user session data
+        //
         $this->session->setUserData($sid, null);
 
+        //  Succeeded logout event
+        //
         event(new Events\Logout($user));
 
+        //  Succeeded logout response
+        //
         return response()->json(['success' => true]);
-    }
-
-    /**
-     * Set return_type based on request
-     *
-     * @param Request $request
-     * @return void
-     */
-    protected function detectReturnType(Request $request): void
-    {
-        if ($request->has('return_url')) {
-            $this->return_type = 'redirect';
-        } elseif ($request->has('callback')) {
-            $this->return_type = 'jsonp';
-        } elseif ($request->expectsJson()) {
-            $this->return_type = 'json';
-        }
     }
 
     /**
@@ -185,19 +205,32 @@ class ServerController extends Controller
      */
     public function commands(Request $request, $command): JsonResponse
     {
+        // Retrieve commands from configuration
+        //
         $commands = config('passport.commands', []);
 
+        // Command not found in configuration
+        //
         if (!array_key_exists($command, $commands)) {
             return response()->json(['message' => 'Command not found.'], 404);
         }
 
+        // Create closure
+        //
         $closure = $commands[$command];
+
+        // Retrieve broker model from request
+        //
         $broker = $this->broker->getBrokerFromRequest($request);
 
+        // Return closure if it is callable
+        //
         if (is_callable($closure)) {
             return response()->json($closure($broker, $request));
         }
 
-        return response()->json(null);
+        // Return closure not callable
+        //
+        return response()->json(['message' => 'Command can\'t be executed.'], 400);
     }
 }

@@ -27,6 +27,16 @@ class ClientBrokerManager
     protected Requester $requester;
 
     /**
+     * @var string client_id
+     */
+    public string $client_id;
+
+    /**
+     * @var string client_secret
+     */
+    public string $client_secret;
+
+    /**
      * Constructor
      *
      * @param Requester|null $requester
@@ -37,44 +47,16 @@ class ClientBrokerManager
         $this->session    = new SessionManager;
         $this->requester  = new Requester($requester);
 
-    }
+        $this->client_id     = config('passport.broker.client_id');
+        $this->client_secret = config('passport.broker.client_secret');
 
-    /**
-     * Return the client id
-     *
-     * @return string
-     * @throw Jurager\Passport\Exceptions\InvalidClientException
-     */
-    public function clientId(): string
-    {
-        $client_id = config('passport.broker.client_id');
-
-        if (empty($client_id)) {
-            throw new InvalidClientException(
-                'Invalid client id. Please make sure the client id is defined in config.'
-            );
+        if (empty($this->client_id)) {
+            throw new InvalidClientException('Invalid client id. Please make sure the client id is defined in config.');
         }
 
-        return $client_id;
-    }
-
-    /**
-     * Return the client secret
-     *
-     * @return string
-     * @throw Jurager\Passport\Exceptions\InvalidClientException
-     */
-    public function clientSecret(): string
-    {
-        $client_secret = config('passport.broker.client_secret');
-
-        if (empty($client_secret)) {
-            throw new InvalidClientException(
-                'Invalid client secret. Please make sure the client secret is defined in config.'
-            );
+        if (empty($this->client_secret)) {
+            throw new InvalidClientException('Invalid client secret. Please make sure the client secret is defined in config.');
         }
-
-        return $client_secret;
     }
 
     /**
@@ -89,9 +71,7 @@ class ClientBrokerManager
         $server_url = config('passport.broker.server_url');
 
         if (empty($server_url)) {
-            throw new InvalidClientException(
-                'Invalid server url. Please make sure the server url is defined in config.'
-            );
+            throw new InvalidClientException('Invalid server url. Please make sure the server url is defined in config.');
         }
 
         return $server_url . $path;
@@ -140,7 +120,7 @@ class ClientBrokerManager
      */
     public function sessionName(): string
     {
-        return 'sso_token_' . preg_replace('/[_\W]+/', '_', strtolower($this->clientId()));
+        return 'sso_token_' . preg_replace('/[_\W]+/', '_', strtolower($this->client_id));
     }
 
     /**
@@ -173,10 +153,10 @@ class ClientBrokerManager
     public function sessionId(string $token): string
     {
         $checksum = $this->encryption->generateChecksum(
-            'session', $token, $this->clientSecret()
+            'session', $token, $this->client_secret
         );
 
-        return "Passport-{$this->clientId()}-$token-$checksum";
+        return "Passport-{$this->client_id}-$token-$checksum";
     }
 
     /**
@@ -188,7 +168,7 @@ class ClientBrokerManager
     public function generateAttachChecksum(string $token): string
     {
         return $this->encryption->generateChecksum(
-            'attach', $token, $this->clientSecret()
+            'attach', $token, $this->client_secret
         );
     }
 
@@ -226,13 +206,6 @@ class ClientBrokerManager
         $headers = $this->agentHeaders($request);
 
         return $this->requester->request($sid, 'GET', $url, [], $headers);
-
-        //try {
-        //    return $this->requester->request($sid, 'GET', $url, [], $headers);
-        //}
-        //catch (NotAttachedException $e) {
-        //    $this->sessionReattach($request);
-        //}
     }
 
     /**

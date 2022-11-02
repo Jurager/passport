@@ -129,11 +129,11 @@ trait Authenticate
         $closure = config('passport.after_authenticating');
         $broker = $this->broker->getBrokerFromRequest($request);
 
-        if (
-            $user && is_callable($closure) &&
-            !$closure($user, $broker, $request)
-        ) {
-            return null; // Reset user to null if closure return false
+        if ($user && is_callable($closure) && !$closure($user, $broker, $request)) {
+
+            // Reset user to null if closure return false
+            //
+            return null;
         }
 
         return $user;

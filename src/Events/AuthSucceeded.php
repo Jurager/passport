@@ -4,7 +4,7 @@ namespace Jurager\Passport\Events;
 
 use Illuminate\Queue\SerializesModels;
 
-class LoginSucceeded
+class AuthSucceeded
 {
     use SerializesModels;
 

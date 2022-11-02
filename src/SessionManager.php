@@ -49,12 +49,23 @@ class SessionManager
      * Return session value of the key $key
      *
      * @param $key
-     * @param $default
-     * @return mixed
+     * @param null $default
+     * @return string|array|null
      */
-    public function get($key, $default = null): mixed
+    public function get($key, $default = null): string|array|null
     {
         return Cache::get($key, $default);
+    }
+
+    /**
+     * Check session exists in storage
+     *
+     * @param $key
+     * @return bool
+     */
+    public function has($key): bool
+    {
+        return Cache::has($key);
     }
 
     /**

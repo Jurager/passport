@@ -88,18 +88,18 @@ class PassportGuard implements Guard
             $login_params['remember'] = true;
         }
 
-        if ($payload = $this->broker->login($login_params, $this->request)) {
+        if (($payload = $this->broker->login($login_params, $this->request)) && $user = $this->loginFromPayload($payload)) {
 
-            $user = $this->loginFromPayload($payload);
-
-            if ($user) {
-                $this->fireLoginSucceededEvent($user);
+            if (isset($this->events)) {
+                $this->events->dispatch(new Events\AuthSucceeded($user, $this->request));
             }
 
             return $user;
         }
 
-        $this->fireLoginFailedEvent($credentials);
+        if (isset($this->events)) {
+            $this->events->dispatch(new Events\AuthFailed($credentials, $this->request));
+        }
 
         return false;
     }
@@ -117,7 +117,7 @@ class PassportGuard implements Guard
         $this->updatePayload($payload);
 
         if ($this->user) {
-            $this->fireAuthenticatedEvent($this->user);
+            //$this->fireAuthenticatedEvent($this->user);
         }
 
         return $this->user;
@@ -246,67 +246,12 @@ class PassportGuard implements Guard
         $user = $this->user();
 
         if ($this->broker->logout($this->request)) {
-            $this->fireLogoutEvent($user);
+
+            if (isset($this->events)) {
+                $this->events->dispatch(new Events\Logout($user));
+            }
 
             $this->user = null;
-        }
-    }
-
-    /**
-     * Fire the login success event if the dispatcher is set.
-     *
-     * @param Authenticatable $user
-     *
-     * @return void
-     */
-    protected function fireLoginSucceededEvent(Authenticatable $user): void
-    {
-        if (isset($this->events)) {
-            $this->events->dispatch(new Events\LoginSucceeded($user, $this->request));
-        }
-    }
-
-    /**
-     * Fire the authenticated event with the arguments.
-     *
-     * @param Authenticatable|null $user
-     *
-     * @return void
-     */
-    protected function fireAuthenticatedEvent(?Authenticatable $user): void
-    {
-        if (isset($this->events)) {
-            $this->events->dispatch(new Events\Authenticated(
-                $user, $this->request
-            ));
-        }
-    }
-
-    /**
-     * Fire the failed authentication attempt event with the given arguments.
-     *
-     * @param array $credentials
-     *
-     * @return void
-     */
-    protected function fireLoginFailedEvent(array $credentials): void
-    {
-        if (isset($this->events)) {
-            $this->events->dispatch(new Events\LoginFailed($credentials, $this->request));
-        }
-    }
-
-    /**
-     * Fire the logout event with the given arguments.
-     *
-     * @param Authenticatable|null $user
-     *
-     * @return void
-     */
-    protected function fireLogoutEvent(?Authenticatable $user): void
-    {
-        if (isset($this->events)) {
-            $this->events->dispatch(new Events\Logout($user));
         }
     }
 }

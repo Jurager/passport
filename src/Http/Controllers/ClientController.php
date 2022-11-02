@@ -40,44 +40,31 @@ class ClientController extends Controller
      */
     public function attach(Request $request): \Illuminate\Http\RedirectResponse
     {
-        $params     = $request->except(['broker', 'token', 'checksum']);
-        $attach_url = $this->getAttachUrl($params);
+        $params = $request->except(['broker', 'token', 'checksum']);
 
-        return redirect()->away($attach_url);
-    }
-
-    /**
-     * Return attack url with params
-     *
-     * @param array $params
-     *
-     * @return string
-     */
-    protected function getAttachUrl(array $params = []): string
-    {
-        $token = $this->generateNewToken();
-        $checksum = $this->broker->generateAttachChecksum($token);
-
-        $query = [
-            'broker' => $this->broker->clientId(),
-            'token' => $token,
-            'checksum' => $checksum
-        ] + $params;
-
-        return $this->broker->serverUrl('/attach?' . http_build_query($query));
-    }
-
-    /**
-     * Generate new client token
-     *
-     * @return string
-     */
-    protected function generateNewToken(): string
-    {
+        // Generate an unique session token
+        //
         $token = $this->broker->generateClientToken();
 
+        // Save session token in storage
+        //
         $this->broker->saveClientToken($token);
 
-        return $token;
+        // Generate the attachment checksum
+        //
+        $checksum = $this->broker->generateAttachChecksum($token);
+
+        // Get the server attachment route
+        //
+        $attach_url = $this->broker->serverUrl('/attach?' . http_build_query([
+                'broker'   => $this->broker->client_id,
+                'token'    => $token,
+                'checksum' => $checksum,
+                ...$params
+            ]));
+
+        // Redirect to server attachment route
+        //
+        return redirect()->away($attach_url);
     }
 }

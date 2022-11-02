@@ -58,6 +58,8 @@ class PassportGuard implements Guard
      */
     public function user() : Authenticatable|RedirectResponse|null
     {
+        $auth_url = Config::get('passport.broker.auth_url');
+
         if (! is_null($this->user)) {
             return $this->user;
         }
@@ -68,6 +70,10 @@ class PassportGuard implements Guard
 
         if ($payload = $this->broker->profile($this->request)) {
             $this->user = $this->loginFromPayload($payload);
+        }
+
+        if (is_null($this->user) && $auth_url) {
+            return redirect($auth_url.'?continue='.$this->request->fullUrl())->send();
         }
 
         return $this->user;
@@ -211,27 +217,6 @@ class PassportGuard implements Guard
         $this->request = $request;
 
         return $this;
-    }
-
-    /**
-     * Get the event dispatcher instance.
-     *
-     * @return \Illuminate\Contracts\Events\Dispatcher
-     */
-    public function getDispatcher(): \Illuminate\Contracts\Events\Dispatcher
-    {
-        return $this->events;
-    }
-
-    /**
-     * Set the event dispatcher instance.
-     *
-     * @param \Illuminate\Contracts\Events\Dispatcher $events
-     * @return void
-     */
-    public function setDispatcher(\Illuminate\Contracts\Events\Dispatcher $events): void
-    {
-        $this->events = $events;
     }
 
     /**

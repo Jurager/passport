@@ -60,6 +60,11 @@ return [
         'server_url' => env('PASSPORT_BROKER_SERVER_URL'),
 
         /**
+         * The auth broker Url. Required if you want only on one broker
+         */
+        'auth_url' => env('PASSPORT_BROKER_AUTH_URL'),
+
+        /**
         * The return Url. Required for clients.
         */
         'return_url' => env('PASSPORT_BROKER_RETURN_URL', true),

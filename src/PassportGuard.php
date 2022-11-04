@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
@@ -54,7 +55,7 @@ class PassportGuard implements Guard
      * Get the currently authenticated user.
      *
      * @return Authenticatable|RedirectResponse|null
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException|\JsonException
      */
     public function user() : Authenticatable|RedirectResponse|null
     {
@@ -85,7 +86,7 @@ class PassportGuard implements Guard
      * @param array $credentials
      * @param bool $remember
      * @return Authenticatable|bool|null
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException|\JsonException
      */
     public function attempt(array $credentials = [], bool $remember = false): Authenticatable|bool|null
     {
@@ -186,7 +187,7 @@ class PassportGuard implements Guard
      *
      * @param array $payload
      */
-    protected function updatePayload(array $payload)
+    protected function updatePayload(array $payload): void
     {
         if ($this->user && method_exists($this->user, 'setPayload')) {
             $this->user->setPayload($payload);
@@ -223,7 +224,7 @@ class PassportGuard implements Guard
      * Logout user.
      *
      * @return void
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException|\JsonException
      */
     public function logout(): void
     {

@@ -91,9 +91,9 @@ class ClientBrokerManager
     /**
      * Return session token
      *
-     * @return string
+     * @return string|array|null
      */
-    public function getClientToken(): mixed
+    public function getClientToken(): string|array|null
     {
         // Get client token from storage
         //
@@ -136,7 +136,7 @@ class ClientBrokerManager
 
         // Return session id string
         //
-        return "Passport-{$this->client_id}-$token-$checksum";
+        return "Passport-$this->client_id-$token-$checksum";
     }
 
     /**

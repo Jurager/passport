@@ -21,10 +21,9 @@ class ValidateBroker
      *
      * @param \Illuminate\Http\Request $request
      * @param Closure $next
-     * @param string|null  $guard
      * @return mixed
      */
-    public function handle(\Illuminate\Http\Request $request, Closure $next, $guard = null): mixed
+    public function handle(\Illuminate\Http\Request $request, Closure $next): mixed
     {
         try {
 
@@ -40,7 +39,7 @@ class ValidateBroker
             //
             return $next($request);
 
-        } catch(InvalidClientException $e) {
+        } catch(InvalidClientException) {
 
             // Invalid client exception
             //

@@ -11,6 +11,7 @@ trait Authenticate
 {
     /**
      * Authenticate user from request
+     * @throws \JsonException
      */
     protected function authenticate(Request $request, $broker): bool
     {
@@ -74,7 +75,7 @@ trait Authenticate
      *
      * @return array
      */
-    protected function loginCredentials(Request $request)
+    protected function loginCredentials(Request $request): array
     {
         return $request->only($this->username($request), 'password');
     }
@@ -98,7 +99,7 @@ trait Authenticate
      *
      * @return array
      */
-    protected function sessionCredentials(Request $request)
+    protected function sessionCredentials(Request $request): array
     {
         $field = $this->username($request);
         $value = $request->input($field);

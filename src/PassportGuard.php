@@ -2,7 +2,10 @@
 
 namespace Jurager\Passport;
 
-use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Auth\Events\Attempting;
+use Illuminate\Auth\Events\Failed;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
@@ -11,10 +14,20 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Facades\Config;
+use GuzzleHttp\Exception\GuzzleException;
 
 class PassportGuard implements Guard
 {
     use GuardHelpers, Macroable;
+
+    /**
+     * The name of the guard. Typically "web".
+     *
+     * Corresponds to guard name in authentication configuration.
+     *
+     * @var string
+     */
+    public readonly string $name;
 
     /**
      * The user provider implementation.
@@ -44,8 +57,9 @@ class PassportGuard implements Guard
      * @param ClientBrokerManager $broker
      * @param Request|null $request
      */
-    public function __construct(UserProvider $provider, ClientBrokerManager $broker, Request $request = null)
+    public function __construct($name, UserProvider $provider, ClientBrokerManager $broker, Request $request = null)
     {
+        $this->name = $name;
         $this->provider = $provider;
         $this->broker = $broker;
         $this->request = $request;
@@ -64,7 +78,7 @@ class PassportGuard implements Guard
         if (! is_null($this->user)) {
             return $this->user;
         }
-        
+
         if(!$this->broker->isAttached()) {
             $this->broker->sessionAttach($this->request);
         }
@@ -90,30 +104,26 @@ class PassportGuard implements Guard
      */
     public function attempt(array $credentials = [], bool $remember = false): Authenticatable|bool|null
     {
-        $login_params = $credentials;
+        $this->fireAttemptEvent($credentials, $remember);
 
         if ($remember) {
-            $login_params['remember'] = true;
+            $credentials['remember'] = true;
         }
 
-        if (($payload = $this->broker->login($login_params, $this->request)) && $user = $this->loginFromPayload($payload)) {
-
-            if (isset($this->events)) {
-                $this->events->dispatch(new Events\AuthSucceeded($user, $this->request));
-            }
-
+        if (($payload = $this->broker->login($credentials, $this->request)) && $user = $this->loginFromPayload($payload)) {
             return $user;
         }
 
-        if (isset($this->events)) {
-            $this->events->dispatch(new Events\AuthFailed($credentials, $this->request));
-        }
+        // If the authentication attempt fails we will fire an event so that the user
+        // may be notified of any suspicious attempts to access their account from
+        // an unrecognized user. A developer may listen to this event as needed.
+        $this->fireFailedEvent($user, $credentials);
 
         return false;
     }
 
     /**
-     * Log a user using the payload.
+     * Log a user into the application using the payload.
      *
      * @param array $payload
      * @return Authenticatable|bool|null
@@ -125,7 +135,11 @@ class PassportGuard implements Guard
         $this->updatePayload($payload);
 
         if ($this->user) {
-            //$this->fireAuthenticatedEvent($this->user);
+
+            // If we have an event dispatcher instance set we will fire an event so that
+            // any listeners will hook into the authentication events and run actions
+            // based on the login and logout events fired from the guard instances.
+            $this->fireLoginEvent($user);
         }
 
         return $this->user;
@@ -221,6 +235,85 @@ class PassportGuard implements Guard
     }
 
     /**
+     * Get the event dispatcher instance.
+     *
+     * @return \Illuminate\Contracts\Events\Dispatcher
+     */
+    public function getDispatcher()
+    {
+        return $this->events;
+    }
+
+    /**
+     * Set the event dispatcher instance.
+     *
+     * @param  \Illuminate\Contracts\Events\Dispatcher  $events
+     * @return void
+     */
+    public function setDispatcher($events)
+    {
+        $this->events = $events;
+    }
+
+    /**
+     * Fire the attempt event with the arguments.
+     *
+     * @param  array  $credentials
+     * @param  bool  $remember
+     * @return void
+     */
+    protected function fireAttemptEvent(array $credentials, $remember = false)
+    {
+        $this->events?->dispatch(new Attempting($this->name, $credentials, $remember));
+    }
+
+    /**
+     * Fire the login event if the dispatcher is set.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  bool  $remember
+     * @return void
+     */
+    protected function fireLoginEvent($user, $remember = false)
+    {
+        $this->events?->dispatch(new Login($this->name, $user, $remember));
+    }
+
+    /**
+     * Fire the authenticated event if the dispatcher is set.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @return void
+     */
+    protected function fireAuthenticatedEvent($user)
+    {
+        $this->events?->dispatch(new Authenticated($this->name, $user));
+    }
+
+    /**
+     * Fire the other device logout event if the dispatcher is set.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @return void
+     */
+    protected function fireOtherDeviceLogoutEvent($user)
+    {
+        $this->events?->dispatch(new OtherDeviceLogout($this->name, $user));
+    }
+
+    /**
+     * Fire the failed authentication attempt event with the given arguments.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|null  $user
+     * @param  array  $credentials
+     * @return void
+     */
+    protected function fireFailedEvent($user, array $credentials)
+    {
+        $this->events?->dispatch(new Failed($this->name, $user, $credentials));
+    }
+
+    /**
      * Logout user.
      *
      * @return void
@@ -232,10 +325,16 @@ class PassportGuard implements Guard
 
         if ($this->broker->logout($this->request)) {
 
+            // If we have an event dispatcher instance, we can fire off the logout event
+            // so any further processing can be done. This allows the developer to be
+            // listening for anytime a user signs out of this application manually.
             if (isset($this->events)) {
-                $this->events->dispatch(new Events\Logout($user));
+                $this->events->dispatch(new Logout($this->name, $user));
             }
 
+            // Once we have fired the logout event we will clear the users out of memory
+            // so they are no longer available as the user is no longer considered as
+            // being signed into this application and should not be available here.
             $this->user = null;
         }
     }

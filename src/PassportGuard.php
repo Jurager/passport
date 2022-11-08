@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport;
 
+use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Auth\Events\Attempting;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
@@ -66,6 +67,16 @@ class PassportGuard implements Guard
     }
 
     /**
+     * Determine if the user was authenticated via "remember me" cookie.
+     *
+     * @return bool
+     */
+    public function viaRemember()
+    {
+        return false;
+    }
+
+    /**
      * Get the currently authenticated user.
      *
      * @return Authenticatable|RedirectResponse|null
@@ -104,6 +115,8 @@ class PassportGuard implements Guard
      */
     public function attempt(array $credentials = [], bool $remember = false): Authenticatable|bool|null
     {
+        // Call authentification attempting event
+        //
         $this->fireAttemptEvent($credentials, $remember);
 
         if ($remember) {
@@ -111,6 +124,14 @@ class PassportGuard implements Guard
         }
 
         if (($payload = $this->broker->login($credentials, $this->request)) && $user = $this->loginFromPayload($payload)) {
+
+            // If we have an event dispatcher instance set we will fire an event so that
+            // any listeners will hook into the authentication events and run actions
+            // based on the login and logout events fired from the guard instances.
+            $this->fireLoginEvent($user);
+
+            // Succeeded
+            //
             return $user;
         }
 
@@ -119,6 +140,8 @@ class PassportGuard implements Guard
         // an unrecognized user. A developer may listen to this event as needed.
         $this->fireFailedEvent($user, $credentials);
 
+        // Auth attempting failed
+        //
         return false;
     }
 
@@ -130,18 +153,20 @@ class PassportGuard implements Guard
      */
     public function loginFromPayload(array $payload): Authenticatable|bool|null
     {
+        // Retrieve user from payload
+        //
         $this->user = $this->retrieveFromPayload($payload);
 
+        // Update actual user payload
+        //
         $this->updatePayload($payload);
 
-        if ($this->user) {
+        // Call authenticated event
+        //
+        $this->fireAuthenticatedEvent($this->user);
 
-            // If we have an event dispatcher instance set we will fire an event so that
-            // any listeners will hook into the authentication events and run actions
-            // based on the login and logout events fired from the guard instances.
-            $this->fireLoginEvent($user);
-        }
-
+        // Succeeded
+        //
         return $this->user;
     }
 
@@ -216,18 +241,58 @@ class PassportGuard implements Guard
      */
     public function validate(array $credentials = []): bool
     {
+        // Retrieve a user by the given credentials.
+        //
         $user = $this->provider->retrieveByCredentials($credentials);
 
+        // Exists
+        //
         return ! is_null($user);
+    }
+
+    /**
+     * Logout user.
+     *
+     * @return void
+     * @throws GuzzleException|\JsonException
+     */
+    public function logout(): void
+    {
+        $user = $this->user();
+
+        if ($this->broker->logout($this->request)) {
+
+            // If we have an event dispatcher instance, we can fire off the logout event
+            // so any further processing can be done. This allows the developer to be
+            // listening for anytime a user signs out of this application manually.
+            if (isset($this->events)) {
+                $this->events->dispatch(new Logout($this->name, $user));
+            }
+
+            // Once we have fired the logout event we will clear the users out of memory
+            // so they are no longer available as the user is no longer considered as
+            // being signed into this application and should not be available here.
+            $this->user = null;
+        }
+    }
+
+    /**
+     * Get the current request instance.
+     *
+     * @return \Symfony\Component\HttpFoundation\Request
+     */
+    public function getRequest()
+    {
+        return $this->request ?: Request::createFromGlobals();
     }
 
     /**
      * Set the current request instance.
      *
-     * @param Request $request
+     * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @return $this
      */
-    public function setRequest(Request $request): static
+    public function setRequest(Request $request)
     {
         $this->request = $request;
 
@@ -311,31 +376,5 @@ class PassportGuard implements Guard
     protected function fireFailedEvent($user, array $credentials)
     {
         $this->events?->dispatch(new Failed($this->name, $user, $credentials));
-    }
-
-    /**
-     * Logout user.
-     *
-     * @return void
-     * @throws GuzzleException|\JsonException
-     */
-    public function logout(): void
-    {
-        $user = $this->user();
-
-        if ($this->broker->logout($this->request)) {
-
-            // If we have an event dispatcher instance, we can fire off the logout event
-            // so any further processing can be done. This allows the developer to be
-            // listening for anytime a user signs out of this application manually.
-            if (isset($this->events)) {
-                $this->events->dispatch(new Logout($this->name, $user));
-            }
-
-            // Once we have fired the logout event we will clear the users out of memory
-            // so they are no longer available as the user is no longer considered as
-            // being signed into this application and should not be available here.
-            $this->user = null;
-        }
     }
 }

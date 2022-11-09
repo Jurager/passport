@@ -57,6 +57,17 @@ abstract class AbstractSessionManager
     }
 
     /**
+     * Check session exists in storage
+     *
+     * @param $key
+     * @return bool
+     */
+    public function has($key): bool
+    {
+        return $this->store()->has($key);
+    }
+
+    /**
      * Delete session value of the key $key
      */
     public function forget($key)

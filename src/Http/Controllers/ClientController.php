@@ -29,6 +29,7 @@ class ClientController extends Controller
     {
         $this->broker  = $broker;
         $this->session = $session;
+        $this->session->type = 'session';
     }
 
     /**

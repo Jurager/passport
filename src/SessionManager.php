@@ -5,9 +5,25 @@ namespace Jurager\Passport;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
+use Jurager\Passport\Exceptions\InvalidClientException;
 
 class SessionManager
 {
+    public string $type;
+
+    /**
+     * Return the storage driver
+     *
+     * @return int
+     */
+    protected function store() {
+        if(isset($this->type)) {
+            return app()->{$this->type};
+        }
+
+        throw new \Exception('Invalid storage type. Please make sure the storage type is defined.');
+    }
+
     /**
      * Return the session configuration TTL
      *
@@ -38,10 +54,10 @@ class SessionManager
     public function set(string $key, string $value, bool $forever = false): void
     {
         if ($forever || $this->isTTLForever()) {
-            Cache::forever($key, $value);
+            $this->store()->forever($key, $value);
         } else {
             $ttl = $this->getSessionTTL();
-            Cache::put($key, $value, $ttl);
+            $this->store()->put($key, $value, $ttl);
         }
     }
 
@@ -55,7 +71,7 @@ class SessionManager
      */
     public function get($key, $default = null): string|array|null
     {
-        return Cache::get($key, $default);
+        return $this->store()->get($key, $default);
     }
 
     /**
@@ -66,7 +82,7 @@ class SessionManager
      */
     public function has($key): bool
     {
-        return Cache::has($key);
+        return $this->store()->has($key);
     }
 
     /**
@@ -77,7 +93,7 @@ class SessionManager
      */
     public function forget($key): void
     {
-        Cache::forget($key);
+        $this->store()->forget($key);
     }
 
     /**

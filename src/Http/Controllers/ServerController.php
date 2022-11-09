@@ -6,7 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Jurager\Passport\ServerBrokerManager;
-use Jurager\Passport\SessionManager;
+use Jurager\Passport\Session\ServerSessionManager;
 use Jurager\Passport\Http\Middleware\ValidateBroker;
 use Jurager\Passport\Http\Middleware\ServerAuthenticate;
 use Jurager\Passport\Http\Concerns\Authenticate;
@@ -23,20 +23,19 @@ class ServerController extends Controller
 
     protected ServerBrokerManager $broker;
 
-    protected SessionManager $session;
+    protected ServerSessionManager $session;
 
     /**
      * @param ServerBrokerManager $broker
-     * @param SessionManager $session
+     * @param ServerSessionManager $session
      */
-    public function __construct(ServerBrokerManager $broker, SessionManager $session)
+    public function __construct(ServerBrokerManager $broker, ServerSessionManager $session)
     {
         $this->middleware(ValidateBroker::class)->except('attach');
         $this->middleware(ServerAuthenticate::class)->only(['profile', 'logout']);
 
         $this->broker = $broker;
         $this->session = $session;
-        $this->session->type = 'cache';
     }
 
     /**

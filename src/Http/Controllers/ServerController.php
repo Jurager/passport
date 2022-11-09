@@ -36,6 +36,7 @@ class ServerController extends Controller
 
         $this->broker = $broker;
         $this->session = $session;
+        $this->session->type = 'cache';
     }
 
     /**

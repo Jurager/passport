@@ -138,7 +138,7 @@ class PassportGuard implements Guard
         // If the authentication attempt fails we will fire an event so that the user
         // may be notified of any suspicious attempts to access their account from
         // an unrecognized user. A developer may listen to this event as needed.
-        $this->fireFailedEvent($user, $credentials);
+        //$this->fireFailedEvent($user, $credentials);
 
         // Auth attempting failed
         //

@@ -47,6 +47,7 @@ class ClientBrokerManager
     {
         $this->encryption = new Encryption;
         $this->session    = new SessionManager;
+        $this->session->type = 'session';
         $this->requester  = new Requester($requester);
 
         $this->client_id     = Config::get('passport.broker.client_id');

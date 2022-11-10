@@ -102,9 +102,9 @@ class Storage
      * Retrieve user session data
      *
      * @param $sid
-     * @return string
+     * @return string|null
      */
-    public function getUserData($sid): string
+    public function getUserData($sid): string|null
     {
         $id = $this->get($sid);
 

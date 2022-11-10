@@ -87,7 +87,7 @@ class ClientBrokerManager
     {
         // Save client token in storage
         //
-        Cookie::queue(Cookie::make($this->sessionName(), $token, 60));
+        Cookie::queue(Cookie::make($this->sessionName(), $token, $this->session->getSessionTTL() / 60));
         //$this->session->set($this->sessionName(), $token);
     }
 

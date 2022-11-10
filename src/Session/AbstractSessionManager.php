@@ -13,7 +13,7 @@ abstract class AbstractSessionManager
      * Return the session configuration ttl
      * @return int
      */
-    protected function getSessionTTL()
+    public function getSessionTTL()
     {
         return config('passport.session_ttl');
     }

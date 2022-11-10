@@ -36,10 +36,10 @@ class Storage
     /**
      * Set session value in the cache
      * @param $key string
-     * @param $value string
+     * @param string|array $value string
      * @param $forever bool
      */
-    public function set(string $key, string $value, bool $forever = false): void
+    public function set(string $key, string|array $value, bool $forever = false): void
     {
         if (($forever || $this->isTTLForever()) && is_callable([$this->store(), 'forever'])) {
             $this->store()->forever($key, $value);

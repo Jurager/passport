@@ -25,7 +25,7 @@ trait Authenticate
 
             // Retrieve broker session
             //
-            $sid = $this->storage->getBrokerSessionId($request);
+            $sid = $this->server->getBrokerSessionId($request);
 
             // Retrieve credentials from session
             //
@@ -126,7 +126,7 @@ trait Authenticate
 
             // Retrieve broker model from request
             //
-            $broker = $this->broker->getBrokerFromRequest($request);
+            $broker = $this->server->getBrokerFromRequest($request);
 
             // Return closure if it is callable
             //
@@ -153,7 +153,7 @@ trait Authenticate
 
         // Retrieve broker model from request
         //
-        $broker = $this->broker->getBrokerFromRequest($request);
+        $broker = $this->server->getBrokerFromRequest($request);
 
         // Return closure if it is callable
         //

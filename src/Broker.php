@@ -2,10 +2,10 @@
 
 namespace Jurager\Passport;
 
-use Illuminate\Cookie\CookieJar;
 use Jurager\Passport\Exceptions\InvalidClientException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cookie;
 
 class Broker
 {
@@ -18,11 +18,6 @@ class Broker
      * @var Requester
      */
     protected Requester $requester;
-
-    /**
-     * @var CookieJar
-     */
-    protected CookieJar $cookie;
 
     /**
      * @var string client_id
@@ -48,7 +43,6 @@ class Broker
     {
         $this->encryption = new Encryption;
         $this->requester  = new Requester($requester);
-        $this->cookie     = new CookieJar();
 
         $this->client_id     = Config::get('passport.broker.client_id');
         $this->client_secret = Config::get('passport.broker.client_secret');
@@ -90,11 +84,11 @@ class Broker
 
         // Create new cookie
         //
-        $cookie = $this->cookie->make($this->sessionName(), $token, $ttl);
+        $cookie = Cookie::make($this->sessionName(), $token, $ttl);
 
         // Save client token in cookie
         //
-        $this->cookie->queue($cookie);
+        Cookie::queue($cookie);
     }
 
     /**
@@ -117,7 +111,7 @@ class Broker
     {
         // Clear client token in storage
         //
-        $this->cookie->forget($this->sessionName());
+        Cookie::forget($this->sessionName());
     }
 
     /**

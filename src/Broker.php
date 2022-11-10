@@ -159,7 +159,7 @@ class Broker
     {
         // Redirect to client attachment with return route
         //
-        return redirect()->route('sso.client.attach', ['return_url' => $request->fullUrl()])->send();
+        return redirect()->route('sso.broker.attach', ['return_url' => $request->fullUrl()])->send();
     }
 
     /**

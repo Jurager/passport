@@ -3,8 +3,7 @@
 namespace Jurager\Passport;
 
 use Illuminate\Support\Facades\Session;
-use function Jurager\Passport\Session\app;
-use function Jurager\Passport\Session\config;
+use Illuminate\Support\Facades\Config;
 
 class Storage
 {
@@ -20,16 +19,16 @@ class Storage
      * Return the session configuration ttl
      * @return int
      */
-    public function getSessionTTL()
+    private function getSessionTTL(): int
     {
-        return config('passport.session_ttl');
+        return Config::get('passport.session_ttl');
     }
 
     /**
      * Check if session ttl is forever, means if it value is null
      * @return bool
      */
-    protected function isTTLForever()
+    protected function isTTLForever(): bool
     {
         return is_null($this->getSessionTTL());
     }
@@ -40,7 +39,7 @@ class Storage
      * @param $value string
      * @param $forever bool
      */
-    public function set($key, $value, $forever = false)
+    public function set(string $key, string $value, bool $forever = false): void
     {
         if (($forever || $this->isTTLForever()) && is_callable([$this->store(), 'forever'])) {
             $this->store()->forever($key, $value);
@@ -58,7 +57,7 @@ class Storage
      *
      * @return mixed
      */
-    public function get($key, $default = null)
+    public function get($key, $default = null): string
     {
         return $this->store()->get($key, $default);
     }
@@ -77,7 +76,7 @@ class Storage
     /**
      * Delete session value of the key $key
      */
-    public function forget($key)
+    public function forget($key): void
     {
         $this->store()->forget($key);
     }
@@ -86,8 +85,9 @@ class Storage
      * Set user session data
      *
      * @param string $sid
+     * @param $value
      */
-    public function setUserData($sid, $value)
+    public function setUserData(string $sid, $value): void
     {
         $id = $this->get($sid);
 
@@ -101,9 +101,10 @@ class Storage
     /**
      * Retrieve user session data
      *
+     * @param $sid
      * @return string
      */
-    public function getUserData($sid)
+    public function getUserData($sid): string
     {
         $id = $this->get($sid);
 
@@ -116,7 +117,7 @@ class Storage
     /**
      * Start a new session by resetting the session value
      */
-    public function start($sid)
+    public function start($sid): void
     {
         $id = Session::getId();
 

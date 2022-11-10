@@ -33,9 +33,9 @@ class PassportGuard implements Guard
     /**
      * The user provider implementation.
      *
-     * @var ClientBrokerManager
+     * @var Broker
      */
-    protected ClientBrokerManager $broker;
+    protected Broker $broker;
 
     /**
      * The request instance.
@@ -54,11 +54,12 @@ class PassportGuard implements Guard
     /**
      * Create a new authentication guard.
      *
+     * @param $name
      * @param UserProvider $provider
-     * @param ClientBrokerManager $broker
+     * @param Broker $broker
      * @param Request|null $request
      */
-    public function __construct($name, UserProvider $provider, ClientBrokerManager $broker, Request $request = null)
+    public function __construct($name, UserProvider $provider, Broker $broker, Request $request = null)
     {
         $this->name = $name;
         $this->provider = $provider;
@@ -90,7 +91,7 @@ class PassportGuard implements Guard
             return $this->user;
         }
 
-        if(!$this->broker->isAttached()) {
+        if(!$this->broker->isAttached($this->request)) {
             $this->broker->sessionAttach($this->request);
         }
 

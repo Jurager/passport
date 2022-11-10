@@ -25,7 +25,7 @@ trait Authenticate
 
             // Retrieve broker session
             //
-            $sid = $this->broker->getBrokerSessionId($request);
+            $sid = $this->storage->getBrokerSessionId($request);
 
             // Retrieve credentials from session
             //
@@ -33,7 +33,7 @@ trait Authenticate
 
             // @todo: Manage to use remember $request->has('remember')
             //
-            $this->session->setUserData($sid, $credentials);
+            $this->storage->setUserData($sid, $credentials);
 
             // Success
             //

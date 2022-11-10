@@ -1,13 +1,20 @@
 <?php
 
-namespace Jurager\Passport\Session;
+namespace Jurager\Passport;
 
-abstract class AbstractSessionManager
+use Illuminate\Support\Facades\Session;
+use function Jurager\Passport\Session\app;
+use function Jurager\Passport\Session\config;
+
+class Storage
 {
     /**
-     * Return The session store
+     * Use cache as store
      */
-    abstract protected function store();
+    protected function store()
+    {
+        return app()->cache;
+    }
 
     /**
      * Return the session configuration ttl
@@ -73,5 +80,46 @@ abstract class AbstractSessionManager
     public function forget($key)
     {
         $this->store()->forget($key);
+    }
+
+    /**
+     * Set user session data
+     *
+     * @param string $sid
+     */
+    public function setUserData($sid, $value)
+    {
+        $id = $this->get($sid);
+
+        Session::setId($id);
+        Session::start();
+
+        Session::put('sso_user', $value);
+        Session::save();
+    }
+
+    /**
+     * Retrieve user session data
+     *
+     * @return string
+     */
+    public function getUserData($sid)
+    {
+        $id = $this->get($sid);
+
+        Session::setId($id);
+        Session::start();
+
+        return Session::get('sso_user');
+    }
+
+    /**
+     * Start a new session by resetting the session value
+     */
+    public function start($sid)
+    {
+        $id = Session::getId();
+
+        $this->set($sid, $id);
     }
 }

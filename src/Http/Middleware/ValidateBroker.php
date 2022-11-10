@@ -3,17 +3,17 @@
 namespace Jurager\Passport\Http\Middleware;
 
 use Closure;
-use Jurager\Passport\ServerBrokerManager;
+use Jurager\Passport\Sever;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\InvalidClientException;
 
 class ValidateBroker
 {
-    protected ServerBrokerManager $broker;
+    protected Server $server;
 
-    public function __construct(ServerBrokerManager $broker)
+    public function __construct(Server $server)
     {
-        $this->broker = $broker;
+        $this->server = $server;
     }
 
     /**
@@ -29,11 +29,11 @@ class ValidateBroker
 
             // Retrieve broker session
             //
-            $sid = $this->broker->getBrokerSessionId($request);
+            $sid = $this->server->getBrokerSessionId($request);
 
             // Validate broker session
             //
-            $this->broker->validateBrokerSessionId($sid);
+            $this->server->validateBrokerSessionId($sid);
 
             // Next
             //

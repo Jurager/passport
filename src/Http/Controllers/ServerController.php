@@ -3,39 +3,39 @@
 namespace Jurager\Passport\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use Jurager\Passport\ServerBrokerManager;
-use Jurager\Passport\Session\ServerSessionManager;
-use Jurager\Passport\Http\Middleware\ValidateBroker;
-use Jurager\Passport\Http\Middleware\ServerAuthenticate;
-use Jurager\Passport\Http\Concerns\Authenticate;
-use Jurager\Passport\Events;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Validator;
+use Jurager\Passport\Events;
+use Jurager\Passport\Http\Concerns\Authenticate;
+use Jurager\Passport\Http\Middleware\ServerAuthenticate;
+use Jurager\Passport\Http\Middleware\ValidateBroker;
+use Jurager\Passport\Server;
+use Jurager\Passport\Storage;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ServerController extends Controller
 {
     use Authenticate;
 
-    protected ServerBrokerManager $broker;
+    protected Server $server;
 
-    protected ServerSessionManager $session;
+    protected Storage $storage;
 
     /**
-     * @param ServerBrokerManager $broker
-     * @param ServerSessionManager $session
+     * @param Server $server
+     * @param Storage $storage
      */
-    public function __construct(ServerBrokerManager $broker, ServerSessionManager $session)
+    public function __construct(Server $server, Storage $storage)
     {
         $this->middleware(ValidateBroker::class)->except('attach');
         $this->middleware(ServerAuthenticate::class)->only(['profile', 'logout']);
 
-        $this->broker = $broker;
-        $this->session = $session;
+        $this->server = $server;
+        $this->storage = $storage;
     }
 
     /**
@@ -65,7 +65,7 @@ class ServerController extends Controller
 
         // Generate attach checksum
         //
-        $generated = $this->broker->generateAttachChecksum($broker_id, $token);
+        $generated = $this->server->generateAttachChecksum($broker_id, $token);
 
         // Compare generated and received checksum
         //
@@ -78,11 +78,11 @@ class ServerController extends Controller
 
         // Generate new session
         //
-        $sid = $this->broker->generateSessionId($broker_id, $token);
+        $sid = $this->server->generateSessionId($broker_id, $token);
 
         // Start a new session
         //
-        $this->session->start($sid);
+        $this->storage->start($sid);
 
         // Response, if request not containing redirecting route
         //
@@ -106,11 +106,11 @@ class ServerController extends Controller
     {
         // Retrieve broker session from request
         //
-        $sid = $this->broker->getBrokerSessionId($request);
+        $sid = $this->server->getBrokerSessionId($request);
 
         // Check if session exists in storage
         //
-        if (!$this->session->has($sid)) {
+        if (!$this->storage->has($sid)) {
 
             // Broker must be attached before authenticating users
             //
@@ -183,11 +183,11 @@ class ServerController extends Controller
 
         // Retrieve broker session
         //
-        $sid = $this->broker->getBrokerSessionId($request);
+        $sid = $this->server->getBrokerSessionId($request);
 
         // Reset user session data
         //
-        $this->session->setUserData($sid, null);
+        $this->storage->setUserData($sid, null);
 
         //  Succeeded logout event
         //
@@ -223,7 +223,7 @@ class ServerController extends Controller
 
         // Retrieve broker model from request
         //
-        $broker = $this->broker->getBrokerFromRequest($request);
+        $broker = $this->server->getBrokerFromRequest($request);
 
         // Return closure if it is callable
         //

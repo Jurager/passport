@@ -3,23 +3,22 @@
 namespace Jurager\Passport\Http\Middleware;
 
 use Closure;
-use Jurager\Passport\ServerBrokerManager;
-use Jurager\Passport\Session\ServerSessionManager;
-use Jurager\Passport\Exceptions\InvalidSessionIdException;
-use Jurager\Passport\Events;
-
 use Illuminate\Support\Facades\Auth;
+use Jurager\Passport\Events;
+use Jurager\Passport\Exceptions\InvalidSessionIdException;
+use Jurager\Passport\Server;
+use Jurager\Passport\Storage;
 
 class ServerAuthenticate
 {
-    protected ServerBrokerManager $broker;
+    protected Server $server;
 
-    protected ServerSessionManager $session;
+    protected Storage $storage;
 
-    public function __construct(ServerBrokerManager $broker, ServerSessionManager $session)
+    public function __construct(Server $server, Storage $storage)
     {
-        $this->broker = $broker;
-        $this->session = $session;
+        $this->server = $server;
+        $this->storage = $storage;
     }
 
     /**
@@ -39,11 +38,11 @@ class ServerAuthenticate
 
         // Retrieve broker session
         //
-        $sid = $this->broker->getBrokerSessionId($request);
+        $sid = $this->server->getBrokerSessionId($request);
 
         // Check if session exists in storage
         //
-        if (!$this->session->has($sid)) {
+        if (!$this->storage->has($sid)) {
 
             // Broker must be attached before authenticating users
             //
@@ -53,7 +52,7 @@ class ServerAuthenticate
         try {
             // Validate broker session
             //
-            $this->broker->validateBrokerSessionId($sid);
+            $this->server->validateBrokerSessionId($sid);
 
             // Check current user authorization
             //
@@ -84,7 +83,7 @@ class ServerAuthenticate
     {
         // Decode account session data
         //
-        $attributes = json_decode($this->session->getUserData($sid), true, 512, JSON_THROW_ON_ERROR);
+        $attributes = json_decode($this->storage->getUserData($sid), true, 512, JSON_THROW_ON_ERROR);
 
         if (!empty($attributes)) {
 

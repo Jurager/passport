@@ -78,7 +78,7 @@ class PassportServiceProvider extends ServiceProvider
 
             // Register new Guard
             //
-            $guard = new PassportGuard($name, $app['auth']->createUserProvider($config['provider']), new ClientBrokerManager, $app['request']);
+            $guard = new PassportGuard($name, $app['auth']->createUserProvider($config['provider']), new Broker, $app['request']);
 
             // Set event dispatcher
             //

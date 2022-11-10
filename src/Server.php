@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
 
 /**
- * Class ServerBrokerManager
+ * Class Server
  */
-class ServerBrokerManager
+class Server
 {
     /**
      * @var Encryption

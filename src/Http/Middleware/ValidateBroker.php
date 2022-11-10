@@ -3,7 +3,7 @@
 namespace Jurager\Passport\Http\Middleware;
 
 use Closure;
-use Jurager\Passport\Sever;
+use Jurager\Passport\Server;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\InvalidClientException;
 

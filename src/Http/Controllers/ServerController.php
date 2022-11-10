@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
+use JsonException;
 use Jurager\Passport\Events;
 use Jurager\Passport\Http\Concerns\Authenticate;
 use Jurager\Passport\Http\Middleware\ServerAuthenticate;
@@ -43,7 +44,7 @@ class ServerController extends Controller
      *
      * @param Request $request
      * @return Response|RedirectResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function attach(Request $request): Response|RedirectResponse
     {
@@ -100,7 +101,7 @@ class ServerController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function login(Request $request): JsonResponse
     {

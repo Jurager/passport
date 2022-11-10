@@ -2,51 +2,25 @@
 
 namespace Jurager\Passport;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Config;
 
 class Storage
 {
     /**
-     * Use cache as store
-     */
-    protected function store()
-    {
-        return app()->cache;
-    }
-
-    /**
-     * Return the session configuration ttl
-     * @return int
-     */
-    private function getSessionTTL(): int
-    {
-        return Config::get('passport.session_ttl');
-    }
-
-    /**
-     * Check if session ttl is forever, means if it value is null
-     * @return bool
-     */
-    protected function isTTLForever(): bool
-    {
-        return is_null($this->getSessionTTL());
-    }
-
-    /**
      * Set session value in the cache
+     *
      * @param $key string
      * @param string|array $value string
      * @param $forever bool
      */
     public function set(string $key, string|array $value, bool $forever = false): void
     {
-        if (($forever || $this->isTTLForever()) && is_callable([$this->store(), 'forever'])) {
-            $this->store()->forever($key, $value);
-        } else {
-            $ttl = $this->getSessionTTL();
-            $this->store()->put($key, $value, $ttl);
-        }
+        // If the storage time is not passed to the put method,
+        // Item will be stored indefinitely
+        //
+        Cache::put($key, $value, Config::get('passport.storage_ttl'));
     }
 
     /**
@@ -59,7 +33,7 @@ class Storage
      */
     public function get($key, $default = null): string
     {
-        return $this->store()->get($key, $default);
+        return Cache::get($key, $default);
     }
 
     /**
@@ -70,15 +44,15 @@ class Storage
      */
     public function has($key): bool
     {
-        return $this->store()->has($key);
+        return Cache::has($key);
     }
 
     /**
      * Delete session value of the key $key
      */
-    public function forget($key): void
+    public function forget($key): bool
     {
-        $this->store()->forget($key);
+        return Cache::forget($key);
     }
 
     /**

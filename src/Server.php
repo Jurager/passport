@@ -20,7 +20,7 @@ class Server
     /**
      * @var
      */
-    private $model;
+    private mixed $model;
 
     /**
      * @var string

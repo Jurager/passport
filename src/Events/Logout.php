@@ -13,14 +13,14 @@ class Logout
      *
      * @var \Illuminate\Contracts\Auth\Authenticatable
      */
-    public $user;
+    public \Illuminate\Contracts\Auth\Authenticatable $user;
 
     /**
      * Create a new event instance.
      *
      * @param \Illuminate\Contracts\Auth\Authenticatable $user
      */
-    public function __construct($user)
+    public function __construct(\Illuminate\Contracts\Auth\Authenticatable $user)
     {
         $this->user = $user;
     }

@@ -6,12 +6,13 @@ use Jurager\Passport\Events;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use JsonException;
 
 trait Authenticate
 {
     /**
      * Authenticate user from request
-     * @throws \JsonException
+     * @throws JsonException
      */
     protected function authenticate(Request $request, $broker): bool
     {
@@ -157,7 +158,7 @@ trait Authenticate
 
         // Return closure if it is callable
         //
-        if ($user && is_callable($closure) && !$closure($user, $broker, $request)) {
+        if (is_callable($closure) && !$closure($user, $broker, $request)) {
 
             // Reset user to null if closure return false
             //

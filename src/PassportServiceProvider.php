@@ -32,7 +32,7 @@ class PassportServiceProvider extends ServiceProvider
         ]
     ];
 
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([
             __DIR__ . '/config/passport.php' => config_path('passport.php'),
@@ -52,7 +52,7 @@ class PassportServiceProvider extends ServiceProvider
 
         // Attach Routes
         //
-        $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadRoutesFrom(__DIR__ . '/routes/passport.php');
     }
 
     /**
@@ -82,15 +82,11 @@ class PassportServiceProvider extends ServiceProvider
 
             // Set event dispatcher
             //
-            if (method_exists($guard, 'setDispatcher')) {
-                $guard->setDispatcher($this->app['events']);
-            }
+            $guard->setDispatcher($this->app['events']);
 
             // Update current request instance
             //
-            if (method_exists($guard, 'setRequest')) {
-                $guard->setRequest($this->app->refresh('request', $guard, 'setRequest'));
-            }
+            $guard->setRequest($this->app->refresh('request', $guard, 'setRequest'));
 
             // Return created Guard
             //

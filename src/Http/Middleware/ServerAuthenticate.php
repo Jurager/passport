@@ -4,6 +4,7 @@ namespace Jurager\Passport\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use JsonException;
 use Jurager\Passport\Events;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Server;
@@ -28,7 +29,7 @@ class ServerAuthenticate
      * @param Closure $next
      * @param null $guard
      * @return mixed
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function handle(\Illuminate\Http\Request $request, Closure $next, $guard = null): mixed
     {
@@ -56,7 +57,7 @@ class ServerAuthenticate
 
             // Check current user authorization
             //
-            if ($user = $this->check($guard, $sid, $request)) {
+            if ($user = $this->check($guard, $sid)) {
 
                 //  Succeeded auth event
                 //
@@ -79,6 +80,9 @@ class ServerAuthenticate
         }
     }
 
+    /**
+     * @throws JsonException
+     */
     protected function check($guard, $sid)
     {
         // Decode account session data

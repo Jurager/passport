@@ -6,6 +6,8 @@ use Jurager\Passport\Exceptions\InvalidClientException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cookie;
+use GuzzleHttp\Exception\GuzzleException;
+use JsonException;
 
 class Broker
 {
@@ -94,7 +96,7 @@ class Broker
     /**
      * Return session token
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return string|array|null
      */
     public function getClientToken(Request $request): string|array|null
@@ -159,7 +161,7 @@ class Broker
     /**
      * Check if session is attached
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return bool
      */
     public function isAttached(Request $request): bool
@@ -186,11 +188,11 @@ class Broker
      * Send login request
      *
      * @param array $credentials
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return bool|array
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \JsonException
+     * @throws GuzzleException
+     * @throws JsonException
      */
     public function login(array $credentials, Request $request): bool|array
     {
@@ -204,11 +206,11 @@ class Broker
 
     /**
      * Send profile request
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return bool|string|array
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \JsonException
+     * @throws GuzzleException
+     * @throws JsonException
      */
     public function profile(Request $request): bool|string|array
     {
@@ -222,11 +224,11 @@ class Broker
 
     /**
      * Send logout request
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return bool
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \JsonException
+     * @throws GuzzleException
+     * @throws JsonException
      */
     public function logout(Request $request): bool
     {
@@ -258,11 +260,11 @@ class Broker
      *
      * @param string $command
      * @param array $params
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      *
      * @return false|string
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \JsonException
+     * @throws GuzzleException
+     * @throws JsonException
      */
     public function commands(string $command, array $params, Request $request): bool|string
     {

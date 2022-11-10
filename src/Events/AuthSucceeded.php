@@ -11,16 +11,16 @@ class AuthSucceeded
     /**
      * The authenticated user.
      *
-     * @var \Illuminate\Contracts\Auth\Authenticatable
+     * @var \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    public $user;
+    public ?\Illuminate\Contracts\Auth\Authenticatable $user;
 
     /**
      * The authenticated user.
      *
-     * @var \Illuminate\Http\Request
+     * @var \Illuminate\Http\Request|null
      */
-    public $request;
+    public ?\Illuminate\Http\Request $request;
 
     /**
      * Create a new event instance.

@@ -16,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Support\Facades\Config;
 use GuzzleHttp\Exception\GuzzleException;
+use JsonException;
 
 class PassportGuard implements Guard
 {
@@ -28,7 +29,7 @@ class PassportGuard implements Guard
      *
      * @var string
      */
-    public readonly string $name;
+    public string $name;
 
     /**
      * The user provider implementation.
@@ -72,7 +73,7 @@ class PassportGuard implements Guard
      *
      * @return bool
      */
-    public function viaRemember()
+    public function viaRemember(): bool
     {
         return false;
     }
@@ -81,7 +82,7 @@ class PassportGuard implements Guard
      * Get the currently authenticated user.
      *
      * @return Authenticatable|RedirectResponse|null
-     * @throws GuzzleException|\JsonException
+     * @throws GuzzleException|JsonException
      */
     public function user() : Authenticatable|RedirectResponse|null
     {
@@ -112,11 +113,11 @@ class PassportGuard implements Guard
      * @param array $credentials
      * @param bool $remember
      * @return Authenticatable|bool|null
-     * @throws GuzzleException|\JsonException
+     * @throws GuzzleException|JsonException
      */
     public function attempt(array $credentials = [], bool $remember = false): Authenticatable|bool|null
     {
-        // Call authentification attempting event
+        // Call authentication attempting event
         //
         $this->fireAttemptEvent($credentials, $remember);
 
@@ -255,7 +256,7 @@ class PassportGuard implements Guard
      * Logout user.
      *
      * @return void
-     * @throws GuzzleException|\JsonException
+     * @throws GuzzleException|JsonException
      */
     public function logout(): void
     {
@@ -270,7 +271,7 @@ class PassportGuard implements Guard
                 $this->events->dispatch(new Logout($this->name, $user));
             }
 
-            // Once we have fired the logout event we will clear the users out of memory
+            // Once we have fired the logout event we will clear the users out of memory,
             // so they are no longer available as the user is no longer considered as
             // being signed into this application and should not be available here.
             $this->user = null;
@@ -280,9 +281,9 @@ class PassportGuard implements Guard
     /**
      * Get the current request instance.
      *
-     * @return \Symfony\Component\HttpFoundation\Request
+     * @return Request|\Symfony\Component\HttpFoundation\Request
      */
-    public function getRequest()
+    public function getRequest(): Request|\Symfony\Component\HttpFoundation\Request
     {
         return $this->request ?: Request::createFromGlobals();
     }
@@ -290,7 +291,7 @@ class PassportGuard implements Guard
     /**
      * Set the current request instance.
      *
-     * @param  \Symfony\Component\HttpFoundation\Request  $request
+     * @param Request $request
      * @return $this
      */
     public function setRequest(Request $request)
@@ -305,7 +306,7 @@ class PassportGuard implements Guard
      *
      * @return \Illuminate\Contracts\Events\Dispatcher
      */
-    public function getDispatcher()
+    public function getDispatcher(): \Illuminate\Contracts\Events\Dispatcher
     {
         return $this->events;
     }
@@ -316,7 +317,7 @@ class PassportGuard implements Guard
      * @param  \Illuminate\Contracts\Events\Dispatcher  $events
      * @return void
      */
-    public function setDispatcher($events)
+    public function setDispatcher($events): void
     {
         $this->events = $events;
     }
@@ -325,57 +326,57 @@ class PassportGuard implements Guard
      * Fire the attempt event with the arguments.
      *
      * @param  array  $credentials
-     * @param  bool  $remember
+     * @param bool $remember
      * @return void
      */
-    protected function fireAttemptEvent(array $credentials, $remember = false)
+    protected function fireAttemptEvent(array $credentials, bool $remember = false): void
     {
-        $this->events?->dispatch(new Attempting($this->name, $credentials, $remember));
+        $this->events->dispatch(new Attempting($this->name, $credentials, $remember));
     }
 
     /**
      * Fire the login event if the dispatcher is set.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  bool  $remember
+     * @param Authenticatable $user
+     * @param bool $remember
      * @return void
      */
-    protected function fireLoginEvent($user, $remember = false)
+    protected function fireLoginEvent(Authenticatable $user, bool $remember = false): void
     {
-        $this->events?->dispatch(new Login($this->name, $user, $remember));
+        $this->events->dispatch(new Login($this->name, $user, $remember));
     }
 
     /**
      * Fire the authenticated event if the dispatcher is set.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param Authenticatable $user
      * @return void
      */
-    protected function fireAuthenticatedEvent($user)
+    protected function fireAuthenticatedEvent(Authenticatable $user): void
     {
-        $this->events?->dispatch(new Authenticated($this->name, $user));
+        $this->events->dispatch(new Authenticated($this->name, $user));
     }
 
     /**
      * Fire the other device logout event if the dispatcher is set.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param Authenticatable $user
      * @return void
      */
-    protected function fireOtherDeviceLogoutEvent($user)
+    protected function fireOtherDeviceLogoutEvent(Authenticatable $user): void
     {
-        $this->events?->dispatch(new OtherDeviceLogout($this->name, $user));
+        $this->events->dispatch(new OtherDeviceLogout($this->name, $user));
     }
 
     /**
      * Fire the failed authentication attempt event with the given arguments.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable|null  $user
+     * @param Authenticatable|null $user
      * @param  array  $credentials
      * @return void
      */
-    protected function fireFailedEvent($user, array $credentials)
+    protected function fireFailedEvent(?Authenticatable $user, array $credentials): void
     {
-        $this->events?->dispatch(new Failed($this->name, $user, $credentials));
+        $this->events->dispatch(new Failed($this->name, $user, $credentials));
     }
 }

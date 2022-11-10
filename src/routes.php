@@ -10,7 +10,7 @@ Route::middleware('passport')->group(function() {
         // Passport Client Routes
         //
         Route::prefix(Config::get('passport.routes_prefix_client'))->name('sso.client.')->group(function() {
-            Route::get('attach', 'Jurager\Passport\Http\Controllers\ClientController@attach')->name('attach');
+            Route::get('attach', 'Jurager\Passport\Http\Controllers\BrokerController@attach')->name('attach');
         });
     }
 

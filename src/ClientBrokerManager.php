@@ -108,6 +108,7 @@ class ClientBrokerManager
      */
     public function clearClientToken(): void
     {
+
         // Clear client token in storage
         //
         //$this->session->forget($this->sessionName());
@@ -234,6 +235,10 @@ class ClientBrokerManager
         $response = $this->requester->request($sid, 'POST', $url, [], $headers);
 
         if($response['success'] === true) {
+
+            // Invalidate session
+            //
+            $request?->session()->invalidate();
 
             // Clear current client session on broker
             //

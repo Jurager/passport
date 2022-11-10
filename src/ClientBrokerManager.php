@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport;
 
+use Illuminate\Support\Facades\Cookie;
 use Jurager\Passport\Session\ClientSessionManager;
 use Jurager\Passport\Exceptions\InvalidClientException;
 use Illuminate\Http\Request;
@@ -86,7 +87,8 @@ class ClientBrokerManager
     {
         // Save client token in storage
         //
-        $this->session->set($this->sessionName(), $token);
+        Cookie::queue(Cookie::make($this->sessionName(), $token, 60));
+        //$this->session->set($this->sessionName(), $token);
     }
 
     /**
@@ -98,7 +100,7 @@ class ClientBrokerManager
     {
         // Get client token from storage
         //
-        return $this->session->get($this->sessionName());
+        return Cookie::get($this->sessionName());
     }
 
     /**
@@ -108,7 +110,8 @@ class ClientBrokerManager
     {
         // Clear client token in storage
         //
-        $this->session->forget($this->sessionName());
+        //$this->session->forget($this->sessionName());
+        Cookie::forget($this->sessionName());
     }
 
     /**

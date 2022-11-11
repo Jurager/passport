@@ -178,7 +178,7 @@ class Broker
 
         // Redirect to server attachment route
         //
-        return redirect()->away($attach_url);
+        return redirect()->away($attach_url)->send();
     }
 
     /**

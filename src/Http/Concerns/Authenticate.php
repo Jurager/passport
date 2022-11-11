@@ -51,7 +51,7 @@ trait Authenticate
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    protected function attemptLogin(Request $request)
+    protected function attemptLogin(Request $request): ?\Illuminate\Contracts\Auth\Authenticatable
     {
         // Trying to authenticate
         //
@@ -142,11 +142,11 @@ trait Authenticate
     /**
      * Do additional verification by calling after_authenticating closure.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable $user
-     * @param  \Symfony\Component\HttpFoundation\Request|null $request
-     * @return \Illuminate\Contracts\Auth\Authenticatable
+     * @param \Illuminate\Contracts\Auth\Authenticatable $user
+     * @param Request $request
+     * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
-    protected function afterAuthenticatingUser($user, $request)
+    protected function afterAuthenticatingUser(\Illuminate\Contracts\Auth\Authenticatable $user, Request $request): ?\Illuminate\Contracts\Auth\Authenticatable
     {
         // Retrieve after_authenticating closure from configuration
         //

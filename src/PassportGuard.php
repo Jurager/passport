@@ -273,7 +273,7 @@ class PassportGuard implements Guard
 
             // Once we have fired the logout event we will clear the users out of memory,
             // so they are no longer available as the user is no longer considered as
-            // being signed into this application and should not be available here.
+            // being signed in this application and should not be available here.
             $this->user = null;
         }
     }

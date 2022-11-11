@@ -11,25 +11,24 @@ class AuthSucceeded
     /**
      * The authenticated user.
      *
-     * @var \Illuminate\Contracts\Auth\Authenticatable|null
+     * @var \Illuminate\Contracts\Auth\Authenticatable
      */
-    public ?\Illuminate\Contracts\Auth\Authenticatable $user;
+    public \Illuminate\Contracts\Auth\Authenticatable $user;
 
     /**
      * The authenticated user.
      *
-     * @var \Illuminate\Http\Request|null
+     * @var \Illuminate\Http\Request
      */
-    public ?\Illuminate\Http\Request $request;
+    public \Illuminate\Http\Request $request;
 
     /**
      * Create a new event instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable|null $user
-     * @param  \Illuminate\Http\Request $request
-     * @return void
+     * @param \Illuminate\Contracts\Auth\Authenticatable $user
+     * @param \Illuminate\Http\Request $request
      */
-    public function __construct($user, $request = null)
+    public function __construct(\Illuminate\Contracts\Auth\Authenticatable $user, \Illuminate\Http\Request $request)
     {
         $this->user = $user;
         $this->request = $request;

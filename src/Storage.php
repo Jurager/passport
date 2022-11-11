@@ -13,9 +13,8 @@ class Storage
      *
      * @param $key string
      * @param string|array $value string
-     * @param $forever bool
      */
-    public function set(string $key, string|array $value, bool $forever = false): void
+    public function set(string $key, string|array $value): void
     {
         // If the storage time is not passed to the put method,
         // Item will be stored indefinitely

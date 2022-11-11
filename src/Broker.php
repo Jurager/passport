@@ -84,13 +84,10 @@ class Broker
         //
         $ttl = Config::get('passport.session_ttl') / 60;
 
-        // Create new cookie
-        //
-        $cookie = Cookie::make($this->sessionName(), $token, $ttl);
 
         // Save client token in cookie
         //
-        Cookie::queue($cookie);
+        Cookie::queue($this->sessionName(), $token, $ttl);
     }
 
     /**
@@ -170,12 +167,12 @@ class Broker
         // Get the server attachment route
         //
         $attach_url = $this->server_url . '/attach?' . http_build_query([
-                'broker' => $this->client_id,
-                'token' => $token,
-                'checksum' => $checksum,
-                'return_url' => $request->fullUrl(),
-                ...$params
-            ]);
+            'broker' => $this->client_id,
+            'token' => $token,
+            'checksum' => $checksum,
+            'return_url' => $request->fullUrl(),
+            ...$params
+        ]);
 
         // Redirect to server attachment route
         //

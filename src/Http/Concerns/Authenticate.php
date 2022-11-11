@@ -12,6 +12,7 @@ trait Authenticate
 {
     /**
      * Authenticate user from request
+     *
      * @throws JsonException
      */
     protected function authenticate(Request $request, $broker): bool
@@ -48,7 +49,6 @@ trait Authenticate
      * Attempt login
      *
      * @param Request $request
-     *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     protected function attemptLogin(Request $request): ?\Illuminate\Contracts\Auth\Authenticatable
@@ -73,7 +73,6 @@ trait Authenticate
      * Return login credentials
      *
      * @param Request $request
-     *
      * @return array
      */
     protected function loginCredentials(Request $request): array
@@ -97,7 +96,6 @@ trait Authenticate
      * Return session credentials
      *
      * @param Request $request
-     *
      * @return array
      */
     protected function sessionCredentials(Request $request): array

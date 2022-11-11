@@ -153,9 +153,32 @@ class Broker
      */
     public function sessionAttach($request): mixed
     {
-        // Redirect to client attachment with return route
+        $params = $request->except(['broker', 'token', 'checksum']);
+
+        // Generate an unique session token
         //
-        return redirect()->route('sso.broker.attach', ['return_url' => $request->fullUrl()])->send();
+        $token = $this->generateClientToken();
+
+        // Save session token in storage
+        //
+        $this->saveClientToken($token);
+
+        // Generate the attachment checksum
+        //
+        $checksum = $this->generateAttachChecksum($token);
+
+        // Get the server attachment route
+        //
+        $attach_url = $this->server_url . '/attach?' . http_build_query([
+                'broker'   => $this->client_id,
+                'token'    => $token,
+                'checksum' => $checksum,
+                ...$params
+            ]);
+
+        // Redirect to server attachment route
+        //
+        return redirect()->away($attach_url);
     }
 
     /**
@@ -279,20 +302,14 @@ class Broker
     /**
      * Add agent headers
      *
-     * @param Request|null $request
+     * @param Request $request
      * @return array
      */
-    protected function agentHeaders(Request $request = null): array
+    protected function agentHeaders(Request $request): array
     {
-        $headers = [];
-
-        if ($request) {
-            $headers = [
-                'Passport-User-Agent'     => $request->userAgent(),
-                'Passport-Remote-Address' => $request->ip()
-            ];
-        }
-
-        return $headers;
+        return [
+            'Passport-User-Agent'     => $request->userAgent(),
+            'Passport-Remote-Address' => $request->ip()
+        ];
     }
 }

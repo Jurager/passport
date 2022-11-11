@@ -12,7 +12,7 @@ trait Passport
     protected mixed $passport_payload;
 
     /**
-     * Set sso payload data
+     * Set payload data
      *
      * @param mixed $payload
      */
@@ -22,7 +22,7 @@ trait Passport
     }
 
     /**
-     * Return sso payload data
+     * Return payload data
      *
      * @return mixed
      */

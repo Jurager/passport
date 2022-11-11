@@ -170,9 +170,10 @@ class Broker
         // Get the server attachment route
         //
         $attach_url = $this->server_url . '/attach?' . http_build_query([
-                'broker'   => $this->client_id,
-                'token'    => $token,
+                'broker' => $this->client_id,
+                'token' => $token,
                 'checksum' => $checksum,
+                'return_url' => $request->fullUrl(),
                 ...$params
             ]);
 

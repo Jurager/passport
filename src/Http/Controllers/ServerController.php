@@ -43,10 +43,9 @@ class ServerController extends Controller
      * Attach client broker to server
      *
      * @param Request $request
-     * @return Response|RedirectResponse
-     * @throws JsonException
+     * @return Response|JsonResponse|RedirectResponse
      */
-    public function attach(Request $request): Response|RedirectResponse
+    public function attach(Request $request): Response|JsonResponse|RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'broker' => 'required|string',

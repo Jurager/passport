@@ -1,7 +1,7 @@
 {
     "name": "jurager/passport",
     "description": "Laravel package to implement single sign-on method",
-    "keywords": ["laravel", "sso", "passport", "authorization", "auth", ],
+    "keywords": ["laravel", "sso", "passport", "authorization", "auth"],
     "license": "MIT",
     "authors": [
         {

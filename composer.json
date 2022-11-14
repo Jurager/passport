@@ -1,6 +1,8 @@
 {
     "name": "jurager/passport",
-    "type": "library",
+    "description": "Laravel package to implement single sign-on method",
+    "keywords": ["laravel", "sso", "passport", "authorization", "auth", ],
+    "license": "MIT",
     "authors": [
         {
             "name": "Yuri Gerassimov",

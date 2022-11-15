@@ -2,6 +2,9 @@
 
 namespace Jurager\Passport;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class PassportServiceProvider extends ServiceProvider
@@ -19,6 +22,8 @@ class PassportServiceProvider extends ServiceProvider
      */
     protected array $routeMiddleware = [];
 
+    protected bool $is_server;
+
     /**
      * The middleware groups.
      *
@@ -34,9 +39,27 @@ class PassportServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Publish Config
         $this->publishes([
             __DIR__ . '/config/passport.php' => config_path('passport.php'),
         ]);
+
+        // Package working mode
+        //
+        $this->is_server =  !Config::get('passport.broker.client_id');
+
+        // Only on server
+        //
+        if($this->is_server) {
+
+            // Load Migrations
+            //
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
+            // Register event subscribers
+            //
+            Event::subscribe('Jurager\Passport\Listeners\AuthEventSubscriber');
+        }
 
         // Add Guard
         //

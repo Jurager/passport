@@ -2,9 +2,9 @@
 
 namespace Jurager\Passport\Factories;
 
-use ALajusticia\AuthTracker\Exceptions\CustomIpProviderException;
-use ALajusticia\AuthTracker\Exceptions\IpProviderException;
-use ALajusticia\AuthTracker\Interfaces\IpProvider;
+use Jurager\Passport\Exceptions\CustomProviderException;
+use Jurager\Passport\Exceptions\ProviderException;
+use Jurager\Passport\Interfaces\Provider;
 use Jurager\Passport\Providers\Ip2LocationLite;
 use Jurager\Passport\Providers\IpApi;
 use Illuminate\Support\Facades\App;

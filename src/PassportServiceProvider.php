@@ -37,21 +37,12 @@ class PassportServiceProvider extends ServiceProvider
         ]
     ];
 
-    /**
-     * Register the application services.
-     *
-     * @return void
-     */
-    public function register(): void
-    {
-        $this->mergeConfigFrom(__DIR__ . '/config/passport.php', 'passport');
-    }
-
     public function boot(): void
     {
         // Publish Config
+        //
         $this->publishes([
-            __DIR__ . '/config/passport.php' => config_path('passport.php'),
+            __DIR__ . '/../config/passport.php' => config_path('passport.php'),
         ]);
 
         // Package working mode
@@ -82,6 +73,16 @@ class PassportServiceProvider extends ServiceProvider
         // Attach Routes
         //
         $this->loadRoutesFrom(__DIR__ . '/routes/passport.php');
+    }
+
+    /**
+     * Register the application services.
+     *
+     * @return void
+     */
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../config/passport.php', 'passport');
     }
 
     /**

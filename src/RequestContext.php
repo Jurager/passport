@@ -43,7 +43,7 @@ class RequestContext
 
         // Initialize the provider
         //
-        $this->provider = ProviderFactory::build(config('auth_tracker.ip_lookup.provider'));
+        $this->provider = ProviderFactory::build(config('passport.server.lookup.provider'));
 
         $this->userAgent = Request::header('Passport-User-Agent');
         $this->ip = Request::header('Passport-Remote-Address');

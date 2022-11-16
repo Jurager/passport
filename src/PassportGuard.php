@@ -127,8 +127,6 @@ class PassportGuard implements Guard
 
         if (($payload = $this->broker->login($credentials, $this->request)) && $user = $this->loginFromPayload($payload)) {
 
-            $this->createHistoryEntry($user);
-
             // If we have an event dispatcher instance set we will fire an event so that
             // any listeners will hook into the authentication events and run actions
             // based on the login and logout events fired from the guard instances.
@@ -266,10 +264,6 @@ class PassportGuard implements Guard
 
         if ($this->broker->logout($this->request)) {
 
-            // Delete history records
-            //
-            $this->user()->histories()->where('session_id', session()->getId())->delete();
-
             // If we have an event dispatcher instance, we can fire off the logout event
             // so any further processing can be done. This allows the developer to be
             // listening for anytime a user signs out of this application manually.
@@ -282,38 +276,6 @@ class PassportGuard implements Guard
             // being signed in this application and should not be available here.
             $this->user = null;
         }
-    }
-
-    /**
-     * @param $user
-     * @return void
-     */
-    protected function createHistoryEntry($user): void
-    {
-
-        // Initial login
-        // Get information as possible about the request
-        //
-        $context = new RequestContext;
-
-        // Build a new history
-        //
-        $history = HistoryFactory::build($context);
-
-        // Set the expiration date based on whether it is a remembered login or not
-        //if ($event->remember) {
-        //    $history->expiresAt(Carbon::now()->addDays(config('auth_tracker.remember_lifetime', 365)));
-        //} else {
-        //    $history->expiresAt(Carbon::now()->addMinutes(config('session.lifetime')));
-        //}
-
-        // Attach the login to the user and save it
-        //
-        $user->histories()->save($history);
-
-        // Update remember token
-        //
-        //$this->updateRememberToken($event->user, Str::random(60));
     }
 
     /**

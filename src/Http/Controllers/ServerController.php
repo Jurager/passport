@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use JsonException;
 use Jurager\Passport\Events;
+use Jurager\Passport\Factories\HistoryFactory;
 use Jurager\Passport\Http\Concerns\Authenticate;
 use Jurager\Passport\Http\Middleware\ServerAuthenticate;
 use Jurager\Passport\Http\Middleware\ValidateBroker;
+use Jurager\Passport\RequestContext;
 use Jurager\Passport\Server;
 use Jurager\Passport\Storage;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -122,15 +124,31 @@ class ServerController extends Controller
 
             // Get the currently authenticated user
             //
-            $user = Auth::guard()->user();
+            if($user = Auth::guard()->user()) {
 
-            //  Succeeded auth event
-            //
-            event(new Events\AuthSucceeded($user, $request));
+                $context = new RequestContext;
 
-            // Return current user information
+                // Build a new history
+                //
+                $history = HistoryFactory::build($context);
+
+                // Attach the login to the user and save it
+                //
+                $user->histories()->save($history);
+
+                //  Succeeded auth event
+                //
+                event(new Events\AuthSucceeded($user, $request));
+
+                // Return current user information
+                //
+                return response()->json($this->userInfo($user, $request));
+            }
+
+            //  Return unauthenticated response
             //
-            return response()->json($this->userInfo($user, $request));
+            return response()->json([], 401);
+
         }
 
         //  Failed auth event
@@ -194,6 +212,10 @@ class ServerController extends Controller
         // Retrieve broker session
         //
         $sid = $this->server->getBrokerSessionId($request);
+
+        // Delete history records
+        //
+        $user->histories()->where('session_id', $sid)->delete();
 
         // Reset user session data
         //

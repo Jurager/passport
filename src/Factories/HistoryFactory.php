@@ -27,6 +27,7 @@ class HistoryFactory
             'device' => $context->parser()->getDevice(),
             'platform' => $context->parser()->getPlatform(),
             'browser' => $context->parser()->getBrowser(),
+            'expires_at' => date("Y-m-d H:i:s", strtotime('+'.config('passport.storage_ttl').' seconds'))
         ]);
 
         // If geolocation data was received

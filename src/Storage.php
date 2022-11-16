@@ -4,7 +4,6 @@ namespace Jurager\Passport;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Config;
 
 class Storage
 {

@@ -4,7 +4,6 @@ namespace Jurager\Passport;
 
 use Jurager\Passport\Exceptions\InvalidClientException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cookie;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;

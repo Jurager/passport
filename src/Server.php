@@ -4,7 +4,7 @@ namespace Jurager\Passport;
 
 use Jurager\Passport\Exceptions\InvalidServerException;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
-use Illuminate\Support\Facades\Config;
+
 use Illuminate\Http\Request;
 
 /**

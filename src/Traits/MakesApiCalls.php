@@ -2,7 +2,6 @@
 
 namespace Jurager\Passport\Traits;
 
-use Illuminate\Support\Facades\Config;
 use Jurager\Passport\Events\FailedApiCall;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;

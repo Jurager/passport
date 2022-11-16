@@ -12,7 +12,6 @@ use Jurager\Passport\Exceptions\InvalidClientException;
 use Jurager\Passport\Exceptions\NotAttachedException;
 use Jurager\Passport\Exceptions\UnauthorizedException;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Config;
 use RuntimeException;
 
 class Requester

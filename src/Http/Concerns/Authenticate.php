@@ -5,7 +5,6 @@ namespace Jurager\Passport\Http\Concerns;
 use Jurager\Passport\Events;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
 use JsonException;
 
 trait Authenticate

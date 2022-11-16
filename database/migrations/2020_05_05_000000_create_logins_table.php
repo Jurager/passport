@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('session_id')->nullable();
             $table->string('remember_token')->nullable();
             $table->datetime('expires_at');
-            
+
             $table->softDeletes();
         });
     }

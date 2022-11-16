@@ -14,7 +14,6 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Traits\Macroable;
-use Illuminate\Support\Facades\Config;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
 

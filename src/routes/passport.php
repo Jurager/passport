@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Config;
 use Jurager\Passport\Http\Controllers\BrokerController;
 use Jurager\Passport\Http\Controllers\ServerController;
 

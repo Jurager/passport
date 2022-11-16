@@ -47,7 +47,7 @@ class ProviderFactory
                     case 'ip-api':
                         return new IpApi;
                     default:
-                        throw new IpProviderException;
+                        throw new ProviderException;
                 }
             }
         }

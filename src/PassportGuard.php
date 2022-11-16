@@ -293,7 +293,7 @@ class PassportGuard implements Guard
      */
     protected function createHistoryEntry($user): void
     {
-        
+
         // Initial login
         // Get information as possible about the request
         //

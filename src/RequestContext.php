@@ -60,12 +60,12 @@ class RequestContext
     /**
      * Get the IP lookup result.
      *
-     * @return IpProvider
+     * @return provider
      */
     public function ip()
     {
-        if ($this->ipProvider && $this->ipProvider->getResult()) {
-            return $this->ipProvider;
+        if ($this->provider && $this->provider->getResult()) {
+            return $this->provider;
         }
 
         return null;

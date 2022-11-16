@@ -3,6 +3,7 @@
 namespace Jurager\Passport\Traits;
 
 use Illuminate\Support\Facades\Session;
+use Jurager\Passport\Models\History;
 
 trait Passport
 {
@@ -38,7 +39,7 @@ trait Passport
      */
     public function histories(): mixed
     {
-        return $this->morphMany(Login::class, 'authenticatable');
+        return $this->morphMany(History::class, 'authenticatable');
     }
 
     /**

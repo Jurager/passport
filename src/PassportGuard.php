@@ -271,7 +271,7 @@ class PassportGuard implements Guard
 
             // Delete history records
             //
-            $this->user()->history()->where('session_id', session()->getId())->delete();
+            $this->user()->histories()->where('session_id', session()->getId())->delete();
 
             // If we have an event dispatcher instance, we can fire off the logout event
             // so any further processing can be done. This allows the developer to be
@@ -312,7 +312,7 @@ class PassportGuard implements Guard
 
         // Attach the login to the user and save it
         //
-        $user->history()->save($history);
+        $user->histories()->save($history);
 
         // Update remember token
         //

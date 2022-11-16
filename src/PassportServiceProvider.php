@@ -51,7 +51,7 @@ class PassportServiceProvider extends ServiceProvider
         // Load Migrations
         //
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        
+
         // Add Guard
         //
         $this->extendAuthGuard();
@@ -66,7 +66,7 @@ class PassportServiceProvider extends ServiceProvider
 
         // Attach Routes
         //
-        $this->loadRoutesFrom(__DIR__ . '/routes/passport.php');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/passport.php');
     }
 
     /**

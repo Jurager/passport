@@ -16,7 +16,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Traits\Macroable;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
-use Jurager\Passport\Factories\HistoryFactory;
 
 class PassportGuard implements Guard
 {

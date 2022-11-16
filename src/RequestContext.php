@@ -38,13 +38,15 @@ class RequestContext
     public function __construct()
     {
         // Initialize the parser
+        //
         $this->parser = ParserFactory::build(config('passport.server.parser'));
 
-        // Initialize the IP provider
+        // Initialize the provider
+        //
         $this->provider = ProviderFactory::build(config('auth_tracker.ip_lookup.provider'));
 
-        $this->userAgent = Request::userAgent();
-        $this->ip = Request::ip();
+        $this->userAgent = Request::header('Passport-User-Agent');
+        $this->ip = Request::header('Passport-Remote-Address');
     }
 
     /**

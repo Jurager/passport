@@ -38,7 +38,7 @@ class RequestContext
     public function __construct()
     {
         // Initialize the parser
-        $this->parser = ParserFactory::build(config('auth_tracker.parser'));
+        $this->parser = ParserFactory::build(config('passport.server.parser'));
 
         // Initialize the IP provider
         $this->provider = ProviderFactory::build(config('auth_tracker.ip_lookup.provider'));

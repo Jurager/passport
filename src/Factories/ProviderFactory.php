@@ -60,7 +60,7 @@ class ProviderFactory
      */
     public static function ipLookupEnabled()
     {
-        return config('passport.lookup.provider') &&
-            App::environment(config('passport.lookup.environments'));
+        return config('passport.server.lookup.provider') &&
+            App::environment(config('passport.server.lookup.environments'));
     }
 }

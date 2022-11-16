@@ -19,8 +19,8 @@ class Ip2LocationLite implements Provider
     public function __construct()
     {
         $table = filter_var(Request::ip(), FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)
-            ? config('passport.lookup.ip2location.ipv6_table')
-            : config('passport.lookup.ip2location.ipv4_table');
+            ? config('passport.server.lookup.ip2location.ipv6_table')
+            : config('passport.server.lookup.ip2location.ipv4_table');
 
         $this->result = DB::table($table)
             ->whereRaw('INET_ATON(?) <= ip_to', [Request::ip()])

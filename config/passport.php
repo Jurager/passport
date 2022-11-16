@@ -32,6 +32,68 @@ return [
          * Array of available brokers and it's secrets, required for "array" driver. ['id' => 'secret']
          */
         'brokers' => [],
+
+        /**
+         * Choose which parser to use to parse the User-Agent. Supported values: 'agent', 'whichbrowser'
+         */
+        'parser' => 'whichbrowser',
+
+        'lookup' => [
+
+            /**
+             * If you want to enable the IP address lookup, choose a supported lookup provider
+             * Supported values:
+             * - 'ip2location-lite' (see https://lite.ip2location.com/database/ip-country-region-city)
+             * - 'ip-api' (see https://members.ip-api.com)
+             * - false (to disable the IP address lookup feature)
+             * - any other custom name declared as a key of the custom_providers array
+             */
+            'provider' => 'ip-api',
+
+
+            /**
+             * Float describing the number of seconds to wait while trying to connect  to the provider's API.
+             */
+            'timeout' => 1.0,
+
+
+            /**
+             * Indicate here an array of environments for which you want to enable address lookup.
+             */
+            'environments' => [
+                'production',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Custom Providers
+            |--------------------------------------------------------------------------
+            |
+            | You can create your own custom providers for the IP address lookup feature.
+            | See in the README file how to create an IP provider class and declare it
+            | in the array below.
+            |
+            | Format: 'name_of_your_provider' => ProviderClassName::class
+            |
+            */
+
+            'custom_providers' => [],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Ip2Location
+            |--------------------------------------------------------------------------
+            |
+            | If you are using 'ip2location-lite' provider, here you may change the
+            | name of the tables for IPv4 and IPv6.
+            |
+            */
+
+            'ip2location' => [
+                'ipv4_table' => 'ip2location_db3',
+                'ipv6_table' => 'ip2location_db3_ipv6',
+            ],
+        ],
     ],
 
     /**

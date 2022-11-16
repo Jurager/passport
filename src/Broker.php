@@ -81,7 +81,7 @@ class Broker
     {
         // Get expires from config
         //
-        $ttl = config('passport.session_ttl') / 60;
+        $ttl = config('passport.storage_ttl') / 60;
 
         // Save client token in cookie
         //

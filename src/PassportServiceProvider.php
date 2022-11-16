@@ -37,6 +37,16 @@ class PassportServiceProvider extends ServiceProvider
         ]
     ];
 
+    /**
+     * Register the application services.
+     *
+     * @return void
+     */
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__ . '/config/passport.php', 'passport');
+    }
+
     public function boot(): void
     {
         // Publish Config
@@ -49,17 +59,13 @@ class PassportServiceProvider extends ServiceProvider
         $this->is_server =  !Config::get('passport.broker.client_id');
 
         // Only on server
+        // Load Migrations
         //
-        if($this->is_server) {
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
-            // Load Migrations
-            //
-            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-
-            // Register event subscribers
-            //
-            Event::subscribe('Jurager\Passport\Listeners\AuthEventSubscriber');
-        }
+        // Register event subscribers
+        //
+        Event::subscribe('Jurager\Passport\Listeners\AuthEventSubscriber');
 
         // Add Guard
         //
@@ -76,16 +82,6 @@ class PassportServiceProvider extends ServiceProvider
         // Attach Routes
         //
         $this->loadRoutesFrom(__DIR__ . '/routes/passport.php');
-    }
-
-    /**
-     * Register the application services.
-     *
-     * @return void
-     */
-    public function register(): void
-    {
-        $this->mergeConfigFrom(__DIR__ . '/config/passport.php', 'passport');
     }
 
     /**

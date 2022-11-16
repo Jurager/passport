@@ -51,11 +51,7 @@ class PassportServiceProvider extends ServiceProvider
         // Load Migrations
         //
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-
-        // Register event subscribers
-        //
-        Event::subscribe(\Jurager\Passport\Listeners\AuthEventSubscriber::class);
-
+        
         // Add Guard
         //
         $this->extendAuthGuard();

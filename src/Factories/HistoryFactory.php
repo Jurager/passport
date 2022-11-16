@@ -11,11 +11,10 @@ class HistoryFactory
     /**
      * Build a new Login.
      *
-     * @param LoginEvent|AccessTokenCreated $event
      * @param RequestContext $context
      * @return History
      */
-    public static function build($event, RequestContext $context)
+    public static function build(RequestContext $context)
     {
         $history = new History();
 

@@ -43,15 +43,15 @@ class Server
 
         // Model brokers
         //
-        $this->model = Config::get('passport.server.model');
+        $this->model = config('passport.server.model');
 
         // Model brokers id field
         //
-        $this->id_field = Config::get('passport.server.id_field');
+        $this->id_field = config('passport.server.id_field');
 
         // Model brokers secret field
         //
-        $this->secret_field = Config::get('passport.server.secret_field');
+        $this->secret_field = config('passport.server.secret_field');
 
         // Model brokers not found
         //

@@ -19,7 +19,7 @@ class Storage
         // If the storage time is not passed to the put method,
         // Item will be stored indefinitely
         //
-        Cache::put($key, $value, Config::get('passport.storage_ttl'));
+        Cache::put($key, $value, config('passport.storage_ttl'));
     }
 
     /**

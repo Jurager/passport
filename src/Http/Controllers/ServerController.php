@@ -220,7 +220,7 @@ class ServerController extends Controller
     {
         // Retrieve commands from configuration
         //
-        $commands = Config::get('passport.commands', []);
+        $commands = config('passport.commands', []);
 
         // Command not found in configuration
         //

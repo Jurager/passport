@@ -27,7 +27,7 @@ trait MakesApiCalls
     public function __construct()
     {
         $this->httpClient = new Client([
-            'connect_timeout' => Config::get('passport.lookup.timeout'),
+            'connect_timeout' => config('passport.lookup.timeout'),
         ]);
 
         $this->result = $this->makeApiCall();

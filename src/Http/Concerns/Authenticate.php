@@ -117,7 +117,7 @@ trait Authenticate
     {
         // Retrieve user_info closure from configuration
         //
-        $closure = Config::get('passport.user_info');
+        $closure = config('passport.user_info');
 
         // Return closure if it is callable
         //
@@ -148,7 +148,7 @@ trait Authenticate
     {
         // Retrieve after_authenticating closure from configuration
         //
-        $closure = Config::get('passport.after_authenticating');
+        $closure = config('passport.after_authenticating');
 
         // Retrieve broker model from request
         //

@@ -56,7 +56,7 @@ class PassportServiceProvider extends ServiceProvider
 
         // Package working mode
         //
-        $this->is_server =  !Config::get('passport.broker.client_id');
+        $this->is_server =  !config('passport.broker.client_id');
 
         // Only on server
         // Load Migrations
@@ -65,7 +65,7 @@ class PassportServiceProvider extends ServiceProvider
 
         // Register event subscribers
         //
-        Event::subscribe('Jurager\Passport\Listeners\AuthEventSubscriber');
+        Event::subscribe(\Jurager\Passport\Listeners\AuthEventSubscriber::class);
 
         // Add Guard
         //

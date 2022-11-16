@@ -86,7 +86,7 @@ class PassportGuard implements Guard
      */
     public function user() : Authenticatable|RedirectResponse|null
     {
-        $auth_url = Config::get('passport.broker.auth_url');
+        $auth_url = config('passport.broker.auth_url');
 
         if (! is_null($this->user)) {
             return $this->user;
@@ -187,7 +187,7 @@ class PassportGuard implements Guard
         $user = $this->retrieveByCredentials($payload);
 
         if (!$user) {
-            $userCreateStrategy = Config::get('passport.user_create_strategy');
+            $userCreateStrategy = config('passport.user_create_strategy');
 
             if (is_callable($userCreateStrategy) && $userCreateStrategy($payload)) {
                 $user = $this->retrieveByCredentials($payload);
@@ -205,7 +205,7 @@ class PassportGuard implements Guard
      */
     protected function retrieveByCredentials(mixed $payload): ?Authenticatable
     {
-        $username = Config::get('passport.broker.client_username', 'email');
+        $username = config('passport.broker.client_username', 'email');
 
         return $this->provider->retrieveByCredentials([$username => $payload[$username]]);
     }
@@ -218,7 +218,7 @@ class PassportGuard implements Guard
      */
     protected function usernameExistsInPayload(mixed $payload): bool
     {
-        $username = Config::get('passport.broker.client_username', 'email');
+        $username = config('passport.broker.client_username', 'email');
 
         return array_key_exists($username, $payload);
     }

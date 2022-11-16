@@ -48,7 +48,7 @@ class History extends Model
      */
     public function __construct(array $attributes = [])
     {
-        $this->setTable(Config::get('passport.history_table_name'));
+        $this->setTable(config('passport.history_table_name'));
 
         parent::__construct($attributes);
     }
@@ -127,6 +127,6 @@ class History extends Model
     {
         // Delete history entries older than storage time to live
         //
-        return static::where('created_at', '<=', Config::get('passport.storage_ttl'));
+        return static::where('created_at', '<=', config('passport.storage_ttl'));
     }
 }

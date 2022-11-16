@@ -7,12 +7,12 @@ use Jurager\Passport\Http\Controllers\ServerController;
 
 Route::middleware('passport')->group(function() {
 
-    if(Config::get('passport.broker.client_id')) {
+    if(config('passport.broker.client_id')) {
 
         // Passport Broker Routes
         //
         Route::controller(BrokerController::class)
-            ->prefix(Config::get('passport.routes_prefix_client'))
+            ->prefix(config('passport.routes_prefix_client'))
             ->name('sso.broker.')
             ->group(function() {
                 Route::get('attach', 'attach')->name('attach');
@@ -21,12 +21,12 @@ Route::middleware('passport')->group(function() {
 
     // Not empty value of broker.client_id indicates that we are using passport as server
     //
-    if(!Config::get('passport.broker.client_id')) {
+    if(!config('passport.broker.client_id')) {
 
         // Passport Server Routes
         //
         Route::controller(ServerController::class)
-            ->prefix(Config::get('passport.routes_prefix_server'))
+            ->prefix(config('passport.routes_prefix_server'))
             ->name('sso.server.')
             ->group(function() {
                 Route::get('attach', 'attach')->name('attach');

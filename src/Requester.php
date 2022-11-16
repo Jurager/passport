@@ -23,7 +23,7 @@ class Requester
     public function __construct($client = null)
     {
         $this->client = $client ?: new Client;
-        $this->debug  = Config::get('passport.debug');
+        $this->debug  = config('passport.debug');
     }
 
     /**

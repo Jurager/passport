@@ -27,12 +27,12 @@ class ProviderFactory
 
                 // Use of a custom IP address lookup provider
 
-                if (!in_array(IpProvider::class, class_implements($customProviders[$name]))) {
+                if (!in_array(Provider::class, class_implements($customProviders[$name]), true)) {
 
                     // The custom IP provider class doesn't
                     // implement the required interface
 
-                    throw new CustomIpProviderException;
+                    throw new CustomProviderException;
                 }
 
                 return new $customProviders[$name];
@@ -60,7 +60,7 @@ class ProviderFactory
      */
     public static function ipLookupEnabled()
     {
-        return Config::get('passport.lookup.provider') &&
-            App::environment(Config::get('passport.lookup.environments'));
+        return config('passport.lookup.provider') &&
+            App::environment(config('passport.lookup.environments'));
     }
 }

@@ -46,9 +46,9 @@ class Broker
         $this->encryption = new Encryption;
         $this->requester  = new Requester($requester);
 
-        $this->client_id     = Config::get('passport.broker.client_id');
-        $this->client_secret = Config::get('passport.broker.client_secret');
-        $this->server_url    = Config::get('passport.broker.server_url');
+        $this->client_id     = config('passport.broker.client_id');
+        $this->client_secret = config('passport.broker.client_secret');
+        $this->server_url    = config('passport.broker.server_url');
 
         if (empty($this->client_id)) {
             throw new InvalidClientException('Invalid client id. Please make sure the client id is defined in config.');
@@ -82,7 +82,7 @@ class Broker
     {
         // Get expires from config
         //
-        $ttl = Config::get('passport.session_ttl') / 60;
+        $ttl = config('passport.session_ttl') / 60;
 
         // Save client token in cookie
         //

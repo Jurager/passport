@@ -124,31 +124,27 @@ class ServerController extends Controller
 
             // Get the currently authenticated user
             //
-            if($user = Auth::guard()->user()) {
+            $user = Auth::guard()->user();
 
-                $context = new RequestContext;
-
-                // Build a new history
-                //
-                $history = HistoryFactory::build($context);
-
-                // Attach the login to the user and save it
-                //
-                $user->histories()->save($history);
-
-                //  Succeeded auth event
-                //
-                event(new Events\AuthSucceeded($user, $request));
-
-                // Return current user information
-                //
-                return response()->json($this->userInfo($user, $request));
-            }
-
-            //  Return unauthenticated response
+            // Request context
             //
-            return response()->json([], 401);
+            $context = new RequestContext;
 
+            // Build a new history
+            //
+            $history = HistoryFactory::build($context);
+
+            // Attach the login to the user and save it
+            //
+            $user->histories()->save($history);
+
+            //  Succeeded auth event
+            //
+            event(new Events\AuthSucceeded($user, $request));
+
+            // Return current user information
+            //
+            return response()->json($this->userInfo($user, $request));
         }
 
         //  Failed auth event

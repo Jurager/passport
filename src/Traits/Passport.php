@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Session;
 use Jurager\Passport\Models\History;
 

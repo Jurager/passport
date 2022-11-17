@@ -200,7 +200,7 @@ class ServerController extends Controller
 
         // Delete history records
         //
-        $user->history()->where('session_id', $sid)->delete();
+        $user->history()->logout($sid);
 
         // Reset user session data
         //

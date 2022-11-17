@@ -104,7 +104,7 @@ class Requester
                 'invalid_client_id' => new InvalidClientException($jsonResponse['message']),
                 'unauthorized' => new UnauthorizedException($jsonResponse['message'], $status),
                 'not_attached' => new NotAttachedException($jsonResponse['message'], $status),
-                default => new RuntimeException($jsonResponse['message']),
+                default => new RuntimeException($jsonResponse['message'], $status),
             };
         }
     }

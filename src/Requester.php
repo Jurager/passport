@@ -98,8 +98,8 @@ class Requester
             throw match ($jsonResponse['code']) {
                 'invalid_session_id' => new InvalidSessionIdException($jsonResponse['message'], $status),
                 'invalid_client_id' => new InvalidClientException($jsonResponse['message']),
-                'not_attached' => new NotAttachedException($jsonResponse['message'], $status),
                 'unauthorized' => new UnauthorizedException($jsonResponse['message'], $status),
+                'not_attached' => new NotAttachedException($jsonResponse['message'], $status),
                 default => new RuntimeException($jsonResponse['message']),
             };
         }

@@ -87,7 +87,7 @@ class ServerAuthenticate
     {
         // Decode account session data
         //
-        $attributes = json_decode($this->storage->getUserData($sid), true);
+        $attributes = json_decode($this->storage->getUserData($sid), true, 512, JSON_THROW_ON_ERROR);
 
         if (!empty($attributes)) {
 

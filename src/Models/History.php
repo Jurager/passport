@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Database\Eloquent\MassPrunable;
+use Jurager\Passport\Scopes\HistoryScope;
 
 class History extends Model
 {
@@ -53,6 +54,16 @@ class History extends Model
     }
 
     /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new HistoryScope);
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
     public function authenticatable(): \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -82,39 +93,6 @@ class History extends Model
         // Check the session is current
         //
         return $this->session_id === Session::getId();
-    }
-
-    /**
-     * Revoke the authentication.
-     *
-     * @return bool|null
-     */
-    protected function revoke(): ?bool
-    {
-        // Destroy current user session
-        //
-        if ($this->session_id === Session::getId()) {
-
-            // Attempt to logout
-            //
-            Auth::guard()->logout();
-
-            // Remove all data from the session
-            Session::flush();
-
-            // Generate a new session identifier for the session
-            Session::migrate(true);
-
-        } else {
-
-            // Destroy the other session
-            //
-            Session::getHandler()->destroy($this->session_id);
-        }
-
-        // Delete history entry
-        //
-        return $this->delete();
     }
 
     /**

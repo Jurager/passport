@@ -37,7 +37,7 @@ trait Passport
     /**
      * @return mixed
      */
-    public function histories(): mixed
+    public function history(): mixed
     {
         return $this->morphMany(History::class, 'authenticatable');
     }
@@ -51,7 +51,7 @@ trait Passport
     {
         // Find current authenticated use history entry
         //
-        return $this->histories()->where('session_id', Session::getId())->first();
+        return $this->history()->where('session_id', Session::getId())->first();
     }
 
     /**
@@ -65,7 +65,7 @@ trait Passport
     {
         // Find the login entry by identifier or current session
         //
-        $history = $id ? $this->histories()->find($id) : $this->current();
+        $history = $id ? $this->history()->find($id) : $this->current();
 
         // If found try to revoke session
         //
@@ -79,7 +79,7 @@ trait Passport
      */
     public function logoutOthers(): mixed
     {
-        return $this->histories()->where(function (Builder $query) {
+        return $this->history()->where(function (Builder $query) {
             return $query->where('session_id', '!=', Session::getId())->orWhereNull('session_id');
         })->revoke();
     }
@@ -91,6 +91,6 @@ trait Passport
      */
     public function logoutAll(): mixed
     {
-        return $this->histories()->revoke();
+        return $this->history()->revoke();
     }
 }

@@ -136,7 +136,7 @@ class ServerController extends Controller
 
             // Attach the login to the user and save it
             //
-            $user->histories()->save($history);
+            $user->history()->save($history);
 
             //  Succeeded auth event
             //
@@ -200,7 +200,7 @@ class ServerController extends Controller
 
         // Delete history records
         //
-        $user->histories()->where('session_id', $sid)->delete();
+        $user->history()->where('session_id', $sid)->delete();
 
         // Reset user session data
         //

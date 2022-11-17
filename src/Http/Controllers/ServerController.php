@@ -124,10 +124,9 @@ class ServerController extends Controller
 
             // Get the currently authenticated user
             //
-            $user = Auth::guard()->user();
+            $user = $this->guard()->user();
 
-            // Request context
-            //
+
             $context = new RequestContext;
 
             // Build a new history
@@ -166,31 +165,20 @@ class ServerController extends Controller
     {
         // Get authorized account
         //
-        $user = Auth::guard()->user();
+        $user = $this->afterAuthenticatingUser($this->guard()->user(), $request);
 
-        if($user) {
+        // Failed verification
+        //
+        if (!$user) {
 
-            // Additional verification
+            //  Return unauthenticated response
             //
-            $callback = $this->afterAuthenticatingUser($user, $request);
-
-            // Failed verification
-            //
-            if (!$callback) {
-
-                //  Return unauthenticated response
-                //
-                return response()->json([], 401);
-            }
-
-            // Return current user information
-            //
-            return response()->json($this->userInfo($callback, $request));
+            return response()->json([], 401);
         }
 
-        //  Return unauthenticated response
+        // Return current user information
         //
-        return response()->json([], 401);
+        return response()->json($this->userInfo($user, $request));
     }
 
     /**

@@ -58,15 +58,14 @@ trait Passport
     /**
      * Destroy a session by identifier.
      *
-     * @param int|null $sid
+     * @param int|null $id
      * @return bool
-     * @throws \Exception
      */
-    public function logout(int $sid = null): bool
+    public function logout(int $id = null): bool
     {
         // Find the login entry by identifier or current session
         //
-        $history = $sid ? $this->history()->where('session_id', $sid)->first() : $this->current();
+        $history = $id ? $this->history()->find($id) : $this->current();
 
         // If found try to revoke session
         //

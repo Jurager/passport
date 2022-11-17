@@ -2,7 +2,7 @@
 
 namespace Jurager\Passport\Exceptions;
 
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use HttpException;
 
 class UnauthorizedException extends HttpException
 {

@@ -83,7 +83,11 @@ class Requester
      * @throw Jurager\Passport\Exceptions\InvalidClientException
      * @throw Jurager\Passport\Exceptions\UnauthorizedException
      * @throw Jurager\Passport\Exceptions\NotAttachedException
+     * @param $request
+     * @param $response
      * @throws JsonException
+     * @throws NotAttachedException
+     * @throws UnauthorizedException
      */
     protected function throwException($request, $response): void
     {

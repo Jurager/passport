@@ -40,22 +40,23 @@ class ValidateBroker
             //
             return $next($request);
 
-        } catch(InvalidClientException) {
+        } catch (InvalidClientException) {
 
             // Invalid client exception
             //
             return response()->json(['code' => 'invalid_client_id', 'message' => 'Invalid client id.'], 403);
 
-        } catch(InvalidSessionIdException $e) {
+        } catch (InvalidSessionIdException $e) {
 
             // Invalid session exception
             //
             return response()->json(['code' => 'invalid_session_id', 'message' => $e->getMessage()], 403);
 
-        } catch(UnauthorizedException $e) {
+        } catch (UnauthorizedException $e) {
 
             // Unauthorized exception
             //
             return response()->json(['code' => 'unauthorized', 'message' => $e->getMessage()], 401);
         }
     }
+}

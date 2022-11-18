@@ -166,20 +166,31 @@ class ServerController extends Controller
     {
         // Get authorized account
         //
-        $user = $this->afterAuthenticatingUser(Auth::guard()->user(), $request);
+        $user = Auth::guard()->user();
 
-        // Failed verification
-        //
-        if (!$user) {
+        if($user) {
 
-            //  Return unauthenticated response
+            // Additional verification
             //
-            return response()->json([], 401);
+            $callback = $this->afterAuthenticatingUser($user, $request);
+
+            // Failed verification
+            //
+            if (!$callback) {
+
+                //  Return unauthenticated response
+                //
+                return response()->json([], 401);
+            }
+
+            // Return current user information
+            //
+            return response()->json($this->userInfo($callback, $request));
         }
 
-        // Return current user information
+        //  Return unauthenticated response
         //
-        return response()->json($this->userInfo($user, $request));
+        return response()->json([], 401);
     }
 
     /**

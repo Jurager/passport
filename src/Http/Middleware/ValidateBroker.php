@@ -3,6 +3,7 @@
 namespace Jurager\Passport\Http\Middleware;
 
 use Closure;
+use Jurager\Passport\Exceptions\UnauthorizedException;
 use Jurager\Passport\Server;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\InvalidClientException;
@@ -50,6 +51,12 @@ class ValidateBroker
             // Invalid session exception
             //
             return response()->json(['code' => 'invalid_session_id', 'message' => $e->getMessage()], 403);
+        }
+        catch(UnauthorizedException $e) {
+
+            // Invalid session exception
+            //
+            return response()->json(['code' => 'unauthorized', 'message' => $e->getMessage()], 401);
         }
     }
 }

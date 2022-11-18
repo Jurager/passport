@@ -32,6 +32,9 @@ class PassportServiceProvider extends ServiceProvider
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class
+        ],
+        'web' => [
+            \Jurager\Passport\Http\Middleware\AttachBroker::class
         ]
     ];
 

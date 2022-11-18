@@ -13,13 +13,12 @@ use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Traits\Macroable;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
 
 class PassportGuard implements Guard
 {
-    use GuardHelpers, Macroable;
+    use GuardHelpers;
 
     /**
      * The name of the guard. Typically "web".
@@ -28,36 +27,72 @@ class PassportGuard implements Guard
      *
      * @var string
      */
-    public string $name;
+    protected $name;
+
+    /**
+     * The user we last attempted to retrieve.
+     *
+     * @var \Illuminate\Contracts\Auth\Authenticatable
+     */
+    protected $lastAttempted;
+
+    /**
+     * Indicates if the user was authenticated via a recaller cookie.
+     *
+     * @var bool
+     */
+    protected $viaRemember = false;
 
     /**
      * The user provider implementation.
      *
-     * @var Broker
+     * @var \Jurager\Passport\Broker
      */
-    protected Broker $broker;
+    protected $broker;
 
     /**
      * The request instance.
      *
-     * @var \Symfony\Component\HttpFoundation\Request|Request|null
+     * @var \Symfony\Component\HttpFoundation\Request
      */
-    protected \Symfony\Component\HttpFoundation\Request|Request|null $request;
+    protected $request;
 
     /**
      * The event dispatcher instance.
      *
      * @var \Illuminate\Contracts\Events\Dispatcher
      */
-    protected \Illuminate\Contracts\Events\Dispatcher $events;
+    protected $events;
+
+    /**
+     * The timebox instance.
+     *
+     * @var \Illuminate\Support\Timebox
+     */
+    protected $timebox;
+
+    /**
+     * Indicates if the logout method has been called.
+     *
+     * @var bool
+     */
+    protected $loggedOut = false;
+
+    /**
+     * Indicates if a token user retrieval has been attempted.
+     *
+     * @var bool
+     */
+    protected $recallAttempted = false;
 
     /**
      * Create a new authentication guard.
      *
-     * @param $name
-     * @param UserProvider $provider
-     * @param Broker $broker
-     * @param Request|null $request
+     * @param  string  $name
+     * @param  \Illuminate\Contracts\Auth\UserProvider  $provider
+     * @param  \Jurager\Passport\Broker $broker
+     * @param  \Symfony\Component\HttpFoundation\Request|null  $request
+     * @return void
      */
     public function __construct($name, UserProvider $provider, Broker $broker, Request $request = null)
     {
@@ -77,6 +112,15 @@ class PassportGuard implements Guard
         return false;
     }
 
+    public function check()
+    {
+        if (is_null($this->user) && config('passport.broker.auth_url')) {
+            return redirect(config('passport.broker.auth_url').'?continue='.$this->request->fullUrl())->send();
+        }
+
+        return true;
+    }
+
     /**
      * Get the currently authenticated user.
      *
@@ -85,22 +129,19 @@ class PassportGuard implements Guard
      */
     public function user() : Authenticatable|RedirectResponse|null
     {
-        $auth_url = config('passport.broker.auth_url');
+        if ($this->loggedOut) {
+            return null;
+        }
 
+        // If we've already retrieved the user for the current request we can just
+        // return it back immediately. We do not want to fetch the user data on
+        // every call to this method because that would be tremendously slow.
         if (! is_null($this->user)) {
             return $this->user;
         }
 
-        if(!$this->broker->isAttached($this->request)) {
-            $this->broker->sessionAttach($this->request);
-        }
-
         if ($payload = $this->broker->profile($this->request)) {
             $this->user = $this->loginFromPayload($payload);
-        }
-
-        if (is_null($this->user) && $auth_url) {
-            return redirect($auth_url.'?continue='.$this->request->fullUrl())->send();
         }
 
         return $this->user;
@@ -274,6 +315,8 @@ class PassportGuard implements Guard
             // so they are no longer available as the user is no longer considered as
             // being signed in this application and should not be available here.
             $this->user = null;
+
+            $this->loggedOut = true;
         }
     }
 

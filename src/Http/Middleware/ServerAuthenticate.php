@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use JsonException;
 use Jurager\Passport\Events;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
+use Jurager\Passport\Exceptions\UnauthorizedException;
 use Jurager\Passport\Server;
 use Jurager\Passport\Storage;
 
@@ -63,20 +64,23 @@ class ServerAuthenticate
                 //
                 event(new Events\Authenticated($user, $request));
 
-                // Next
-                //
-                return $next($request);
             }
 
-            // Unauthorized exception
+            // Next
             //
-            return response()->json(['code' => 'unauthorized', 'message' => 'Unauthorized.'], 401);
+            return $next($request);
 
         } catch(InvalidSessionIdException $e) {
 
             // Invalid session exception
             //
             return response()->json(['code' => 'invalid_session_id', 'message' => $e->getMessage()], 403);
+
+        } catch(UnauthorizedException $e) {
+
+            // Unauthorized exception
+            //
+            return response()->json(['code' => 'unauthorized', 'message' => $e->getMessage()], 401);
         }
     }
 

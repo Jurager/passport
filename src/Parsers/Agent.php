@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport\Parsers;
 
+use Illuminate\Support\Facades\Request;
 use Jurager\Passport\Interfaces\UserAgentParser;
 use Jenssegers\Agent\Agent as Parser;
 
@@ -18,6 +19,7 @@ class Agent implements UserAgentParser
     public function __construct()
     {
         $this->parser = new Parser();
+        $this->parser->setUserAgent(Request::header('Passport-User-Agent'));
     }
 
     /**

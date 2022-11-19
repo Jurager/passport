@@ -18,7 +18,7 @@ class WhichBrowser implements UserAgentParser
      */
     public function __construct()
     {
-        $this->parser = new Parser(Request::userAgent());
+        $this->parser = new Parser(Request::header('Passport-User-Agent'));
     }
 
     /**

@@ -45,7 +45,12 @@ class RequestContext
         //
         $this->provider = ProviderFactory::build(config('passport.server.lookup.provider'));
 
+        // Detect User-Agent
+        //
         $this->userAgent = Request::header('Passport-User-Agent');
+
+        // Detect Remote IP
+        //
         $this->ip = Request::header('Passport-Remote-Address');
     }
 

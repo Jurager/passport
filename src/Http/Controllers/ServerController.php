@@ -206,19 +206,9 @@ class ServerController extends Controller
         //
         $user = $request->user();
 
-        // Retrieve broker session
-        //
-        $sid = $this->server->getBrokerSessionId($request);
-
-        Log::debug($sid);
-
         // Delete history records
         //
-        $user->logout($sid);
-
-        // Reset user session data
-        //
-        $this->storage->setUserData($sid, null);
+        $user->logout($request->get('id'));
 
         //  Succeeded logout event
         //

@@ -20,8 +20,6 @@ class PassportServiceProvider extends ServiceProvider
      */
     protected array $routeMiddleware = [];
 
-    protected bool $is_server;
-
     /**
      * The middleware groups.
      *
@@ -33,9 +31,6 @@ class PassportServiceProvider extends ServiceProvider
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class
         ],
-        'web' => [
-            \Jurager\Passport\Http\Middleware\AttachBroker::class
-        ]
     ];
 
     public function boot(): void
@@ -45,10 +40,6 @@ class PassportServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/passport.php' => config_path('passport.php'),
         ]);
-
-        // Package working mode
-        //
-        $this->is_server =  !config('passport.broker.client_id');
 
         // Only on server
         // Load Migrations

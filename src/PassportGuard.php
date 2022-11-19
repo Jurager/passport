@@ -112,15 +112,6 @@ class PassportGuard implements Guard
         return false;
     }
 
-    public function check()
-    {
-        if (is_null($this->user) && config('passport.broker.auth_url')) {
-            return redirect(config('passport.broker.auth_url').'?continue='.$this->request->fullUrl())->send();
-        }
-
-        return true;
-    }
-
     /**
      * Get the currently authenticated user.
      *
@@ -129,19 +120,18 @@ class PassportGuard implements Guard
      */
     public function user() : Authenticatable|RedirectResponse|null
     {
-        if ($this->loggedOut) {
-            return null;
-        }
+        $auth_url = config('passport.broker.auth_url');
 
-        // If we've already retrieved the user for the current request we can just
-        // return it back immediately. We do not want to fetch the user data on
-        // every call to this method because that would be tremendously slow.
         if (! is_null($this->user)) {
             return $this->user;
         }
 
         if ($payload = $this->broker->profile($this->request)) {
             $this->user = $this->loginFromPayload($payload);
+        }
+
+        if (is_null($this->user) && $auth_url) {
+            return redirect($auth_url.'?continue='.$this->request->fullUrl())->send();
         }
 
         return $this->user;

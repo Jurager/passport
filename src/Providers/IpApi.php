@@ -18,7 +18,7 @@ class IpApi implements Provider
      */
     public function getRequest()
     {
-        return new GuzzleRequest('GET', 'https://ip-api.com/json/' . Request::ip() . '?fields=25');
+        return new GuzzleRequest('GET', 'http://ip-api.com/json/' . Request::ip() . '?fields=25');
     }
 
     /**

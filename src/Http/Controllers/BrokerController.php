@@ -58,4 +58,58 @@ class BrokerController extends Controller
         //
         return redirect()->away($attach_url);
     }
+
+    /**
+     * Destroy all sessions / Revoke all access tokens.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logoutAll(Request $request)
+    {
+        dd('logout all');
+    }
+
+    /**
+     * Destroy a session / Revoke an access token by its ID.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \JsonException
+     */
+    public function logoutById(Request $request, $id)
+    {
+        dd('logout by id ' . $id);
+
+        $this->broker->logout($request);
+
+        return redirect()->route('account.activity')->with([
+            'status' => [
+                'type' => 'success',
+                'message' => 'Accesses have been updated.'
+            ]
+        ]);
+    }
+
+    /**
+     * Destroy all sessions / Revoke all access tokens, except the current one.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logoutOthers(Request $request)
+    {
+        dd('logout others');
+
+        $request->user()->logoutOthers();
+
+        return redirect()->route('account.activity')->with([
+            'status' => [
+                'type' => 'success',
+                'message' => 'Accesses have been updated.'
+            ]
+        ]);
+    }
 }

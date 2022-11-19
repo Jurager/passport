@@ -14,8 +14,19 @@ Route::middleware('passport')->group(function() {
             ->prefix(config('passport.routes_prefix_client'))
             ->name('sso.broker.')
             ->group(function() {
+
                 Route::get('attach', 'attach')->name('attach');
+
+                Route::prefix('logout')
+                    ->middleware('auth')
+                    ->group(function () {
+                        Route::name('logout.all')->post('all', 'logoutAll');
+                        Route::name('logout.others')->post('others', 'logoutOthers');
+                        Route::name('logout.id')->post('{id}', 'logoutById')->where('id', '[0-9]+');
+                });
+
             });
+
     }
 
     // Not empty value of broker.client_id indicates that we are using passport as server

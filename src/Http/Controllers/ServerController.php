@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use JsonException;
 use Jurager\Passport\Events;
@@ -209,9 +210,11 @@ class ServerController extends Controller
         //
         $sid = $this->server->getBrokerSessionId($request);
 
+        Log::debug($sid);
+
         // Delete history records
         //
-        $user->history()->logout($sid);
+        $user->logout($sid);
 
         // Reset user session data
         //

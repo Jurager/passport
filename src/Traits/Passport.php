@@ -69,7 +69,7 @@ trait Passport
 
         // If found try to revoke session
         //
-        return $history && !empty($history->revoke($history->session_id));
+        return $history && !empty($history->revoke());
     }
 
     /**

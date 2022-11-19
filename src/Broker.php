@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
+use Jurager\Passport\Exceptions\NotAttachedException;
 
 class Broker
 {
@@ -126,11 +127,20 @@ class Broker
     /**
      * Return the session id
      *
-     * @param string $token The client generated token
+     * @param string|null $token The client generated token
      * @return string
      */
-    public function sessionId(string $token): string
+    public function sessionId(string|null $token): string
     {
+        // Client must be attached
+        //
+        if (!$token) {
+
+            // Throw not attached exception with 403 status code
+            //
+            throw new NotAttachedException(403, 'Client broker not attached.');
+        }
+
         // Generate new client checksum
         //
         $checksum = $this->encryption->generateChecksum('session', $token, $this->client_secret);

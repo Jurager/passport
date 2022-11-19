@@ -21,7 +21,7 @@ class ProviderFactory
     public static function build($name)
     {
         if (self::ipLookupEnabled()) {
-            $customProviders = config('auth_tracker.ip_lookup.custom_providers');
+            $customProviders = config('passport.server.lookup.custom_providers');
 
             if ($customProviders && array_key_exists($name, $customProviders)) {
 

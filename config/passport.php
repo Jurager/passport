@@ -142,13 +142,14 @@ return [
             | Environments
             |--------------------------------------------------------------------------
             |
-            | Indicate here an array of environnments for which you want to enable
+            | Indicate here an array of environments for which you want to enable
             | the IP address lookup.
             |
             */
 
             'environments' => [
                 'production',
+                'local',
             ],
 
             /*

@@ -5,6 +5,7 @@ namespace Jurager\Passport\Factories;
 use Jurager\Passport\Models\History;
 use Jurager\Passport\RequestContext;
 use Illuminate\Auth\Events\Login as LoginEvent;
+use Illuminate\Support\Facades\Log;
 
 class HistoryFactory
 {
@@ -18,29 +19,33 @@ class HistoryFactory
     {
         $history = new History();
 
+        $parser = $context->parser();
+
+        Log::debug($parser);
+
         // Fill in the common attributes
         //
         $history->fill([
             'user_agent' => $context->userAgent,
             'ip' => $context->ip,
-            'device_type' => $context->parser()->getDeviceType(),
-            'device' => $context->parser()->getDevice(),
-            'platform' => $context->parser()->getPlatform(),
-            'browser' => $context->parser()->getBrowser(),
+            'device_type' => $parser->getDeviceType(),
+            'device' => $parser->getDevice(),
+            'platform' => $parser->getPlatform(),
+            'browser' => $parser->getBrowser(),
             'expires_at' => date("Y-m-d H:i:s", strtotime('+'.config('passport.storage_ttl').' seconds')),
             'session_id' => session()->getId(),
         ]);
 
         // If geolocation data was received
         //
-        if ($context->ip()) {
+        if ($geo = $context->ip()) {
 
             // Fill in the geolocation attributes
             //
             $history->fill([
-                'city' => $context->ip()->getCity(),
-                'region' => $context->ip()->getRegion(),
-                'country' => $context->ip()->getCountry(),
+                'city' => $geo->getCity(),
+                'region' => $geo->getRegion(),
+                'country' => $geo->getCountry(),
             ]);
         }
 

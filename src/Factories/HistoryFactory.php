@@ -21,8 +21,6 @@ class HistoryFactory
 
         $parser = $context->parser();
 
-        Log::debug($parser);
-
         // Fill in the common attributes
         //
         $history->fill([

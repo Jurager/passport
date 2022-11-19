@@ -60,17 +60,6 @@ class BrokerController extends Controller
     }
 
     /**
-     * Destroy all sessions / Revoke all access tokens.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function logoutAll(Request $request)
-    {
-        dd('logout all');
-    }
-
-    /**
      * Destroy a session / Revoke an access token by its ID.
      *
      * @param Request $request
@@ -81,17 +70,26 @@ class BrokerController extends Controller
      */
     public function logoutById(Request $request, $id)
     {
-        dd('logout by id ' . $id);
+        if($this->broker->logout($request)) {
+            return response()->json(['success']);
+        }
 
-        $this->broker->logout($request);
-
-        return redirect()->route('account.activity')->with([
-            'status' => [
-                'type' => 'success',
-                'message' => 'Accesses have been updated.'
-            ]
-        ]);
+        return response()->json(['error']);
     }
+
+    /**
+     * Destroy all sessions / Revoke all access tokens.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logoutAll(Request $request)
+    {
+        dd('logout all');
+
+        $request->user()->logoutAll();
+    }
+
 
     /**
      * Destroy all sessions / Revoke all access tokens, except the current one.
@@ -104,12 +102,5 @@ class BrokerController extends Controller
         dd('logout others');
 
         $request->user()->logoutOthers();
-
-        return redirect()->route('account.activity')->with([
-            'status' => [
-                'type' => 'success',
-                'message' => 'Accesses have been updated.'
-            ]
-        ]);
     }
 }

@@ -242,7 +242,7 @@ class Broker
         $sid   = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
-        $response = $this->requester->request($sid, 'POST', $url, [], $headers);
+        $response = $this->requester->request($sid, 'POST', $url, ['id' => $request->id], $headers);
 
         if($response['success'] === true) {
 

@@ -96,6 +96,24 @@ class History extends Model
     }
 
     /**
+     * Revoke the login.
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function revoke()
+    {
+        if ($this->session_id) {
+
+            // Destroy session
+            Session::getHandler()->destroy($this->session_id);
+        }
+
+        // Delete login
+        return $this->delete();
+    }
+
+    /**
      * Get the prunable model query.
      *
      * @return \Illuminate\Database\Eloquent\Builder

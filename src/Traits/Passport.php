@@ -3,6 +3,7 @@
 namespace Jurager\Passport\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Jurager\Passport\Models\History;
 
@@ -58,14 +59,14 @@ trait Passport
     /**
      * Destroy a session by identifier.
      *
-     * @param int|null $id
+     * @param int|null $history_id
      * @return bool
      */
-    public function logout(int $id = null): bool
+    public function logout(int $history_id = null): bool
     {
         // Find the login entry by identifier or current session
         //
-        $history = $id ? $this->history()->find($id) : $this->current();
+        $history = $history_id ? $this->history()->find($history_id) : $this->current();
 
         // If found try to revoke session
         //

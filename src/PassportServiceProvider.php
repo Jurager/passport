@@ -4,6 +4,7 @@ namespace Jurager\Passport;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
+use Jurager\Passport\Console\Commands\Prune;
 use Jurager\Passport\Models\History;
 
 class PassportServiceProvider extends ServiceProvider
@@ -66,6 +67,10 @@ class PassportServiceProvider extends ServiceProvider
         // Schedule the commands
         //
         if ($this->app->runningInConsole()) {
+
+            // Register command
+            //
+            $this->commands([ Prune::class]);
 
             // Wait until the application booted
             //

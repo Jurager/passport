@@ -202,21 +202,34 @@ class ServerController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        // Retrieve current user
+        // Get authorized account
         //
-        $user = $request->user();
+        $user = Auth::guard()->user();
 
-        // Delete history records
-        //
-        $user->logout($request->get('id'));
+        if($user) {
 
-        //  Succeeded logout event
-        //
-        event(new Events\Logout($user));
+            $method = match ($request->get('method')) {
+                'id' => 'logoutById',
+                'all' => 'logoutAll',
+                'others' => 'logoutOthers',
+            };
 
-        //  Succeeded logout response
+            // Delete history records
+            //
+            $user->$method(($method === 'logoutById') ?: $request->get('id'));
+
+            //  Succeeded logout event
+            //
+            event(new Events\Logout($user));
+
+            //  Succeeded logout response
+            //
+            return response()->json(['success' => true]);
+        }
+
+        //  Return unauthenticated response
         //
-        return response()->json(['success' => true]);
+        return response()->json([], 401);
     }
 
     /**

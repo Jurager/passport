@@ -5,7 +5,6 @@ namespace Jurager\Passport;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 use Jurager\Passport\Console\Commands\Prune;
-use Jurager\Passport\Models\History;
 
 class PassportServiceProvider extends ServiceProvider
 {

@@ -63,14 +63,13 @@ class BrokerController extends Controller
      * Destroy a session / Revoke an access token by its ID.
      *
      * @param Request $request
-     * @param $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \JsonException
      */
-    public function logoutById(Request $request, $id)
+    public function logoutById(Request $request)
     {
-        if($this->broker->logout($request)) {
+        if($this->broker->logout($request, 'id')) {
             return response()->json(['success']);
         }
 
@@ -82,12 +81,16 @@ class BrokerController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \JsonException
      */
     public function logoutAll(Request $request)
     {
-        dd('logout all');
+        if($this->broker->logout($request, 'all')) {
+            return response()->json(['success']);
+        }
 
-        $request->user()->logoutAll();
+        //$request->user()->logoutAll();
     }
 
 
@@ -96,11 +99,15 @@ class BrokerController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \JsonException
      */
     public function logoutOthers(Request $request)
     {
-        dd('logout others');
+        if($this->broker->logout($request, 'others')) {
+            return response()->json(['success']);
+        }
 
-        $request->user()->logoutOthers();
+        //$request->user()->logoutOthers();
     }
 }

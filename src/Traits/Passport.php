@@ -62,7 +62,7 @@ trait Passport
      * @param int|null $history_id
      * @return bool
      */
-    public function logout(int $history_id = null): bool
+    public function logoutById(int $history_id = null): bool
     {
         // Find the login entry by identifier or current session
         //

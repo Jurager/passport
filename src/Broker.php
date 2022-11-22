@@ -230,20 +230,37 @@ class Broker
     /**
      * Send logout request
      * @param Request $request
-     *
+     * @param $method
      * @return bool
      * @throws GuzzleException
      * @throws JsonException
      */
-    public function logout(Request $request): bool
+    public function logout(Request $request, $method): bool
     {
         $url   = $this->server_url . '/logout';
         $token = $this->getClientToken($request);
         $sid   = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
-        $response = $this->requester->request($sid, 'POST', $url, ['id' => $request->id], $headers);
+        // Addition request parameters
+        //
+        $params = [];
 
+        // If trying to log out user by history id
+        //
+        if($method === 'id') {
+
+            // Append history id to request
+            //
+            $params['id'] = $request->get('id');
+        }
+
+        // Make request to the authorisation server
+        //
+        $response = $this->requester->request($sid, 'POST', $url, ['method' => $method, ...$params], $headers);
+
+        // Successfully logged out
+        //
         if($response['success'] === true) {
 
             // Clear current client session on broker

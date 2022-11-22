@@ -2,7 +2,6 @@
 
 namespace Jurager\Passport\Models;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Session;
@@ -122,6 +121,6 @@ class History extends Model
     {
         // Delete history entries older than storage time to live
         //
-        return static::where('expires_at', '<=', config('passport.storage_ttl'));
+        return static::where('expires_at', '>=', now());
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Session;
+use Jurager\Passport\Storage;
 
 class HistoryScope implements Scope
 {
@@ -37,7 +38,7 @@ class HistoryScope implements Scope
 
                 // Destroy sessions
                 foreach ($history->pluck('session_id')->filter() as $session_id) {
-                    Session::remove($session_id);
+                    (new Storage())->forget($session_id);
                 }
 
                 // Delete logins

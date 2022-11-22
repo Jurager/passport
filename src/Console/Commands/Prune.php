@@ -29,6 +29,6 @@ class Prune extends Command
      */
     public function handle(History $history)
     {
-        $history->where('expires_at', '>=', now())->delete();
+        $history->where('expires_at', '<=', now())->delete();
     }
 }

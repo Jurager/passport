@@ -5,12 +5,11 @@ namespace Jurager\Passport\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Database\Eloquent\MassPrunable;
 use Jurager\Passport\Scopes\HistoryScope;
 
 class History extends Model
 {
-    use SoftDeletes, MassPrunable;
+    use SoftDeletes;
 
     /**
      * The attributes that aren't mass assignable.
@@ -110,17 +109,5 @@ class History extends Model
 
         // Delete login
         return $this->delete();
-    }
-
-    /**
-     * Get the prunable model query.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function prunable(): \Illuminate\Database\Eloquent\Builder
-    {
-        // Delete history entries older than storage time to live
-        //
-        return static::where('expires_at', '>=', now());
     }
 }

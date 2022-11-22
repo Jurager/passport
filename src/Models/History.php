@@ -122,6 +122,6 @@ class History extends Model
     {
         // Delete history entries older than storage time to live
         //
-        return static::where('created_at', '<=', config('passport.storage_ttl'));
+        return static::where('expires_at', '<=', config('passport.storage_ttl'));
     }
 }

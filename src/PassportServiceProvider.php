@@ -2,8 +2,9 @@
 
 namespace Jurager\Passport;
 
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Console\Scheduling\Schedule;
+use Jurager\Passport\Models\History;
 
 class PassportServiceProvider extends ServiceProvider
 {
@@ -61,6 +62,24 @@ class PassportServiceProvider extends ServiceProvider
         // Attach Routes
         //
         $this->loadRoutesFrom(__DIR__ . '/../routes/passport.php');
+
+        // Schedule the commands
+        //
+        if ($this->app->runningInConsole()) {
+
+            // Wait until the application booted
+            //
+            $this->app->booted(function () {
+
+                // Create new schedule
+                //
+                $schedule = $this->app->make(Schedule::class);
+
+                // Run prunable command
+                //
+                $schedule->command('model:prune', [ '--model' => [History::class]])->everyMinute();
+            });
+        }
     }
 
     /**

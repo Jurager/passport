@@ -5,6 +5,7 @@ namespace Jurager\Passport;
 use Jurager\Passport\Exceptions\InvalidClientException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
+use Jurager\Passport\Session\ClientSessionManager;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
 use Jurager\Passport\Exceptions\NotAttachedException;
@@ -15,6 +16,11 @@ class Broker
      * @var Encryption
      */
     protected Encryption $encryption;
+
+    /**
+     * @var ClientSessionManager
+     */
+    protected ClientSessionManager $storage;
 
     /**
      * @var Requester
@@ -44,6 +50,7 @@ class Broker
     public function __construct(Requester $requester = null)
     {
         $this->encryption = new Encryption;
+        $this->storage = new ClientSessionManager;
         $this->requester  = new Requester($requester);
 
         $this->client_id     = config('passport.broker.client_id');
@@ -82,11 +89,13 @@ class Broker
     {
         // Get expires from config
         //
-        $ttl = config('passport.storage_ttl') / 60;
+        //$ttl = config('passport.storage_ttl') / 60;
+        $key = $this->sessionName();
 
         // Save client token in cookie
         //
-        Cookie::queue($this->sessionName(), $token, $ttl);
+        $this->storage->set($key, $token);
+        //Cookie::queue($this->sessionName(), $token, $ttl);
     }
 
     /**
@@ -97,9 +106,13 @@ class Broker
      */
     public function getClientToken(Request $request): string|array|null
     {
+        $key = $this->sessionName();
+
+        return $this->storage->get($key);
+
         // Get client token from storage
         //
-        return $request->cookie($this->sessionName());
+        //return $request->cookie($this->sessionName());
     }
 
     /**
@@ -107,9 +120,13 @@ class Broker
      */
     public function clearClientToken(): void
     {
+        $key = $this->sessionName();
+
+        $this->storage->forget($key);
+
         // Clear client token in storage
         //
-        Cookie::forget($this->sessionName());
+        //Cookie::forget($this->sessionName());
     }
 
     /**

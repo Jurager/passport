@@ -17,7 +17,7 @@ use Jurager\Passport\Http\Middleware\ServerAuthenticate;
 use Jurager\Passport\Http\Middleware\ValidateBroker;
 use Jurager\Passport\RequestContext;
 use Jurager\Passport\Server;
-use Jurager\Passport\Storage;
+use Jurager\Passport\Session\ServerSessionManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ServerController extends Controller
@@ -26,13 +26,13 @@ class ServerController extends Controller
 
     protected Server $server;
 
-    protected Storage $storage;
+    protected ServerSessionManager $storage;
 
     /**
      * @param Server $server
-     * @param Storage $storage
+     * @param ServerSessionManager $storage
      */
-    public function __construct(Server $server, Storage $storage)
+    public function __construct(Server $server, ServerSessionManager $storage)
     {
         $this->middleware(ValidateBroker::class)->except('attach');
         $this->middleware(ServerAuthenticate::class)->only(['profile', 'logout']);

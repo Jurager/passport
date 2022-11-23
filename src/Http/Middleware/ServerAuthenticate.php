@@ -9,15 +9,15 @@ use Jurager\Passport\Events;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\UnauthorizedException;
 use Jurager\Passport\Server;
-use Jurager\Passport\Storage;
+use Jurager\Passport\Session\ServerSessionManager;
 
 class ServerAuthenticate
 {
     protected Server $server;
 
-    protected Storage $storage;
+    protected ServerSessionManager $storage;
 
-    public function __construct(Server $server, Storage $storage)
+    public function __construct(Server $server, ServerSessionManager $storage)
     {
         $this->server = $server;
         $this->storage = $storage;

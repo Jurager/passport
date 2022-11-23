@@ -4,7 +4,6 @@ namespace Jurager\Passport;
 
 use Jurager\Passport\Exceptions\InvalidClientException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
 use Jurager\Passport\Session\ClientSessionManager;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
@@ -87,15 +86,11 @@ class Broker
      */
     public function saveClientToken($token): void
     {
-        // Get expires from config
-        //
-        //$ttl = config('passport.storage_ttl') / 60;
         $key = $this->sessionName();
 
         // Save client token in cookie
         //
         $this->storage->set($key, $token);
-        //Cookie::queue($this->sessionName(), $token, $ttl);
     }
 
     /**
@@ -104,15 +99,11 @@ class Broker
      * @param Request $request
      * @return string|array|null
      */
-    public function getClientToken(Request $request): string|array|null
+    public function getClientToken(): string|array|null
     {
         $key = $this->sessionName();
 
         return $this->storage->get($key);
-
-        // Get client token from storage
-        //
-        //return $request->cookie($this->sessionName());
     }
 
     /**
@@ -123,10 +114,6 @@ class Broker
         $key = $this->sessionName();
 
         $this->storage->forget($key);
-
-        // Clear client token in storage
-        //
-        //Cookie::forget($this->sessionName());
     }
 
     /**
@@ -186,11 +173,11 @@ class Broker
      * @param Request $request
      * @return bool
      */
-    public function isAttached(Request $request): bool
+    public function isAttached(): bool
     {
         // Check if client token is exists
         //
-        return !is_null($this->getClientToken($request));
+        return !is_null($this->getClientToken());
     }
 
     /**
@@ -219,7 +206,7 @@ class Broker
     public function login(array $credentials, Request $request): bool|array
     {
         $url   = $this->server_url . '/login';
-        $token = $this->getClientToken($request);
+        $token = $this->getClientToken();
         $sid   = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
@@ -237,7 +224,7 @@ class Broker
     public function profile(Request $request): bool|string|array
     {
         $url     = $this->server_url . '/profile';
-        $token   = $this->getClientToken($request);
+        $token   = $this->getClientToken();
         $sid     = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
@@ -255,7 +242,7 @@ class Broker
     public function logout(Request $request, $method): bool
     {
         $url   = $this->server_url . '/logout';
-        $token = $this->getClientToken($request);
+        $token = $this->getClientToken();
         $sid   = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
@@ -310,7 +297,7 @@ class Broker
     public function commands(string $command, array $params, Request $request): bool|string
     {
         $url   = $this->server_url . '/commands/' .$command;
-        $token = $this->getClientToken($request);
+        $token = $this->getClientToken();
         $sid   = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 

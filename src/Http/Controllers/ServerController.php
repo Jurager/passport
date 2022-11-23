@@ -112,7 +112,7 @@ class ServerController extends Controller
 
         // Check if session exists in storage
         //
-        if (!$this->storage->has($sid)) {
+        if (is_null($this->storage->get($sid))) {
 
             // Broker must be attached before authenticating users
             //

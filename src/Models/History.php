@@ -105,6 +105,7 @@ class History extends Model
 
             // Destroy session
             Session::getHandler()->destroy($this->session_id);
+            Session::regenerate(true);
         }
 
         // Delete login

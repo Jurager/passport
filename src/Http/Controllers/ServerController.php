@@ -206,25 +206,42 @@ class ServerController extends Controller
         //
         $user = Auth::guard()->user();
 
+        // Available methods
+        //
+        $methods = ['id', 'all', 'others'];
+
+        // Check user authorisation
+        //
         if($user) {
 
-            $method = match ($request->get('method')) {
-                'id' => 'logoutById',
-                'all' => 'logoutAll',
-                'others' => 'logoutOthers',
-            };
-
-            // Delete history records
+            // Check accepted method
             //
-            $user->$method(($method === 'logoutById') ?: $request->get('id'));
+            if(in_array($method = $request->get('method'), $methods, true)) {
 
-            //  Succeeded logout event
-            //
-            event(new Events\Logout($user));
+                // By session identifier
+                //
+                if($method === 'id') {
+                    $user->logoutById($request->get('id'));
+                }
 
-            //  Succeeded logout response
+                // By all or others method
+                //
+                if($method === 'all' || $method === 'others') {
+                    $user->{'logout'.ucfirst($method)}();
+                }
+
+                //  Succeeded logout event
+                //
+                event(new Events\Logout($user));
+
+                //  Succeeded logout response
+                //
+                return response()->json(['success' => true]);
+            }
+
+            //  Return bad request response
             //
-            return response()->json(['success' => true]);
+            return response()->json([], 400);
         }
 
         //  Return unauthenticated response

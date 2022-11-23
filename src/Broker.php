@@ -252,8 +252,10 @@ class Broker
 
             // Append history id to request
             //
-            $params['id'] = $request->get('id');
+            $params['id'] = $request->id;
         }
+
+        //dd(['method' => $method, ...$params]);
 
         // Make request to the authorisation server
         //
@@ -265,7 +267,7 @@ class Broker
 
             // Clear current client session on broker
             //
-            $this->clearClientToken();
+            //$this->clearClientToken();
 
             // Success
             //

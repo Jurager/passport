@@ -38,8 +38,10 @@ class HistoryScope implements Scope
 
                 // Destroy sessions
                 foreach ($history->pluck('session_id')->filter() as $session_id) {
-                    (new Storage())->forget($session_id);
-                    Session::remove('sso_user');
+                    $storage = new Storage();
+
+                    $storage->forget($session_id);
+                    Session::getHandler()->destroy($session_id);
                 }
 
                 // Delete logins

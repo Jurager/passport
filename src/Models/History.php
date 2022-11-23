@@ -104,7 +104,7 @@ class History extends Model
         if ($this->session_id) {
 
             // Destroy session
-            Session::remove($this->session_id);
+            Session::forget($this->session_id);
         }
 
         // Delete login

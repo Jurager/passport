@@ -37,12 +37,8 @@ class HistoryScope implements Scope
             if ($history->isNotEmpty()) {
 
                 // Destroy sessions
-                foreach ($history->pluck('session_id')->filter() as $session_id) {
-                    //$storage = new Storage();
-
-                    //$storage->forget($session_id);
-                    Session::getHandler()->destroy($session_id);
-                    Session::regenerate(true);
+                foreach ($history->pluck('session_id')->all() as $session_id) {
+                    Session::remove($session_id);
                 }
 
                 // Delete logins

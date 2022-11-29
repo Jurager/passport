@@ -265,7 +265,7 @@ class Broker
 
         // Successfully logged out
         //
-        if($response['success'] === true) {
+        if(array_key_exists('success', $response)) {
 
             // Success
             //

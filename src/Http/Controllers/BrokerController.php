@@ -64,7 +64,7 @@ class BrokerController extends Controller
 
         // Redirect to server attachment route
         //
-        return redirect()->away($attach_url);
+        return redirect()->away($attach_url, [], 307);
     }
 
     /**

@@ -96,7 +96,6 @@ class Broker
     /**
      * Return session token
      *
-     * @param Request $request
      * @return string|array|null
      */
     public function getClientToken(): string|array|null
@@ -164,7 +163,7 @@ class Broker
     {
         // Redirect to client attachment with return route
         //
-        return redirect()->route('sso.broker.attach', ['return_url' => $request->fullUrl()])->send();
+        return redirect()->route('sso.broker.attach', ['return_url' => $request->fullUrl()], 307)->send();
     }
 
     /**

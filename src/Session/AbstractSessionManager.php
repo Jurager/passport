@@ -31,6 +31,7 @@ abstract class AbstractSessionManager
 
     /**
      * Set session value in the cache
+     *
      * @param $key string
      * @param $value string
      * @param $forever bool

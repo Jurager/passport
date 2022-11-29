@@ -77,11 +77,11 @@ class BrokerController extends Controller
      */
     public function logoutById(Request $request)
     {
-        if($this->broker->logout($request, 'id')) {
-            return response()->json(['success']);
+        if($this->broker->logout($request, 'id')){
+            return response()->back()->with('success', 'your message,here');
         }
 
-        return response()->json(['error']);
+        return redirect()->back()->with('error', 'your message,here');
     }
 
     /**
@@ -95,10 +95,10 @@ class BrokerController extends Controller
     public function logoutAll(Request $request)
     {
         if($this->broker->logout($request, 'all')) {
-            return response()->json(['success']);
+            return response()->back()->with('success', 'your message,here');
         }
 
-        //$request->user()->logoutAll();
+        return redirect()->back()->with('error', 'your message,here');
     }
 
 
@@ -113,9 +113,9 @@ class BrokerController extends Controller
     public function logoutOthers(Request $request)
     {
         if($this->broker->logout($request, 'others')) {
-            return response()->json(['success']);
+            return response()->back()->with('success', 'your message,here');
         }
 
-        //$request->user()->logoutOthers();
+        return redirect()->back()->with('error', 'your message,here');
     }
 }

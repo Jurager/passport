@@ -78,10 +78,10 @@ class BrokerController extends Controller
     public function logoutById(Request $request)
     {
         if($this->broker->logout($request, 'id')){
-            return redirect()->back()->with('success', 'your message,here');
+            return redirect()->back()->with('status', [ 'type' => 'success', 'message' => 'Session successfully logout']);
         }
 
-        return redirect()->back()->with('error', 'your message,here');
+        return redirect()->back()->with('status', [ 'type' => 'error', 'message' => 'Error while trying to logout session']);
     }
 
     /**
@@ -95,10 +95,10 @@ class BrokerController extends Controller
     public function logoutAll(Request $request)
     {
         if($this->broker->logout($request, 'all')) {
-            return redirect()->back()->with('success', 'your message,here');
+            return redirect()->back()->with('status', [ 'type' => 'success', 'message' => 'Session successfully logout']);
         }
 
-        return redirect()->back()->with('error', 'your message,here');
+        return redirect()->back()->with('status', [ 'type' => 'error', 'message' => 'Error while trying to logout all sessions']);
     }
 
 
@@ -113,9 +113,9 @@ class BrokerController extends Controller
     public function logoutOthers(Request $request)
     {
         if($this->broker->logout($request, 'others')) {
-            return redirect()->back()->with('success', 'your message,here');
+            return redirect()->back()->with('status', [ 'type' => 'success', 'message' => 'Session successfully logout']);;
         }
 
-        return redirect()->back()->with('error', 'your message,here');
+        return redirect()->back()->with('status', [ 'type' => 'error', 'message' => 'Error while trying to logout others sessions']);
     }
 }

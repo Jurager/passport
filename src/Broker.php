@@ -259,8 +259,6 @@ class Broker
             $params['id'] = $request->id;
         }
 
-        //dd(['method' => $method, ...$params]);
-
         // Make request to the authorisation server
         //
         $response = $this->requester->request($sid, 'POST', $url, ['method' => $method, ...$params], $headers);
@@ -268,10 +266,6 @@ class Broker
         // Successfully logged out
         //
         if($response['success'] === true) {
-
-            // Clear current client session on broker
-            //
-            //$this->clearClientToken();
 
             // Success
             //

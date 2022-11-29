@@ -220,14 +220,14 @@ class ServerController extends Controller
 
                 // By session identifier
                 //
-                if($method === 'id') {
-                    $user->logoutById($request->get('id'));
+                if(($method === 'id') && !$user->logoutById($request->get('id'))) {
+                    return response()->json(['error' => true]);
                 }
 
                 // By all or others method
                 //
-                if($method === 'all' || $method === 'others') {
-                    $user->{'logout'.ucfirst($method)}();
+                if(($method === 'all' || $method === 'others') && !$user->{'logout'.ucfirst($method)}()) {
+                    return response()->json(['error' => true]);
                 }
 
                 //  Succeeded logout event

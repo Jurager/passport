@@ -5,7 +5,7 @@ namespace Jurager\Passport\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Session;
-use Jurager\Passport\Scopes\HistoryScope;
+use Jurager\Passport\Session\ServerSessionManager;
 
 class History extends Model
 {
@@ -52,16 +52,6 @@ class History extends Model
     }
 
     /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
-    protected static function booted()
-    {
-        static::addGlobalScope(new HistoryScope);
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
     public function authenticatable(): \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -101,10 +91,12 @@ class History extends Model
      */
     public function revoke()
     {
+        $storage = new ServerSessionManager();
+
         if ($this->session_id) {
 
             // Destroy session
-            Session::getHandler()->destroy($this->session_id);
+            $storage->deleteUserData($this->session_id);
         }
 
         // Delete login

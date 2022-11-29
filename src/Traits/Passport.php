@@ -78,20 +78,56 @@ trait Passport
      *
      * @return mixed
      */
-    public function logoutOthers(): mixed
+    public function logoutOthers(): bool
     {
-        return $this->history()->where(function (Builder $query) {
+        $histories = $this->history()->where(function (Builder $query) {
             return $query->where('session_id', '!=', Session::getId())->orWhereNull('session_id');
-        })->revoke();
+        })->get();
+
+        // If it has histories items
+        //
+        if($histories) {
+
+            // Session is revoked by history
+            //
+            foreach($histories as $history) {
+                $history->revoke();
+            }
+
+            // Success
+            //
+            return true;
+        }
+
+        return false;
     }
 
     /**
      * Destroy all sessions.
      *
-     * @return mixed
+     * @return bool
      */
-    public function logoutAll(): mixed
+    public function logoutAll(): bool
     {
-        return $this->history()->revoke();
+        // Get all user histories items
+        //
+        $histories = $this->history()->get();
+
+        // If it has histories items
+        //
+        if($histories) {
+
+            // Session is revoked by history
+            //
+            foreach($histories as $history) {
+                $history->revoke();
+            }
+
+            // Success
+            //
+            return true;
+        }
+
+        return false;
     }
 }

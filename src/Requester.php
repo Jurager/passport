@@ -17,12 +17,10 @@ use RuntimeException;
 class Requester
 {
     protected mixed $client;
-    protected bool $debug;
 
     public function __construct($client = null)
     {
         $this->client = new Client;
-        $this->debug  = config('passport.debug');
     }
 
     /**
@@ -58,7 +56,9 @@ class Requester
             $req = $e->getRequest();
             $res = $e->getResponse();
 
-            if ($this->debug) {
+            // If debug is enabled in configuration
+            //
+            if (config('passport.debug')) {
                 if ($req) {
                     Log::debug(Psr7\Message::toString($req));
                 }

@@ -63,6 +63,10 @@ class PassportServiceProvider extends ServiceProvider
         //
         $this->loadRoutesFrom(__DIR__ . '/../routes/passport.php');
 
+        // Load Translations
+        //
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'passport');
+
         // Schedule the commands
         //
         if ($this->app->runningInConsole()) {

@@ -18,17 +18,17 @@ class ProviderFactory
      * @return IpApi|object|void
      * @throws \Exception|\GuzzleHttp\Exception\GuzzleException
      */
-    public static function build($name)
+    public static function build(string $name)
     {
-        if (self::ipLookupEnabled()) {
+        if (config('passport.server.lookup.provider')) {
             
-            $customProviders = config('passport.server.lookup.custom_providers');
+            $custom = config('passport.server.lookup.custom_providers');
 
-            if ($customProviders && array_key_exists($name, $customProviders)) {
+            if ($custom && array_key_exists($name, $custom)) {
 
                 // Use of a custom IP address lookup provider
-
-                if (!in_array(Provider::class, class_implements($customProviders[$name]), true)) {
+                //
+                if (!in_array(Provider::class, class_implements($custom[$name]), true)) {
 
                     // The custom IP provider class doesn't
                     // implement the required interface
@@ -36,32 +36,17 @@ class ProviderFactory
                     throw new CustomProviderException;
                 }
 
-                return new $customProviders[$name];
+                return new $custom[$name];
 
-            } else {
-
-                // Use of an officially supported IP address lookup provider
-
-                switch ($name) {
-                    case 'ip2location-lite':
-                        return new Ip2LocationLite;
-                    case 'ip-api':
-                        return new IpApi;
-                    default:
-                        throw new ProviderException;
-                }
             }
-        }
-    }
 
-    /**
-     * Check if the IP lookup feature is enabled.
-     *
-     * @return bool
-     */
-    public static function ipLookupEnabled()
-    {
-        return config('passport.server.lookup.provider') &&
-            App::environment(config('passport.server.lookup.environments'));
+            // Use of an officially supported address lookup provider
+            //
+            return match ($name) {
+                'ip2location-lite' => new Ip2LocationLite,
+                'ip-api' => new IpApi,
+                default => throw new ProviderException(__('passport::errors.provider_not_selected')),
+            };
+        }
     }
 }

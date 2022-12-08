@@ -122,6 +122,13 @@ class PassportGuard implements Guard
     {
         $auth_url = config('passport.broker.auth_url');
 
+        // All routes that need to be authenticated should use AttachBroker middleware
+        // Otherwise need a workaround with exception on pages, that not uses this middleware
+        //
+        if(is_null($this->user) && !$this->broker->isAttached()) {
+            return null;
+        }
+
         if (! is_null($this->user)) {
             return $this->user;
         }

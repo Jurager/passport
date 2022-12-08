@@ -44,7 +44,7 @@ class ValidateBroker
 
             // Invalid client exception
             //
-            return response()->json(['code' => 'invalid_client_id', 'message' => 'Invalid client id.'], 403);
+            return response()->json(['code' => 'invalid_client_id', 'message' => __('passport::errors.invalid_client_id')], 403);
 
         } catch (InvalidSessionIdException $e) {
 

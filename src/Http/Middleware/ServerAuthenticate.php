@@ -48,7 +48,7 @@ class ServerAuthenticate
 
             // Broker must be attached before authenticating users
             //
-            return response()->json(['code' => 'not_attached', 'message' => __('passport::errors.not_attached')], 403);
+            return response()->json(['code' => 'not_attached', 'message' => trans('passport.errors.not_attached')], 403);
         }
 
         try {

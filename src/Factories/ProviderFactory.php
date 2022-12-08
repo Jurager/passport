@@ -45,7 +45,7 @@ class ProviderFactory
             return match ($name) {
                 'ip2location-lite' => new Ip2LocationLite,
                 'ip-api' => new IpApi,
-                default => throw new ProviderException(__('passport::errors.provider_not_selected')),
+                default => throw new ProviderException(trans('passport::errors.provider_not_selected')),
             };
         }
     }

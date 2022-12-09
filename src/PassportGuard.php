@@ -286,7 +286,7 @@ class PassportGuard implements Guard
 
         // Exists
         //
-        return ! is_null($user);
+        return ! is_null($user) && $this->provider->validateCredentials($user, $credentials);
     }
 
     /**

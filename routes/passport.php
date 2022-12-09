@@ -15,7 +15,7 @@ Route::middleware('passport')->group(function() {
             ->name('sso.broker.')
             ->group(function() {
 
-                Route::get('attach', 'attach')->name('attach');
+                Route::match(['GET', 'POST'],'attach', 'attach')->name('attach');
 
                 Route::prefix('logout')
                     ->middleware('auth')

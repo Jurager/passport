@@ -2,6 +2,8 @@
 
 namespace Jurager\Passport;
 
+use Ramsey\Uuid\Uuid;
+
 /**
  * Encryption class
  */
@@ -40,6 +42,6 @@ class Encryption
      */
     public function randomToken(): string
     {
-        return base_convert(md5(uniqid(mt_rand(), true)), 16, 36);
+        return base_convert(md5(Uuid::uuid4()->toString()), 16, 36);
     }
 }

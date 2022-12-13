@@ -17,7 +17,7 @@ class BrokerController extends Controller
     /**
      * @var ClientSessionManager
      */
-    protected $storage;
+    protected ClientSessionManager $storage;
 
     /**
      * Constructor

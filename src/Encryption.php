@@ -28,9 +28,9 @@ class Encryption
      * @param string $checksum
      * @return bool
      */
-    public function verifyChecksum(string $token, string $secret, string $checksum): bool
+    public function verifyChecksum(string $type, string $token, string $secret, string $checksum): bool
     {
-        return $checksum && $checksum === $this->generateChecksum('attach', $token, $secret);
+        return $checksum && $checksum === $this->generateChecksum($type, $token, $secret);
     }
 
     /**

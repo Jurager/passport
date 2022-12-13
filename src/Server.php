@@ -149,14 +149,15 @@ class Server
     }
 
     /**
-     * Generate attach checksum
+     * Verify attach checksum
      *
      * @param string $broker_id
+     * @param string $checksum
      * @param string $token
      *
      * @return string
      */
-    public function generateAttachChecksum(string $broker_id, string $token): string
+    public function verifyAttachChecksum(string $broker_id, string $token, string $checksum): string
     {
         // Get broker secret field
         //
@@ -164,7 +165,7 @@ class Server
 
         // Return generated checksum
         //
-        return $this->encryption->generateChecksum('attach', $token, $secret);
+        return $this->encryption->verifyChecksum('attach', $token, $secret, $checksum);
     }
 
     /**

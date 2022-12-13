@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use JsonException;
+use Jurager\Passport\Encryption;
 use Jurager\Passport\Events;
 use Jurager\Passport\Factories\HistoryFactory;
 use Jurager\Passport\Http\Concerns\Authenticate;
@@ -24,9 +24,21 @@ class ServerController extends Controller
 {
     use Authenticate;
 
+
+    /**
+     * @var Server
+     */
     protected Server $server;
 
+    /**
+     * @var ServerSessionManager
+     */
     protected ServerSessionManager $storage;
+
+    /**
+     * @var Encryption
+     */
+    protected Encryption $encryption;
 
     /**
      * @param Server $server
@@ -39,6 +51,7 @@ class ServerController extends Controller
 
         $this->server = $server;
         $this->storage = $storage;
+        $this->encryption = new Encryption;
     }
 
     /**
@@ -65,13 +78,9 @@ class ServerController extends Controller
         $checksum  = $request->input('checksum');
         $return_url = $request->input('return_url');
 
-        // Generate attach checksum
+        // Compare checksums
         //
-        $generated = $this->server->generateAttachChecksum($broker_id, $token);
-
-        // Compare generated and received checksum
-        //
-        if (!$checksum || $checksum !== $generated) {
+        if (!$this->server->verifyAttachChecksum($broker_id, $token, $checksum)) {
 
             // Failed checksum comprehension
             //

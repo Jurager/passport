@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport;
 
+use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -25,6 +26,7 @@ class Encryption
     /**
      * Verify if attach checksum matches
      *
+     * @param string $type
      * @param string $token
      * @param string $secret
      * @param string $checksum
@@ -42,6 +44,6 @@ class Encryption
      */
     public function randomToken(): string
     {
-        return base_convert(md5(Uuid::uuid4()->toString()), 16, 36);
+        return hash('sha256', Str::random(40));
     }
 }

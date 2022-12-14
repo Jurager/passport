@@ -51,9 +51,9 @@ abstract class AbstractSessionManager
      *
      * @param string $key
      * @param string|array|null $default
-     * @return string|array $key
+     * @return string|array|null $key
      */
-    public function get(string $key, string|array $default = null): string|array
+    public function get(string $key, string|array $default = null): string|array|null
     {
         return $this->store()->get($key, $default);
     }

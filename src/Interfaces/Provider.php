@@ -3,6 +3,7 @@
 namespace Jurager\Passport\Interfaces;
 
 use GuzzleHttp\Psr7\Request;
+use Illuminate\Support\Collection;
 
 interface Provider
 {
@@ -18,7 +19,7 @@ interface Provider
      *
      * @return Provider|null
      */
-    public function getResult(): ?Provider;
+    public function getResult(): ?Collection;
 
     /**
      * Get the country name.

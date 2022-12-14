@@ -169,7 +169,6 @@ class Broker
     /**
      * Check if session is attached
      *
-     * @param Request $request
      * @return bool
      */
     public function isAttached(): bool
@@ -238,7 +237,7 @@ class Broker
      * @throws GuzzleException
      * @throws JsonException
      */
-    public function logout(Request $request, $method): bool
+    public function logout(Request $request, $method = null): bool
     {
         $url   = $this->server_url . '/logout';
         $token = $this->getClientToken();
@@ -264,16 +263,7 @@ class Broker
 
         // Successfully logged out
         //
-        if(array_key_exists('success', $response)) {
-
-            // Success
-            //
-            return true;
-        }
-
-        // Error when attempting logout on server
-        //
-        return false;
+        return array_key_exists('success', $response);
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace Jurager\Passport\Events;
 
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
 
 class AuthSucceeded
@@ -11,24 +13,24 @@ class AuthSucceeded
     /**
      * The authenticated user.
      *
-     * @var \Illuminate\Contracts\Auth\Authenticatable
+     * @var Authenticatable
      */
-    public \Illuminate\Contracts\Auth\Authenticatable $user;
+    public Authenticatable $user;
 
     /**
      * The authenticated user.
      *
-     * @var \Illuminate\Http\Request
+     * @var Request
      */
-    public \Illuminate\Http\Request $request;
+    public Request $request;
 
     /**
      * Create a new event instance.
      *
-     * @param \Illuminate\Contracts\Auth\Authenticatable $user
-     * @param \Illuminate\Http\Request $request
+     * @param Authenticatable $user
+     * @param Request $request
      */
-    public function __construct(\Illuminate\Contracts\Auth\Authenticatable $user, \Illuminate\Http\Request $request)
+    public function __construct(Authenticatable $user, Request $request)
     {
         $this->user = $user;
         $this->request = $request;

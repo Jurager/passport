@@ -2,6 +2,9 @@
 
 namespace Jurager\Passport;
 
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 use Jurager\Passport\Console\Commands\Prune;
@@ -28,9 +31,9 @@ class PassportServiceProvider extends ServiceProvider
      */
     protected array $middlewareGroups = [
         'passport' => [
-            \Illuminate\Cookie\Middleware\EncryptCookies::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartSession::class
         ],
     ];
 

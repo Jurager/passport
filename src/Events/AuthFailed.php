@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport\Events;
 
+use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
 
 class AuthFailed
@@ -18,9 +19,9 @@ class AuthFailed
     /**
      * The request object.
      *
-     * @var \Illuminate\Http\Request|null
+     * @var Request|null
      */
-    public ?\Illuminate\Http\Request $request;
+    public ?Request $request;
 
     /**
      * Create a new event instance.

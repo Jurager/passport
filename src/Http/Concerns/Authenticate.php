@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport\Http\Concerns;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Jurager\Passport\Events;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,9 +49,9 @@ trait Authenticate
      * Attempt login
      *
      * @param Request $request
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return Authenticatable|null
      */
-    protected function attemptLogin(Request $request): ?\Illuminate\Contracts\Auth\Authenticatable
+    protected function attemptLogin(Request $request): ?Authenticatable
     {
         // Trying to authenticate
         //
@@ -139,11 +140,11 @@ trait Authenticate
     /**
      * Do additional verification by calling after_authenticating closure.
      *
-     * @param \Illuminate\Contracts\Auth\Authenticatable $user
+     * @param Authenticatable $user
      * @param Request $request
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return Authenticatable|null
      */
-    protected function afterAuthenticatingUser(\Illuminate\Contracts\Auth\Authenticatable $user, Request $request): ?\Illuminate\Contracts\Auth\Authenticatable
+    protected function afterAuthenticatingUser(Authenticatable $user, Request $request): ?Authenticatable
     {
         // Retrieve after_authenticating closure from configuration
         //

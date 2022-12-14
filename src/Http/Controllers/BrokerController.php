@@ -2,6 +2,8 @@
 
 namespace Jurager\Passport\Http\Controllers;
 
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Http\RedirectResponse;
 use Jurager\Passport\Broker;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -35,9 +37,9 @@ class BrokerController extends Controller
      * Attach client to server
      *
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function attach(Request $request): \Illuminate\Http\RedirectResponse
+    public function attach(Request $request): RedirectResponse
     {
         $params = $request->except(['broker', 'token', 'checksum']);
 
@@ -71,8 +73,8 @@ class BrokerController extends Controller
      * Destroy a session / Revoke an access token by its ID.
      *
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return RedirectResponse
+     * @throws GuzzleException
      * @throws \JsonException
      */
     public function logoutById(Request $request)
@@ -88,8 +90,8 @@ class BrokerController extends Controller
      * Destroy all sessions / Revoke all access tokens.
      *
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return RedirectResponse
+     * @throws GuzzleException
      * @throws \JsonException
      */
     public function logoutAll(Request $request)
@@ -106,14 +108,14 @@ class BrokerController extends Controller
      * Destroy all sessions / Revoke all access tokens, except the current one.
      *
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return RedirectResponse
+     * @throws GuzzleException
      * @throws \JsonException
      */
     public function logoutOthers(Request $request)
     {
         if($this->broker->logout($request, 'others')) {
-            return redirect()->back()->with('status', [ 'type' => 'success', 'message' => 'Session successfully logout']);;
+            return redirect()->back()->with('status', [ 'type' => 'success', 'message' => 'Session successfully logout']);
         }
 
         return redirect()->back()->with('status', [ 'type' => 'error', 'message' => 'Error while trying to logout others sessions']);

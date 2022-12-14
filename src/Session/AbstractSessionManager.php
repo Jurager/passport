@@ -15,16 +15,16 @@ abstract class AbstractSessionManager
      * Return the session configuration ttl
      * @return int
      */
-    protected function getSessionTTL()
+    protected function getSessionTTL(): int
     {
         return config('passport.storage_ttl');
     }
 
     /**
-     * Check if session ttl is forever, means if it value is null
+     * Check if session ttl is forever, means if its value is null
      * @return bool
      */
-    protected function isTTLForever()
+    protected function isTTLForever(): bool
     {
         return is_null($this->getSessionTTL());
     }
@@ -36,7 +36,7 @@ abstract class AbstractSessionManager
      * @param $value string
      * @param $forever bool
      */
-    public function set($key, $value, $forever = false)
+    public function set(string $key, string $value, bool $forever = false): void
     {
         if (($forever || $this->isTTLForever()) && is_callable([$this->store(), 'forever'])) {
             $this->store()->forever($key, $value);
@@ -49,12 +49,11 @@ abstract class AbstractSessionManager
     /**
      * Return session value of the key $key
      *
-     * @return string $key
-     * @return mixed $default
-     *
-     * @return mixed
+     * @param string $key
+     * @param string|array|null $default
+     * @return string|array $key
      */
-    public function get($key, $default = null)
+    public function get(string $key, string|array $default = null): string|array
     {
         return $this->store()->get($key, $default);
     }
@@ -73,7 +72,7 @@ abstract class AbstractSessionManager
     /**
      * Delete session value of the key $key
      */
-    public function forget($key)
+    public function forget($key): void
     {
         $this->store()->forget($key);
     }

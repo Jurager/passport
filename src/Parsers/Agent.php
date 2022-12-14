@@ -11,7 +11,7 @@ class Agent implements UserAgentParser
     /**
      * @var Parser
      */
-    protected $parser;
+    protected Parser $parser;
 
     /**
      * Agent constructor.
@@ -27,7 +27,7 @@ class Agent implements UserAgentParser
      *
      * @return string|null
      */
-    public function getDevice()
+    public function getDevice(): ?string
     {
         $device = $this->parser->device();
 
@@ -39,11 +39,13 @@ class Agent implements UserAgentParser
      *
      * @return string|null
      */
-    public function getDeviceType()
+    public function getDeviceType(): ?string
     {
         if ($this->parser->isDesktop()) {
             return 'desktop';
-        } elseif ($this->parser->isMobile()) {
+        }
+
+        if ($this->parser->isMobile()) {
             return $this->parser->isTablet() ? 'tablet' : ($this->parser->isPhone() ? 'phone' : 'mobile');
         }
 
@@ -55,7 +57,7 @@ class Agent implements UserAgentParser
      *
      * @return string|null
      */
-    public function getPlatform()
+    public function getPlatform(): ?string
     {
         return $this->parser->platform() ?: null;
     }
@@ -65,7 +67,7 @@ class Agent implements UserAgentParser
      *
      * @return string|null
      */
-    public function getBrowser()
+    public function getBrowser(): ?string
     {
         return $this->parser->browser() ?: null;
     }

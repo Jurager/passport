@@ -15,7 +15,7 @@ class HistoryFactory
      * @param RequestContext $context
      * @return History
      */
-    public static function build(RequestContext $context)
+    public static function build(RequestContext $context): History
     {
         $history = new History();
 

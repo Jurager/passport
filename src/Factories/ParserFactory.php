@@ -14,7 +14,7 @@ class ParserFactory
      * @return Agent|WhichBrowser
      * @throws \Exception
      */
-    public static function build($name)
+    public static function build(string $name): Agent|WhichBrowser
     {
         return match ($name) {
             'agent' => new Agent(),

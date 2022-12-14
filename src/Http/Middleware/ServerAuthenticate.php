@@ -3,6 +3,7 @@
 namespace Jurager\Passport\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use JsonException;
 use Jurager\Passport\Events;
@@ -26,13 +27,13 @@ class ServerAuthenticate
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param Closure $next
      * @param null $guard
      * @return mixed
      * @throws JsonException
      */
-    public function handle(\Illuminate\Http\Request $request, Closure $next, $guard = null): mixed
+    public function handle(Request $request, Closure $next, $guard = null): mixed
     {
         // Get Guard instance
         //

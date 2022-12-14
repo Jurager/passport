@@ -3,6 +3,7 @@
 namespace Jurager\Passport\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Jurager\Passport\Broker;
 use Jurager\Passport\Server;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
@@ -21,11 +22,11 @@ class AttachBroker
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param Closure $next
      * @return mixed
      */
-    public function handle(\Illuminate\Http\Request $request, Closure $next): mixed
+    public function handle(Request $request, Closure $next): mixed
     {
         if(!$this->broker->isAttached()) {
             return $this->broker->sessionAttach($request);

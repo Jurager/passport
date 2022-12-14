@@ -24,11 +24,11 @@ class Prune extends Command
     /**
      * Execute the console command.
      *
-     * @param  \App\Support\DripEmailer  $drip
+     * @param History $history
      * @return mixed
      */
-    public function handle(History $history)
+    public function handle(History $history): mixed
     {
-        $history->where('expires_at', '<=', now())->delete();
+        return $history->where('expires_at', '<=', now())->delete();
     }
 }

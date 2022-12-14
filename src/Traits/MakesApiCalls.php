@@ -2,6 +2,8 @@
 
 namespace Jurager\Passport\Traits;
 
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Collection;
 use Jurager\Passport\Events\FailedApiCall;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
@@ -14,14 +16,14 @@ trait MakesApiCalls
     protected Client $httpClient;
 
     /**
-     * @var \Illuminate\Support\Collection|null
+     * @var Collection|null
      */
-    protected ?\Illuminate\Support\Collection $result;
+    protected ?Collection $result;
 
     /**
      * MakesApiCalls constructor.
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function __construct()
     {
@@ -35,10 +37,10 @@ trait MakesApiCalls
     /**
      * Make the API call and get the response as a Laravel collection.
      *
-     * @return \Illuminate\Support\Collection|null
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return Collection|null
+     * @throws GuzzleException
      */
-    protected function makeApiCall(): ?\Illuminate\Support\Collection
+    protected function makeApiCall(): ?Collection
     {
         try {
 
@@ -57,9 +59,9 @@ trait MakesApiCalls
     /**
      * Get the result of the API call as a Laravel collection.
      *
-     * @return \Illuminate\Support\Collection|null
+     * @return Collection|null
      */
-    public function getResult(): ?\Illuminate\Support\Collection
+    public function getResult(): ?Collection
     {
         return $this->result;
     }

@@ -30,9 +30,9 @@ class Ip2LocationLite implements Provider
     /**
      * Get the Guzzle request.
      *
-     * @return void
+     * @return \GuzzleHttp\Psr7\Request
      */
-    public function getRequest()
+    public function getRequest(): \GuzzleHttp\Psr7\Request
     {
     }
 
@@ -41,7 +41,7 @@ class Ip2LocationLite implements Provider
      *
      * @return string
      */
-    public function getCountry()
+    public function getCountry(): string
     {
         return $this->result->country_name;
     }
@@ -51,7 +51,7 @@ class Ip2LocationLite implements Provider
      *
      * @return string
      */
-    public function getRegion()
+    public function getRegion(): string
     {
         return $this->result->region_name;
     }
@@ -61,17 +61,18 @@ class Ip2LocationLite implements Provider
      *
      * @return string
      */
-    public function getCity()
+    public function getCity(): string
     {
         return $this->result->city_name;
     }
 
+
     /**
      * Get the result of the query.
      *
-     * @return object|null
+     * @return Provider|null
      */
-    public function getResult()
+    public function getResult(): ?Provider
     {
         return $this->result;
     }

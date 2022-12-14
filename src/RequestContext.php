@@ -59,7 +59,7 @@ class RequestContext
      *
      * @return UserAgentParser
      */
-    public function parser()
+    public function parser(): UserAgentParser
     {
         return $this->parser;
     }
@@ -67,9 +67,9 @@ class RequestContext
     /**
      * Get the IP lookup result.
      *
-     * @return provider
+     * @return Provider|null
      */
-    public function ip()
+    public function ip(): ?Provider
     {
         if ($this->provider && $this->provider->getResult()) {
             return $this->provider;

@@ -11,26 +11,33 @@ interface Provider
      *
      * @return Request
      */
-    public function getRequest();
+    public function getRequest(): Request;
+
+    /**
+     * Get the result of the query.
+     *
+     * @return Provider|null
+     */
+    public function getResult(): ?Provider;
 
     /**
      * Get the country name.
      *
      * @return string
      */
-    public function getCountry();
+    public function getCountry(): string;
 
     /**
      * Get the region name.
      *
      * @return string
      */
-    public function getRegion();
+    public function getRegion(): string;
 
     /**
      * Get the city name.
      *
      * @return string
      */
-    public function getCity();
+    public function getCity(): string;
 }

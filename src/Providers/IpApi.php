@@ -16,7 +16,7 @@ class IpApi implements Provider
      *
      * @return GuzzleRequest
      */
-    public function getRequest()
+    public function getRequest(): GuzzleRequest
     {
         return new GuzzleRequest('GET', 'http://ip-api.com/json/' . Request::header('Passport-Remote-Address') . '?fields=25');
     }
@@ -26,7 +26,7 @@ class IpApi implements Provider
      *
      * @return string
      */
-    public function getCountry()
+    public function getCountry(): string
     {
         return $this->result->get('country');
     }
@@ -36,7 +36,7 @@ class IpApi implements Provider
      *
      * @return string
      */
-    public function getRegion()
+    public function getRegion(): string
     {
         return $this->result->get('regionName');
     }
@@ -46,7 +46,7 @@ class IpApi implements Provider
      *
      * @return string
      */
-    public function getCity()
+    public function getCity(): string
     {
         return $this->result->get('city');
     }

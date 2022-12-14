@@ -3,6 +3,7 @@
 namespace Jurager\Passport\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Session;
 use Jurager\Passport\Session\ServerSessionManager;
@@ -52,9 +53,9 @@ class History extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return MorphTo
      */
-    public function authenticatable(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    public function authenticatable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -86,10 +87,10 @@ class History extends Model
     /**
      * Revoke the login.
      *
-     * @return mixed
+     * @return bool|null
      * @throws \Exception
      */
-    public function revoke()
+    public function revoke(): ?bool
     {
         $storage = new ServerSessionManager();
 

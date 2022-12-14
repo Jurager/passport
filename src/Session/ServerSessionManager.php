@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Session;
 class ServerSessionManager extends AbstractSessionManager
 {
     /**
-     * Use Laravel cache as store
+     * Use Laravel caches as store
      */
     protected function store()
     {
@@ -18,8 +18,9 @@ class ServerSessionManager extends AbstractSessionManager
      * Set user session data
      *
      * @param string $sid
+     * @param array|string $value
      */
-    public function setUserData($sid, $value)
+    public function setUserData(string $sid, array|string $value): void
     {
         $id = $this->get($sid);
 
@@ -33,9 +34,10 @@ class ServerSessionManager extends AbstractSessionManager
     /**
      * Retrieve user session data
      *
+     * @param string $sid
      * @return string
      */
-    public function getUserData($sid)
+    public function getUserData(string $sid): string
     {
         $id = $this->get($sid);
 
@@ -48,10 +50,10 @@ class ServerSessionManager extends AbstractSessionManager
     /**
      * Remove user data from session
      *
-     * @param $sid
+     * @param string $sid
      * @return void
      */
-    public function deleteUserData($sid)
+    public function deleteUserData(string $sid): void
     {
         Session::setId($sid);
         Session::start();
@@ -62,8 +64,11 @@ class ServerSessionManager extends AbstractSessionManager
 
     /**
      * Start a new session by resetting the session value
+     *
+     * @param string $sid
+     * @return void
      */
-    public function start($sid)
+    public function start(string $sid): void
     {
         $id = Session::getId();
 

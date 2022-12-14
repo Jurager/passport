@@ -33,7 +33,6 @@
             "Jurager\\Passport\\": "src/"
         }
     },
-    "license": "MIT",
     "extra": {
         "laravel": {
             "providers": [

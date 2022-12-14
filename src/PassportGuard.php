@@ -11,9 +11,11 @@ use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Timebox;
 use JsonException;
 
 class PassportGuard implements Guard
@@ -27,74 +29,66 @@ class PassportGuard implements Guard
      *
      * @var string
      */
-    protected $name;
-
-    /**
-     * The user we last attempted to retrieve.
-     *
-     * @var \Illuminate\Contracts\Auth\Authenticatable
-     */
-    protected $lastAttempted;
+    protected string $name;
 
     /**
      * Indicates if the user was authenticated via a recaller cookie.
      *
      * @var bool
      */
-    protected $viaRemember = false;
+    protected bool $viaRemember = false;
 
     /**
      * The user provider implementation.
      *
-     * @var \Jurager\Passport\Broker
+     * @var Broker
      */
-    protected $broker;
+    protected Broker $broker;
 
     /**
      * The request instance.
      *
-     * @var \Symfony\Component\HttpFoundation\Request
+     * @var \Symfony\Component\HttpFoundation\Request|Request|null
      */
-    protected $request;
+    protected \Symfony\Component\HttpFoundation\Request|Request|null $request;
 
     /**
      * The event dispatcher instance.
      *
-     * @var \Illuminate\Contracts\Events\Dispatcher
+     * @var Dispatcher
      */
-    protected $events;
+    protected Dispatcher $events;
 
     /**
      * The timebox instance.
      *
-     * @var \Illuminate\Support\Timebox
+     * @var Timebox
      */
-    protected $timebox;
+    protected Timebox $timebox;
 
     /**
      * Indicates if the logout method has been called.
      *
      * @var bool
      */
-    protected $loggedOut = false;
+    protected bool $loggedOut = false;
 
     /**
      * Indicates if a token user retrieval has been attempted.
      *
      * @var bool
      */
-    protected $recallAttempted = false;
+    protected bool $recallAttempted = false;
 
     /**
      * Create a new authentication guard.
      *
-     * @param  string  $name
-     * @param  \Illuminate\Contracts\Auth\UserProvider  $provider
-     * @param  \Jurager\Passport\Broker $broker
-     * @param  \Symfony\Component\HttpFoundation\Request|null  $request
-     * @return void
+     * @param string $name
+     * @param UserProvider $provider
+     * @param Broker $broker
+     * @param Request|null $request
      */
-    public function __construct($name, UserProvider $provider, Broker $broker, Request $request = null)
+    public function __construct(string $name, UserProvider $provider, Broker $broker, Request $request = null)
     {
         $this->name = $name;
         $this->provider = $provider;
@@ -333,7 +327,7 @@ class PassportGuard implements Guard
      * @param Request $request
      * @return $this
      */
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): static
     {
         $this->request = $request;
 
@@ -343,9 +337,9 @@ class PassportGuard implements Guard
     /**
      * Get the event dispatcher instance.
      *
-     * @return \Illuminate\Contracts\Events\Dispatcher
+     * @return Dispatcher
      */
-    public function getDispatcher(): \Illuminate\Contracts\Events\Dispatcher
+    public function getDispatcher(): Dispatcher
     {
         return $this->events;
     }
@@ -353,10 +347,10 @@ class PassportGuard implements Guard
     /**
      * Set the event dispatcher instance.
      *
-     * @param  \Illuminate\Contracts\Events\Dispatcher  $events
+     * @param Dispatcher $events
      * @return void
      */
-    public function setDispatcher($events): void
+    public function setDispatcher(Dispatcher $events): void
     {
         $this->events = $events;
     }
@@ -394,17 +388,6 @@ class PassportGuard implements Guard
     protected function fireAuthenticatedEvent(Authenticatable $user): void
     {
         $this->events->dispatch(new Authenticated($this->name, $user));
-    }
-
-    /**
-     * Fire the other device logout event if the dispatcher is set.
-     *
-     * @param Authenticatable $user
-     * @return void
-     */
-    protected function fireOtherDeviceLogoutEvent(Authenticatable $user): void
-    {
-        $this->events->dispatch(new OtherDeviceLogout($this->name, $user));
     }
 
     /**

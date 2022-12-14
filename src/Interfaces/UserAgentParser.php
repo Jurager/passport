@@ -7,28 +7,28 @@ interface UserAgentParser
     /**
      * Get the device name.
      *
-     * @return string
+     * @return string|null
      */
-    public function getDevice();
+    public function getDevice(): ?string;
 
     /**
      * Get the device type.
      *
-     * @return string
+     * @return string|null
      */
-    public function getDeviceType();
+    public function getDeviceType(): ?string;
 
     /**
      * Get the platform name.
      *
-     * @return string
+     * @return string|null
      */
-    public function getPlatform();
+    public function getPlatform(): ?string;
 
     /**
      * Get the browser name.
      *
-     * @return string
+     * @return string|null
      */
-    public function getBrowser();
+    public function getBrowser(): ?string;
 }

@@ -35,9 +35,9 @@ class ServerSessionManager extends AbstractSessionManager
      * Retrieve user session data
      *
      * @param string $sid
-     * @return string
+     * @return array|string|null
      */
-    public function getUserData(string $sid): string
+    public function getUserData(string $sid): array|string|null
     {
         $id = $this->get($sid);
 

@@ -107,9 +107,7 @@ class Broker
      */
     public function getClientToken(): string|array|null
     {
-        $key = $this->request->bearerToken() ?? $this->sessionName();
-
-        return $this->storage->get($key);
+        return $this->request->bearerToken() ?? $this->storage->get($this->sessionName());
     }
 
     /**

@@ -27,6 +27,11 @@ class Broker
     protected Requester $requester;
 
     /**
+     * @var Request
+     */
+    protected Request $request;
+
+    /**
      * @var string client_id
      */
     public string $client_id;
@@ -44,13 +49,15 @@ class Broker
     /**
      * Constructor
      *
-     * @param Requester|null $requester
+     * @param Request $request
      */
-    public function __construct(Requester $requester = null)
+    public function __construct(Request $request)
     {
         $this->encryption = new Encryption;
         $this->storage = new ClientSessionManager;
-        $this->requester  = new Requester($requester);
+        $this->requester  = new Requester();
+
+        $this->request = $request;
 
         $this->client_id     = config('passport.broker.client_id');
         $this->client_secret = config('passport.broker.client_secret');
@@ -100,7 +107,7 @@ class Broker
      */
     public function getClientToken(): string|array|null
     {
-        $key = $this->sessionName();
+        $key = $this->request->bearerToken() ?? $this->sessionName();
 
         return $this->storage->get($key);
     }

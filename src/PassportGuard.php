@@ -196,7 +196,9 @@ class PassportGuard implements Guard
 
         // Call authenticated event
         //
-        $this->fireAuthenticatedEvent($this->user);
+        if($this->user) {
+            $this->fireAuthenticatedEvent($this->user);
+        }
 
         // Succeeded
         //

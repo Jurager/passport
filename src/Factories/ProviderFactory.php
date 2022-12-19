@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport\Factories;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Jurager\Passport\Exceptions\CustomProviderException;
 use Jurager\Passport\Exceptions\ProviderException;
 use Jurager\Passport\Interfaces\Provider;
@@ -16,7 +17,7 @@ class ProviderFactory
      *
      * @param string $name
      * @return IpApi|object|void
-     * @throws \Exception|\GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception|GuzzleException
      */
     public static function build(string $name)
     {

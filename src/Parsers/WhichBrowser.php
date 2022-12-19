@@ -11,7 +11,7 @@ class WhichBrowser implements UserAgentParser
     /**
      * @var Parser
      */
-    protected $parser;
+    protected Parser $parser;
 
     /**
      * WhichBrowser constructor.

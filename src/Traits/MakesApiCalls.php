@@ -46,9 +46,9 @@ trait MakesApiCalls
 
             $response = $this->httpClient->send($this->getRequest());
 
-            return collect(json_decode($response->getBody(), true));
+            return collect(json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR));
 
-        } catch (TransferException $e) {
+        } catch (TransferException|\JsonException $e) {
 
             event(new FailedApiCall($e));
 

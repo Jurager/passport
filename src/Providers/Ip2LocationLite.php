@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport\Providers;
 
+use Illuminate\Support\Collection;
 use Jurager\Passport\Interfaces\Provider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
@@ -22,9 +23,7 @@ class Ip2LocationLite implements Provider
             ? config('passport.server.lookup.ip2location.ipv6_table')
             : config('passport.server.lookup.ip2location.ipv4_table');
 
-        $this->result = DB::table($table)
-            ->whereRaw('INET_ATON(?) <= ip_to', [Request::ip()])
-            ->first();
+        $this->result = DB::table($table)->whereRaw('INET_ATON(?) <= ip_to', [Request::ip()])->first();
     }
 
     /**
@@ -70,9 +69,9 @@ class Ip2LocationLite implements Provider
     /**
      * Get the result of the query.
      *
-     * @return Provider|null
+     * @return Collection|null
      */
-    public function getResult(): ?Provider
+    public function getResult(): ?Collection
     {
         return $this->result;
     }

@@ -77,13 +77,24 @@ class BrokerController extends Controller
      * @throws GuzzleException
      * @throws \JsonException
      */
-    public function logoutById(Request $request)
+    public function logoutById(Request $request): RedirectResponse
     {
+        // Response failed status
+        //
+        $status = [ 'type' => 'error', 'message' => 'Error while trying to logout session'];
+
+        // Trying to log out broker
+        //
         if($this->broker->logout($request, 'id')){
-            return redirect()->back()->with('status', [ 'type' => 'success', 'message' => 'Session successfully logout']);
+
+            // Response success status
+            //
+            $status = [ 'type' => 'success', 'message' => 'Session successfully logout'];
         }
 
-        return redirect()->back()->with('status', [ 'type' => 'error', 'message' => 'Error while trying to logout session']);
+        // Redirect with status message
+        //
+        return redirect()->back()->with('status', $status);
     }
 
     /**
@@ -94,13 +105,24 @@ class BrokerController extends Controller
      * @throws GuzzleException
      * @throws \JsonException
      */
-    public function logoutAll(Request $request)
+    public function logoutAll(Request $request): RedirectResponse
     {
+        // Response failed status
+        //
+        $status = [ 'type' => 'error', 'message' => 'Error while trying to logout session'];
+
+        // Trying to log out all devices on broker
+        //
         if($this->broker->logout($request, 'all')) {
-            return redirect()->back()->with('status', [ 'type' => 'success', 'message' => 'Session successfully logout']);
+
+            // Response success status
+            //
+            $status = [ 'type' => 'success', 'message' => 'Session successfully logout'];
         }
 
-        return redirect()->back()->with('status', [ 'type' => 'error', 'message' => 'Error while trying to logout all sessions']);
+        // Redirect with status message
+        //
+        return redirect()->back()->with('status', $status);
     }
 
 
@@ -112,12 +134,23 @@ class BrokerController extends Controller
      * @throws GuzzleException
      * @throws \JsonException
      */
-    public function logoutOthers(Request $request)
+    public function logoutOthers(Request $request): RedirectResponse
     {
+        // Response failed status
+        //
+        $status = [ 'type' => 'error', 'message' => 'Error while trying to logout session'];
+
+        // Trying to log out other devices on broker
+        //
         if($this->broker->logout($request, 'others')) {
-            return redirect()->back()->with('status', [ 'type' => 'success', 'message' => 'Session successfully logout']);
+
+            // Response success status
+            //
+            $status = [ 'type' => 'success', 'message' => 'Session successfully logout'];
         }
 
-        return redirect()->back()->with('status', [ 'type' => 'error', 'message' => 'Error while trying to logout others sessions']);
+        // Redirect with status message
+        //
+        return redirect()->back()->with('status', $status);
     }
 }

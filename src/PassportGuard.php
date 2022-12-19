@@ -15,7 +15,6 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Timebox;
 use JsonException;
 
 class PassportGuard implements Guard
@@ -30,13 +29,6 @@ class PassportGuard implements Guard
      * @var string
      */
     protected string $name;
-
-    /**
-     * Indicates if the user was authenticated via a recaller cookie.
-     *
-     * @var bool
-     */
-    protected bool $viaRemember = false;
 
     /**
      * The user provider implementation.
@@ -60,27 +52,6 @@ class PassportGuard implements Guard
     protected Dispatcher $events;
 
     /**
-     * The timebox instance.
-     *
-     * @var Timebox
-     */
-    protected Timebox $timebox;
-
-    /**
-     * Indicates if the logout method has been called.
-     *
-     * @var bool
-     */
-    protected bool $loggedOut = false;
-
-    /**
-     * Indicates if a token user retrieval has been attempted.
-     *
-     * @var bool
-     */
-    protected bool $recallAttempted = false;
-
-    /**
      * Create a new authentication guard.
      *
      * @param string $name
@@ -94,16 +65,6 @@ class PassportGuard implements Guard
         $this->provider = $provider;
         $this->broker = $broker;
         $this->request = $request;
-    }
-
-    /**
-     * Determine if the user was authenticated via "remember me" cookie.
-     *
-     * @return bool
-     */
-    public function viaRemember(): bool
-    {
-        return false;
     }
 
     /**
@@ -308,8 +269,6 @@ class PassportGuard implements Guard
             // so they are no longer available as the user is no longer considered as
             // being signed in this application and should not be available here.
             $this->user = null;
-
-            $this->loggedOut = true;
         }
     }
 

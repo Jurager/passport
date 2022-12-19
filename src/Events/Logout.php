@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport\Events;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Queue\SerializesModels;
 
 class Logout
@@ -11,16 +12,16 @@ class Logout
     /**
      * The authenticated user.
      *
-     * @var \Illuminate\Contracts\Auth\Authenticatable
+     * @var Authenticatable
      */
-    public \Illuminate\Contracts\Auth\Authenticatable $user;
+    public Authenticatable $user;
 
     /**
      * Create a new event instance.
      *
-     * @param \Illuminate\Contracts\Auth\Authenticatable $user
+     * @param Authenticatable $user
      */
-    public function __construct(\Illuminate\Contracts\Auth\Authenticatable $user)
+    public function __construct(Authenticatable $user)
     {
         $this->user = $user;
     }

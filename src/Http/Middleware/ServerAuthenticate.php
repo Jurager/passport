@@ -86,7 +86,9 @@ class ServerAuthenticate
     }
 
     /**
-     * @throws JsonException
+     * @param $guard
+     * @param $sid
+     * @return false|mixed
      */
     protected function check($guard, $sid)
     {

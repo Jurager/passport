@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Jurager\Passport\Factories\ProviderFactory;
 use Jurager\Passport\Factories\ParserFactory;
 use Jurager\Passport\Interfaces\Provider;
@@ -18,7 +19,7 @@ class RequestContext
     /**
      * @var Provider $provider
      */
-    protected $provider = null;
+    protected $provider;
 
     /**
      * @var string $userAgent
@@ -33,7 +34,7 @@ class RequestContext
     /**
      * RequestContext constructor.
      *
-     * @throws \Exception|\GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception|GuzzleException
      */
     public function __construct()
     {

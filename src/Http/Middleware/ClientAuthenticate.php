@@ -44,6 +44,6 @@ class ClientAuthenticate extends Middleware
 
         // Redirect to authentication page
         //
-        return redirect($auth_url.'?continue='.$request->fullUrl());
+        return redirect($auth_url.'?continue='.$request->fullUrl())->send();
     }
 }

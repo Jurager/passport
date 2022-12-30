@@ -15,6 +15,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Http\Response;
 use JsonException;
 
 class PassportGuard implements Guard
@@ -70,10 +71,11 @@ class PassportGuard implements Guard
     /**
      * Get the currently authenticated user.
      *
-     * @return Authenticatable|RedirectResponse|null
-     * @throws GuzzleException|JsonException
+     * @return Authenticatable|RedirectResponse|Response|null
+     * @throws GuzzleException
+     * @throws JsonException
      */
-    public function user() : Authenticatable|RedirectResponse|null
+    public function user() : Authenticatable|RedirectResponse|Response|null
     {
         $auth_url = config('passport.broker.auth_url');
 
@@ -92,7 +94,21 @@ class PassportGuard implements Guard
             $this->user = $this->loginFromPayload($payload);
         }
 
+        // If user not authenticated
+        //
         if (is_null($this->user) && $auth_url) {
+
+            // If request has bearer token
+            //
+            if($this->request->bearerToken()) {
+
+                // Not authenticated message
+                //
+                return response()->json(['code' => 'unauthorized'], 401);
+            }
+
+            // Redirect to authentication page
+            //
             return redirect($auth_url.'?continue='.$this->request->fullUrl())->send();
         }
 

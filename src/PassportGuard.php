@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use GuzzleHttp\Exception\GuzzleException;
@@ -71,14 +72,12 @@ class PassportGuard implements Guard
     /**
      * Get the currently authenticated user.
      *
-     * @return Authenticatable|RedirectResponse|Response|null
+     * @return Authenticatable|null
      * @throws GuzzleException
      * @throws JsonException
      */
-    public function user() : Authenticatable|RedirectResponse|Response|null
+    public function user() : Authenticatable|null
     {
-        $auth_url = config('passport.broker.auth_url');
-
         // All routes that need to be authenticated should use AttachBroker middleware
         // Otherwise need a workaround with exception on pages, that not uses this middleware
         //
@@ -92,24 +91,6 @@ class PassportGuard implements Guard
 
         if ($payload = $this->broker->profile($this->request)) {
             $this->user = $this->loginFromPayload($payload);
-        }
-
-        // If user not authenticated
-        //
-        if (is_null($this->user) && $auth_url) {
-
-            // If request has bearer token
-            //
-            if($this->request->bearerToken()) {
-
-                // Not authenticated message
-                //
-                return response()->json(['code' => 'unauthorized'], 401);
-            }
-
-            // Redirect to authentication page
-            //
-            return redirect($auth_url.'?continue='.$this->request->fullUrl())->send();
         }
 
         return $this->user;

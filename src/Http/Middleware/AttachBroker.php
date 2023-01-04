@@ -29,7 +29,7 @@ class AttachBroker
     public function handle(Request $request, Closure $next): mixed
     {
         if(!$this->broker->isAttached()) {
-            return $this->broker->sessionAttach($request);
+            return redirect()->route('sso.broker.attach', ['return_url' => $request->fullUrl()], 307)->send();
         }
 
 

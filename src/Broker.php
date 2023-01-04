@@ -159,19 +159,6 @@ class Broker
     }
 
     /**
-     * Attach session to client
-     *
-     * @param $request
-     * @return mixed
-     */
-    public function sessionAttach($request): mixed
-    {
-        // Redirect to client attachment with return route
-        //
-        return redirect()->route('sso.broker.attach', ['return_url' => $request->fullUrl()], 307)->send();
-    }
-
-    /**
      * Check if session is attached
      *
      * @return bool

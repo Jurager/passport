@@ -2,8 +2,11 @@
 
 namespace Jurager\Passport\Http\Middleware;
 
+use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Contracts\Auth\Factory as Auth;
+use Jurager\Passport\Broker;
 use Illuminate\Http\Request;
 
 class ClientAuthenticate extends Middleware
@@ -21,18 +24,43 @@ class ClientAuthenticate extends Middleware
     }
 
     /**
+     * Determine if the user is logged in to any of the given guards.
+     *
+     * @param Request $request
+     * @param array $guards
+     * @return mixed
+     *
+     * @throws AuthenticationException
+     */
+    protected function authenticate($request, array $guards): mixed
+    {
+        if (empty($guards)) {
+            $guards = [null];
+        }
+
+        foreach ($guards as $guard) {
+            if ($this->auth->guard($guard)->check()) {
+
+                $this->auth->shouldUse($guard);
+
+                return true;
+            }
+        }
+
+        return $this->unauthenticated($request, $guards);
+    }
+
+    /**
      * Handle an unauthenticated user.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  array  $guards
-     * @return void
+     * @param Request $request
+     * @param array $guards
+     * @return mixed
      *
-     * @throws \Illuminate\Auth\AuthenticationException
+     * @throws AuthenticationException
      */
-    protected function unauthenticated($request, array $guards)
+    protected function unauthenticated($request, array $guards): mixed
     {
-        $auth_url = config('passport.broker.auth_url');
-
         // If request has bearer token
         //
         if($request->bearerToken()) {
@@ -44,6 +72,6 @@ class ClientAuthenticate extends Middleware
 
         // Redirect to authentication page
         //
-        return redirect($auth_url.'?continue='.$request->fullUrl())->send();
+        return redirect(config('passport.broker.auth_url').'?continue='.$request->fullUrl())->send();
     }
 }

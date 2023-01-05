@@ -84,7 +84,7 @@ class ServerController extends Controller
 
             // Failed checksum comprehension
             //
-            return response(trans('passport::errors.invalid_checksum'), 400);
+            return response(trans('passport.errors.invalid_checksum'), 400);
         }
 
         // Generate new session
@@ -125,7 +125,7 @@ class ServerController extends Controller
 
             // Broker must be attached before authenticating users
             //
-            return response()->json(['code' => 'not_attached', 'message' => trans('passport::errors.not_attached')], 403);
+            return response()->json(['code' => 'not_attached', 'message' => trans('passport.errors.not_attached')], 403);
         }
 
         // Authenticate user from request
@@ -274,7 +274,7 @@ class ServerController extends Controller
         // Command not found in configuration
         //
         if (!array_key_exists($command, $commands)) {
-            return response()->json(['message' => trans('passport::errors.command_not_found')], 404);
+            return response()->json(['message' => trans('passport.errors.command_not_found')], 404);
         }
 
         // Create closure
@@ -293,6 +293,6 @@ class ServerController extends Controller
 
         // Return closure not callable
         //
-        return response()->json(['message' => trans('passport::errors.command_not_callable')], 400);
+        return response()->json(['message' => trans('passport.errors.command_not_callable')], 400);
     }
 }

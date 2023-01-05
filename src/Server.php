@@ -62,13 +62,13 @@ class Server
         // Server model id field not found
         //
         if (empty($this->id_field)) {
-            throw new InvalidServerException(trans('passport.errors.invalid_server_model_field'));
+            throw new InvalidServerException(trans('passport::errors.invalid_server_model_field'));
         }
 
         // Server model secret field not found
         //
         if (empty($this->secret_field)) {
-            throw new InvalidServerException(trans('passport.errors.invalid_server_model_secret'));
+            throw new InvalidServerException(trans('passport::errors.invalid_server_model_secret'));
         }
     }
 
@@ -117,7 +117,7 @@ class Server
         // Compare checksum with session
         //
         if ($this->generateSessionId($broker_id, $token) !== $sid) {
-            throw new InvalidSessionIdException(trans('passport.errors.checksum_failed'));
+            throw new InvalidSessionIdException(trans('passport::errors.checksum_failed'));
         }
 
         // Return broker identification
@@ -182,7 +182,7 @@ class Server
 
             // Invalid session identification exception
             //
-            throw new InvalidSessionIdException(trans('passport.errors.invalid_session_id'));
+            throw new InvalidSessionIdException(trans('passport::errors.invalid_session_id'));
         }
 
         // Get the first match

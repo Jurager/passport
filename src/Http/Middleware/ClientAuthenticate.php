@@ -2,15 +2,94 @@
 
 namespace Jurager\Passport\Http\Middleware;
 
-use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Auth\Middleware\Authenticate as Middleware;
-use Illuminate\Contracts\Auth\Factory as Auth;
+use Closure;
 use Jurager\Passport\Broker;
+use Jurager\Passport\Exceptions\InvalidSessionIdException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Contracts\Auth\Factory as Auth;
+use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
 use Illuminate\Http\Request;
 
-class ClientAuthenticate extends Middleware
+class ClientAuthenticate implements AuthenticatesRequests
 {
+    /**
+     * The authentication factory instance.
+     *
+     * @var \Illuminate\Contracts\Auth\Factory
+     */
+    protected Auth $auth;
+
+    /**
+     * The group of routes that should be authorized
+     *
+     * @var string
+     */
+    protected string $group;
+
+    /**
+     * Create a new middleware instance.
+     *
+     * @param  \Illuminate\Contracts\Auth\Factory  $auth
+     * @return void
+     */
+    public function __construct(Auth $auth)
+    {
+        $this->auth = $auth;
+    }
+
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     *
+     * @throws \Illuminate\Auth\AuthenticationException
+     */
+    public function handle($request, Closure $next)
+    {
+        $this->authenticate($request);
+
+        return $next($request);
+    }
+
+    /**
+     * Determine if the user is logged in to any of the given guards.
+     *
+     * @param Request $request
+     * @return mixed
+     *
+     * @throws AuthenticationException
+     */
+    protected function authenticate($request): mixed
+    {
+        try {
+            if ($this->auth->guard()->check()) {
+                return true;
+            }
+        }
+        catch (InvalidSessionIdException $e) {
+            return $this->unauthenticated($request);
+        }
+
+        return $this->unauthenticated($request);
+    }
+
+    /**
+     * Handle an unauthenticated user.
+     *
+     * @param Request $request
+     * @return mixed
+     *
+     * @throws AuthenticationException
+     */
+    protected function unauthenticated($request): mixed
+    {
+        // Not authenticated message
+        //
+        throw new AuthenticationException('Unauthenticated.', redirectTo: $this->redirectTo($request));
+    }
+
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      *
@@ -18,60 +97,11 @@ class ClientAuthenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
-            return route('common.index');
-        }
-    }
+        if(!$request->expectsJson()) {
 
-    /**
-     * Determine if the user is logged in to any of the given guards.
-     *
-     * @param Request $request
-     * @param array $guards
-     * @return mixed
-     *
-     * @throws AuthenticationException
-     */
-    protected function authenticate($request, array $guards): mixed
-    {
-        if (empty($guards)) {
-            $guards = [null];
-        }
-
-        foreach ($guards as $guard) {
-            if ($this->auth->guard($guard)->check()) {
-
-                $this->auth->shouldUse($guard);
-
-                return true;
-            }
-        }
-
-        return $this->unauthenticated($request, $guards);
-    }
-
-    /**
-     * Handle an unauthenticated user.
-     *
-     * @param Request $request
-     * @param array $guards
-     * @return mixed
-     *
-     * @throws AuthenticationException
-     */
-    protected function unauthenticated($request, array $guards): mixed
-    {
-        // If request has bearer token
-        //
-        if($request->bearerToken()) {
-
-            // Not authenticated message
+            // Redirect to authentication page
             //
-            throw new AuthenticationException('Unauthenticated.', $guards, $this->redirectTo($request));
+            return redirect(config('passport.broker.auth_url').'?continue='.$request->fullUrl())->send();
         }
-
-        // Redirect to authentication page
-        //
-        return redirect(config('passport.broker.auth_url').'?continue='.$request->fullUrl())->send();
     }
 }

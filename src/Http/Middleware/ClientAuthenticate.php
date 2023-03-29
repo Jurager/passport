@@ -63,24 +63,8 @@ class ClientAuthenticate implements AuthenticatesRequests
      */
     protected function authenticate($request): mixed
     {
-        // If there is an authorization header
-        //
-        if(class_exists('\App\Models\AccessToken') && $bearer = $request->bearerToken()) {
-
-            // First, look for the record with the token in the database
-            //
-            $token = \App\Models\AccessToken::where('token', $bearer)->first();
-
-            // Token found, trying to authentificate user by it's id
-            //
-            if($token) {
-
-                $this->auth->guard()->loginUsingId($token->tokenable_id);
-
-                // Successfully authentificated
-                //
-                return true;
-            }
+        if($token = $request->bearerToken()) {
+            $this->auth->guard()->loginFromToken($token);
         }
         
         try {

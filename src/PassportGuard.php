@@ -162,6 +162,44 @@ class PassportGuard implements Guard
         //
         return $this->user;
     }
+    
+    /**
+     * Log a user into the application using the bearer token.
+     *
+     * @param array $payload
+     * @return Authenticatable|bool|null
+     */
+    public function loginFromToken(string $token): Authenticatable|bool|null
+    {
+        // If there is an authorization header
+        //
+        if($token && class_exists('\App\Models\AccessToken')) {
+
+            // First, look for the record with the token in the database
+            //
+            $access_token = \App\Models\AccessToken::where('token', $token)->first();
+
+            // Token found, trying to authentificate user by it's id
+            //
+            if($access_token && (! $access_token->expires_at || ! $access_token->expires_at->isPast()) ) {
+
+                // Update token last usage timestamp
+                //
+                //
+                $access_token->forceFill(['last_used_at' => now()])->save();
+
+                // Update actual user
+                //
+                $this->user = $access_token->tokenable;
+
+                // Successfully authentificated
+                //
+                return $this->user;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Retrieve user from payload

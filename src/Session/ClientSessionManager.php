@@ -12,4 +12,9 @@ class ClientSessionManager extends AbstractSessionManager
     {
         return app()->session;
     }
+
+    public function purge()
+    {
+        return app()->session->invalidate();
+    }
 }

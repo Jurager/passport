@@ -67,6 +67,10 @@ class ServerAuthenticate
 
             }
 
+            // Update session expiration date
+            //
+            $this->storage->refresh($sid);
+
             // Next
             //
             return $next($request);

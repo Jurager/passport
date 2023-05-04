@@ -74,4 +74,17 @@ class ServerSessionManager extends AbstractSessionManager
 
         $this->set($sid, $id);
     }
+
+    /**
+     * Update expiration date by updating session
+     *
+     * @param string $sid
+     * @return void
+     */
+    public function refresh(string $sid): void
+    {
+        $id = $this->get($sid);
+
+        $this->set($sid, $id);
+    }
 }

@@ -88,7 +88,7 @@ class PassportServiceProvider extends ServiceProvider
 
                 // Run prunable command
                 //
-                //$schedule->command('history:prune')->everyMinute();
+                $schedule->command('history:prune')->everyMinute();
             });
         }
     }

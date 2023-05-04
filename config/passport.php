@@ -274,10 +274,10 @@ return [
     'debug' => env('PASSPORT_DEBUG', false),
 
     /**
-    * Session time to live, default to 60 seconds.
+    * Session time to live, default to 10 minutes.
     * Set to null to store forever
     */
-    'storage_ttl' => env('PASSPORT_STORAGE_TTL', 60),
+    'storage_ttl' => env('PASSPORT_STORAGE_TTL', 600),
 
     /**
      * Prefix used to declare client routes

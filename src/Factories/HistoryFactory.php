@@ -30,7 +30,7 @@ class HistoryFactory
             'device' => $parser->getDevice(),
             'platform' => $parser->getPlatform(),
             'browser' => $parser->getBrowser(),
-            //'expires_at' => date("Y-m-d H:i:s", strtotime('+'.config('passport.storage_ttl').' seconds')),
+            'expires_at' => date("Y-m-d H:i:s", strtotime('+'.config('session.lifetime').' minutes')),
             'session_id' => session()->getId(),
         ]);
 

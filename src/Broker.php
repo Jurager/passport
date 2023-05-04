@@ -265,7 +265,7 @@ class Broker
 
         // Make request to the authorisation server
         //
-        $response = $this->requester->request($sid, 'POST', $url, array_merge($method, $params), $headers);
+        $response = $this->requester->request($sid, 'POST', $url, array_merge(['method' => $method], $params), $headers);
 
         // Successfully logged out
         //

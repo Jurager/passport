@@ -36,7 +36,7 @@ class Requester
      * @return bool|string|array
      * @throws GuzzleException
      */
-    public function request(ClientSessionManager $storage, $sid, $method, $url, array $params = [], array $headers = []): bool|string|array
+    public function request($sid, $method, $url, array $params = [], array $headers = []): bool|string|array
     {
         try {
             $headers = array_merge($headers, [
@@ -70,9 +70,6 @@ class Requester
             }
 
             if ($req && $res) {
-
-                $storage->purge();
-
                 $this->throwException($req, $res);
             }
 

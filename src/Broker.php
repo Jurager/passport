@@ -200,7 +200,7 @@ class Broker
         $sid   = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
-        return $this->requester->request($this->storage, $sid, 'POST', $url, $credentials, $headers);
+        return $this->requester->request($sid, 'POST', $url, $credentials, $headers);
     }
 
     /**
@@ -218,7 +218,14 @@ class Broker
         $sid     = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
-        return $this->requester->request($this->storage, $sid, 'GET', $url, [], $headers);
+        try {
+            $request = $this->requester->request($sid, 'GET', $url, [], $headers);
+        }
+        catch(NotAttachedException $e) {
+            $this->storage->purge();
+        }
+
+        return $request;
     }
 
     /**
@@ -251,7 +258,7 @@ class Broker
 
         // Make request to the authorisation server
         //
-        $response = $this->requester->request($this->storage, $sid, 'POST', $url, array_merge($method, $params), $headers);
+        $response = $this->requester->request($sid, 'POST', $url, array_merge($method, $params), $headers);
 
         // Successfully logged out
         //
@@ -276,7 +283,7 @@ class Broker
         $sid   = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
-        return $this->requester->request($this->storage, $sid, 'POST', $url, $params, $headers);
+        return $this->requester->request($sid, 'POST', $url, $params, $headers);
     }
 
     /**

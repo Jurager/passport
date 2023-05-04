@@ -222,7 +222,14 @@ class Broker
             $request = $this->requester->request($sid, 'GET', $url, [], $headers);
         }
         catch(NotAttachedException $e) {
+
+            // Purge old session data
+            //
             $this->storage->purge();
+
+            // Request not completed
+            //
+            return false;
         }
 
         return $request;

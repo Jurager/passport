@@ -223,6 +223,10 @@ class Broker
         }
         catch(NotAttachedException $e) {
 
+            if($this->request->bearerToken()) {
+                throw $e;
+            }
+
             // Purge old session data
             //
             $this->storage->purge();

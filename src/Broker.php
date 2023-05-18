@@ -3,6 +3,7 @@
 namespace Jurager\Passport;
 
 use Jurager\Passport\Exceptions\InvalidClientException;
+use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Illuminate\Http\Request;
 use Jurager\Passport\Session\ClientSessionManager;
 use GuzzleHttp\Exception\GuzzleException;
@@ -221,7 +222,7 @@ class Broker
         try {
             $request = $this->requester->request($sid, 'GET', $url, [], $headers);
         }
-        catch(NotAttachedException $e) {
+        catch(NotAttachedException|InvalidSessionIdException $e) {
 
             if($this->request->bearerToken()) {
                 throw $e;

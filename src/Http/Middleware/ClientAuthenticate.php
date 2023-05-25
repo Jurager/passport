@@ -73,11 +73,8 @@ class ClientAuthenticate implements AuthenticatesRequests
                 return true;
             }
         }
-        catch (NotAttachedException $e) {
-            return $this->not_attached($request);
-        }
         catch (InvalidSessionIdException $e) {
-            return $this->unauthenticated($request);
+            throw new NotAttachedException(403, 'Client broker not attached.');
         }
 
         return $this->unauthenticated($request);
@@ -96,21 +93,6 @@ class ClientAuthenticate implements AuthenticatesRequests
         // Not authenticated message
         //
         throw new AuthenticationException('Unauthenticated.', redirectTo: $this->redirectTo($request));
-    }
-
-    /**
-     * Handle a not attached user.
-     *
-     * @param Request $request
-     * @return mixed
-     *
-     * @throws NotAttachedException
-     */
-    protected function not_attached($request): mixed
-    {
-        // Not attached message
-        //
-        throw new NotAttachedException(403, 'Client broker not attached.');
     }
 
     /**

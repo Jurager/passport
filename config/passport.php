@@ -261,6 +261,17 @@ return [
         */
 
         'return_url' => env('PASSPORT_BROKER_RETURN_URL', true),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cloudlare Usage
+        |--------------------------------------------------------------------------
+        |
+        | Using a cloudflare proxying broke IP detection.
+        | Set this to 'true' to obtain client IP address from 'CF-Connecting-IP' header
+        |
+        */
+        'cloudflare' => env('PASSPORT_BROKER_CLOUDFLARE', false),
     ],
 
     /**

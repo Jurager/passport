@@ -308,7 +308,7 @@ class Broker
     {
         return [
             'Passport-User-Agent'     => $request->userAgent(),
-            'Passport-Remote-Address' => $request->ip()
+            'Passport-Remote-Address' => config('passport.broker.cloudflare') ? $request->header('CF-Connecting-IP') : $request->ip()
         ];
     }
 }

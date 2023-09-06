@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport\Console\Commands;
 
+use Illuminate\Support\Facades\Schema;
 use Jurager\Passport\Models\History;
 use Illuminate\Console\Command;
 
@@ -29,6 +30,10 @@ class Prune extends Command
      */
     public function handle(History $history): mixed
     {
-        return $history->where('expires_at', '<=', now())->delete();
+        if ( Schema::hasTable($history->getTable()) ) {
+            return $history->where('expires_at', '<=', now())->delete();
+        }
+
+        return false;
     }
 }

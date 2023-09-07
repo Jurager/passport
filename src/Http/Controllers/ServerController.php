@@ -281,14 +281,10 @@ class ServerController extends Controller
         //
         $closure = $commands[$command];
 
-        // Retrieve broker model from request
-        //
-        $broker = $this->server->getBrokerFromRequest($request);
-
         // Return closure if it is callable
         //
         if (is_callable($closure)) {
-            return response()->json($closure($broker, $request));
+            return response()->json($closure($this->server, $request));
         }
 
         // Return closure not callable

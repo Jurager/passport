@@ -24,6 +24,10 @@ class History extends Model
         'device',
         'platform',
         'browser',
+        'city',
+        'region',
+        'country',
+        'remember_token',
         'expires_at',
         'session_id',
     ];

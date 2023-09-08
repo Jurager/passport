@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create(config('passport.history_table_name'), static function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->morphs('authenticatable');
-            $table->string('user_agent')->nullable();
             $table->string('ip')->nullable();
+            $table->string('user_agent')->nullable();
             $table->string('device_type')->nullable();
             $table->string('device')->nullable();
             $table->string('platform')->nullable();
@@ -26,9 +25,11 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('region')->nullable();
             $table->string('country')->nullable();
-            $table->string('session_id')->nullable();
+            $table->string('session_id')->index()->nullable();
             $table->string('remember_token')->nullable();
             $table->datetime('expires_at');
+
+            $table->timestamps();
 
             $table->softDeletes();
         });

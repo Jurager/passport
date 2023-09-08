@@ -11,6 +11,7 @@ use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\UnauthorizedException;
 use Jurager\Passport\Server;
 use Jurager\Passport\Session\ServerSessionManager;
+use Jurager\Passport\Models\History;
 
 class ServerAuthenticate
 {
@@ -70,6 +71,11 @@ class ServerAuthenticate
             // Update session expiration date
             //
             $this->storage->refresh($sid);
+
+            // Update expires_at date in history table
+            //
+            History::where(['session_id' => $this->storage->get($sid)
+                ->update('expires_at', date("Y-m-d H:i:s", strtotime('+'.config('session.lifetime').' minutes')))]);
 
             // Next
             //

@@ -13,6 +13,22 @@ class History extends Model
     use SoftDeletes;
 
     /**
+     * The attributes that should be mass fillable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'user_agent',
+        'ip',
+        'device_type',
+        'device',
+        'platform',
+        'browser',
+        'expires_at',
+        'session_id',
+    ];
+
+    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array

@@ -13,13 +13,6 @@ class History extends Model
     use SoftDeletes;
 
     /**
-     * The attributes that aren't mass assignable.
-     *
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
@@ -29,18 +22,9 @@ class History extends Model
         'authenticatable_id',
         'session_id',
         'remember_token',
-        'oauth_access_token_id',
-        'personal_access_token_id',
         'expires_at',
         'deleted_at',
     ];
-
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = ['is_current'];
 
     /**
      * @param array $attributes

@@ -45,10 +45,13 @@ class PassportServiceProvider extends ServiceProvider
             __DIR__ . '/../config/passport.php' => config_path('passport.php'),
         ]);
 
-        // Only on server
+        // Empty 'broker.client_id' indicates that we are working as server
+        //
+        $migrations_folder = !config('passport.broker.client_id') ? 'server' : 'broker';
+
         // Load Migrations
         //
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations/'.$migrations_folder);
 
         // Add Guard
         //

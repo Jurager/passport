@@ -29,7 +29,7 @@ Route::middleware('passport')->group(function() {
 
     }
 
-    // Not empty value of broker.client_id indicates that we are using passport as server
+    // Empty value of 'broker.client_id' indicates that we are working as server
     //
     if(!config('passport.broker.client_id')) {
 

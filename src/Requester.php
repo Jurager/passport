@@ -27,7 +27,6 @@ class Requester
     /**
      * Generate new checksum
      *
-     * @param ClientSessionManager $storage
      * @param $sid
      * @param $method
      * @param $url
@@ -35,6 +34,7 @@ class Requester
      * @param array $headers
      * @return bool|string|array
      * @throws GuzzleException
+     * @throws JsonException
      */
     public function request($sid, $method, $url, array $params = [], array $headers = []): bool|string|array
     {

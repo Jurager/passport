@@ -275,9 +275,19 @@ return [
     ],
 
     /**
+     * Brokers database table name
+     */
+    'brokers_table_name' => env('PASSPORT_BROKERS_TABLE', 'brokers'),
+
+    /**
      * History database table name
      */
-    'history_table_name' => env('PASSPORT_HISTORY_TABLE', 'logins'),
+    'history_table_name' => env('PASSPORT_HISTORY_TABLE', 'history'),
+
+    /**
+     * Acess Tokens database table name
+     */
+    'access_tokens_table_name' => env('PASSPORT_ACCESS_TOKENS_TABLE', 'access_tokens'),
 
     /**
     * Enable debug mode

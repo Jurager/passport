@@ -41,15 +41,15 @@ class Server
         //
         $this->encryption = new Encryption;
 
-        // Model brokers
+        // Broker model
         //
         $this->model = config('passport.server.model');
 
-        // Model brokers id field
+        // Broker model id field
         //
         $this->id_field = config('passport.server.id_field');
 
-        // Model brokers secret field
+        // Broker model secret field
         //
         $this->secret_field = config('passport.server.secret_field');
 

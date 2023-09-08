@@ -30,7 +30,7 @@ return [
         |
         */
 
-        'model' => env('PASSPORT_SERVER_MODEL', 'App\Models\Broker'),
+        'model' => env('PASSPORT_SERVER_MODEL', 'Jurager\Passport\Models\Broker'),
 
         /*
         |--------------------------------------------------------------------------
@@ -271,7 +271,7 @@ return [
         | Set this to 'true' to obtain client IP address from 'CF-Connecting-IP' header
         |
         */
-        'cloudflare' => env('PASSPORT_BROKER_CLOUDFLARE', false),
+        'uses_cloudflare' => env('PASSPORT_BROKER_CLOUDFLARE', false),
     ],
 
     /**
@@ -285,7 +285,7 @@ return [
     'history_table_name' => env('PASSPORT_HISTORY_TABLE', 'history'),
 
     /**
-     * Acess Tokens database table name
+     * Access Tokens database table name
      */
     'access_tokens_table_name' => env('PASSPORT_ACCESS_TOKENS_TABLE', 'access_tokens'),
 

@@ -36,11 +36,11 @@ trait HasTokens
     /**
      * Remove user created token
      *
-     * @param $id
+     * @param $token_id
      * @return bool
      */
-    public function removeToken($id): bool
+    public function removeToken($token_id): bool
     {
-        return $this->tokens()->dissociate($id);
+        return $this->tokens()->where('id', $token_id)->delete();
     }
 }

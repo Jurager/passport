@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport;
 
+use Jurager\Passport\Models\Token;
 use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Auth\Events\Attempting;
 use Illuminate\Auth\Events\Failed;
@@ -12,11 +13,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Http\Response;
 use JsonException;
 
 class PassportGuard implements Guard
@@ -148,10 +146,6 @@ class PassportGuard implements Guard
         //
         $this->user = $this->retrieveFromPayload($payload);
 
-        // Update actual user payload
-        //
-        $this->updatePayload($payload);
-
         // Call authenticated event
         //
         if($this->user) {
@@ -162,24 +156,24 @@ class PassportGuard implements Guard
         //
         return $this->user;
     }
-    
+
     /**
      * Log a user into the application using the bearer token.
      *
-     * @param array $payload
+     * @param string $token
      * @return Authenticatable|bool|null
      */
     public function loginFromToken(string $token): Authenticatable|bool|null
     {
         // If there is an authorization header
         //
-        if($token && class_exists('\App\Models\AccessToken')) {
+        if($token) {
 
             // First, look for the record with the token in the database
             //
-            $access_token = \App\Models\AccessToken::where('token', $token)->first();
+            $access_token = Token::where('token', $token)->first();
 
-            // Token found, trying to authentificate user by it's id
+            // Token found, trying to authentificate user by its id
             //
             if($access_token && (! $access_token->expires_at || ! $access_token->expires_at->isPast()) ) {
 
@@ -250,18 +244,6 @@ class PassportGuard implements Guard
         $username = config('passport.broker.client_username', 'email');
 
         return array_key_exists($username, $payload);
-    }
-
-    /**
-     * Update user payload
-     *
-     * @param array $payload
-     */
-    protected function updatePayload(array $payload): void
-    {
-        if ($this->user && method_exists($this->user, 'setPayload')) {
-            $this->user->setPayload($payload);
-        }
     }
 
     /**

@@ -287,7 +287,7 @@ return [
     /**
      * Access Tokens database table name
      */
-    'access_tokens_table_name' => env('PASSPORT_ACCESS_TOKENS_TABLE', 'access_tokens'),
+    'tokens_table_name' => env('PASSPORT_TOKENS_TABLE', 'access_tokens'),
 
     /**
     * Enable debug mode

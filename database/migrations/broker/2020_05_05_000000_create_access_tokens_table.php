@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create(config('passport.access_tokens_table_name'), static function (Blueprint $table) {
+        Schema::create(config('passport.tokens_table_name'), static function (Blueprint $table) {
             $table->id();
             $table->morphs('tokenable');
             $table->string('name');
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists(config('passport.access_tokens_table_name'));
+        Schema::dropIfExists(config('passport.tokens_table_name'));
     }
 };

@@ -169,6 +169,10 @@ class PassportGuard implements Guard
         //
         if($token) {
 
+            // Hash it
+            //
+            $token = hash('sha256', $token);
+
             // First, look for the record with the token in the database
             //
             $access_token = Token::where('token', $token)->first();

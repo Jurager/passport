@@ -8,7 +8,7 @@ use Jurager\Passport\Exceptions\ProviderException;
 use Jurager\Passport\Interfaces\Provider;
 use Jurager\Passport\Providers\Ip2LocationLite;
 use Jurager\Passport\Providers\IpApi;
-use Illuminate\Support\Facades\App;
+use Exception;
 
 class ProviderFactory
 {
@@ -17,7 +17,7 @@ class ProviderFactory
      *
      * @param string $name
      * @return IpApi|object|void
-     * @throws \Exception|GuzzleException
+     * @throws Exception|GuzzleException
      */
     public static function build(string $name)
     {

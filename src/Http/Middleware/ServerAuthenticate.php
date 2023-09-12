@@ -100,7 +100,7 @@ class ServerAuthenticate
      * @param $sid
      * @return false|mixed
      */
-    protected function check($guard, $sid)
+    protected function check($guard, $sid): mixed
     {
         // Decode account session data
         //

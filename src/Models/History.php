@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Session;
 use Jurager\Passport\Session\ServerSessionManager;
+use Exception;
 
 class History extends Model
 {
@@ -92,7 +93,7 @@ class History extends Model
      * Revoke the login.
      *
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function revoke(): ?bool
     {

@@ -2,13 +2,6 @@
 
 namespace Jurager\Passport\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use JsonException;
 use Jurager\Passport\Encryption;
 use Jurager\Passport\Events;
 use Jurager\Passport\Factories\HistoryFactory;
@@ -18,12 +11,18 @@ use Jurager\Passport\Http\Middleware\ValidateBroker;
 use Jurager\Passport\RequestContext;
 use Jurager\Passport\Server;
 use Jurager\Passport\Session\ServerSessionManager;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use JsonException;
 
 class ServerController extends Controller
 {
     use Authenticate;
-
 
     /**
      * @var Server

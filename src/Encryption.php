@@ -3,7 +3,6 @@
 namespace Jurager\Passport;
 
 use Illuminate\Support\Str;
-use Ramsey\Uuid\Uuid;
 
 /**
  * Encryption class

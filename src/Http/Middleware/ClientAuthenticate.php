@@ -3,7 +3,6 @@
 namespace Jurager\Passport\Http\Middleware;
 
 use Closure;
-use Jurager\Passport\Broker;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\NotAttachedException;
 use Illuminate\Auth\AuthenticationException;
@@ -16,7 +15,7 @@ class ClientAuthenticate implements AuthenticatesRequests
     /**
      * The authentication factory instance.
      *
-     * @var \Illuminate\Contracts\Auth\Factory
+     * @var Auth
      */
     protected Auth $auth;
 
@@ -30,7 +29,7 @@ class ClientAuthenticate implements AuthenticatesRequests
     /**
      * Create a new middleware instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Factory  $auth
+     * @param Auth $auth
      * @return void
      */
     public function __construct(Auth $auth)
@@ -41,13 +40,13 @@ class ClientAuthenticate implements AuthenticatesRequests
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param Request $request
+     * @param Closure $next
      * @return mixed
      *
-     * @throws \Illuminate\Auth\AuthenticationException
+     * @throws AuthenticationException
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
         $this->authenticate($request);
 
@@ -62,7 +61,7 @@ class ClientAuthenticate implements AuthenticatesRequests
      *
      * @throws AuthenticationException
      */
-    protected function authenticate($request): mixed
+    protected function authenticate(Request $request): mixed
     {
         if($token = $request->bearerToken()) {
             $this->auth->guard()->loginFromToken($token);
@@ -73,7 +72,7 @@ class ClientAuthenticate implements AuthenticatesRequests
                 return true;
             }
         }
-        catch (InvalidSessionIdException $e) {
+        catch (InvalidSessionIdException) {
             throw new NotAttachedException(403, 'Client broker not attached.');
         }
 
@@ -88,7 +87,7 @@ class ClientAuthenticate implements AuthenticatesRequests
      *
      * @throws AuthenticationException
      */
-    protected function unauthenticated($request): mixed
+    protected function unauthenticated(Request $request): mixed
     {
         // Not authenticated message
         //
@@ -100,7 +99,7 @@ class ClientAuthenticate implements AuthenticatesRequests
      *
      * @param Request $request
      */
-    protected function redirectTo($request)
+    protected function redirectTo(Request $request)
     {
         if(!$request->expectsJson()) {
 

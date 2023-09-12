@@ -2,12 +2,12 @@
 
 namespace Jurager\Passport\Http\Controllers;
 
-use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Http\RedirectResponse;
 use Jurager\Passport\Broker;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Jurager\Passport\Session\ClientSessionManager;
+use GuzzleHttp\Exception\GuzzleException;
+use JsonException;
 
 class BrokerController extends Controller
 {
@@ -17,20 +17,13 @@ class BrokerController extends Controller
     protected Broker $broker;
 
     /**
-     * @var ClientSessionManager
-     */
-    protected ClientSessionManager $storage;
-
-    /**
      * Constructor
      *
      * @param Broker $broker
-     * @param ClientSessionManager $storage
      */
-    public function __construct(Broker $broker, ClientSessionManager $storage)
+    public function __construct(Broker $broker)
     {
         $this->broker  = $broker;
-        $this->storage = $storage;
     }
 
     /**
@@ -75,7 +68,7 @@ class BrokerController extends Controller
      * @param Request $request
      * @return RedirectResponse
      * @throws GuzzleException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function logoutById(Request $request): RedirectResponse
     {
@@ -103,7 +96,7 @@ class BrokerController extends Controller
      * @param Request $request
      * @return RedirectResponse
      * @throws GuzzleException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function logoutAll(Request $request): RedirectResponse
     {
@@ -132,7 +125,7 @@ class BrokerController extends Controller
      * @param Request $request
      * @return RedirectResponse
      * @throws GuzzleException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function logoutOthers(Request $request): RedirectResponse
     {

@@ -8,6 +8,7 @@ use Jurager\Passport\Factories\ParserFactory;
 use Jurager\Passport\Interfaces\Provider;
 use Jurager\Passport\Interfaces\UserAgentParser;
 use Illuminate\Support\Facades\Request;
+use Exception;
 
 class RequestContext
 {
@@ -34,7 +35,7 @@ class RequestContext
     /**
      * RequestContext constructor.
      *
-     * @throws \Exception|GuzzleException
+     * @throws Exception|GuzzleException
      */
     public function __construct()
     {

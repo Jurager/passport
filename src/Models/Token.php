@@ -59,7 +59,7 @@ class Token extends Model
      *
      * @return MorphTo
      */
-    public function tokenable()
+    public function tokenable(): MorphTo
     {
         return $this->morphTo('tokenable');
     }

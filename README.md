@@ -4,6 +4,6 @@
 [![PHP Version Require](http://poser.pugx.org/jurager/passport/require/php)](https://packagist.org/packages/jurager/passport)
 [![License](https://poser.pugx.org/jurager/passport/license)](https://packagist.org/packages/jurager/passport)
 
-Laravel package to implement single sign on authentication method, supporting centralized repository of users, creation of user models in brokers without violating the business logic of applications. Provides methods to implement authentication history pages, with ability to end the session of all or a specific user.
+This Laravel package makes it easy to implement single sign-on authentication. It has a centralized user repository and allows for creating user models in brokers without affecting app logic. It also includes methods for adding authentication history pages and ending sessions for all or specific users.
 
-> Documentation for the package is in the process of being written, for now use this readme
+> The package documentation is currently being written. Please refer to the readme file for instructions and usage guidelines.

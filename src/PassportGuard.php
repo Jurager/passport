@@ -22,7 +22,7 @@ class PassportGuard implements Guard
     use GuardHelpers;
 
     /**
-     * The name of the guard. Typically "web".
+     * The name of the guard. Typically, "web".
      *
      * Corresponds to guard name in authentication configuration.
      *
@@ -175,9 +175,9 @@ class PassportGuard implements Guard
 
             // First, look for the record with the token in the database
             //
-            $access_token = Token::where('token', $token)->first();
+            $access_token = Token::query()->where('token', $token)->first();
 
-            // Token found, trying to authentificate user by its id
+            // Token found, trying to authenticate user by its id
             //
             if($access_token && (! $access_token->expires_at || ! $access_token->expires_at->isPast()) ) {
 
@@ -190,7 +190,7 @@ class PassportGuard implements Guard
                 //
                 $this->user = $access_token->tokenable;
 
-                // Successfully authentificated
+                // Successfully authenticated
                 //
                 return $this->user;
             }

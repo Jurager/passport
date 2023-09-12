@@ -4,6 +4,7 @@ namespace Jurager\Passport\Factories;
 
 use Jurager\Passport\Parsers\Agent;
 use Jurager\Passport\Parsers\WhichBrowser;
+use Exception;
 
 class ParserFactory
 {
@@ -12,14 +13,14 @@ class ParserFactory
      *
      * @param string $name
      * @return Agent|WhichBrowser
-     * @throws \Exception
+     * @throws Exception
      */
     public static function build(string $name): Agent|WhichBrowser
     {
         return match ($name) {
             'agent' => new Agent(),
             'whichbrowser' => new WhichBrowser(),
-            default => throw new \Exception('Choose a supported User-Agent parser.'),
+            default => throw new Exception('Choose a supported User-Agent parser.'),
         };
     }
 }

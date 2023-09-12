@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Jurager\Passport\Events\FailedApiCall;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
+use JsonException;
 
 trait MakesApiCalls
 {
@@ -48,7 +49,7 @@ trait MakesApiCalls
 
             return collect(json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR));
 
-        } catch (TransferException|\JsonException $e) {
+        } catch (TransferException|JsonException $e) {
 
             event(new FailedApiCall($e));
 

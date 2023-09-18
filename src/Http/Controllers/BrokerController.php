@@ -74,7 +74,7 @@ class BrokerController extends Controller
     {
         // Response failed status
         //
-        $status = [ 'type' => 'error', 'message' => __('errors.error_while_trying_logout')];
+        $status = [ 'type' => 'error', 'message' => trans('passport::errors.error_while_trying_logout')];
 
         // Trying to log out broker
         //
@@ -82,7 +82,7 @@ class BrokerController extends Controller
 
             // Response success status
             //
-            $status = [ 'type' => 'success', 'message' => __('messages.session_successfully_logout')];
+            $status = [ 'type' => 'success', 'message' => trans('passport::messages.session_successfully_logout')];
         }
 
         // Redirect with status message
@@ -102,7 +102,7 @@ class BrokerController extends Controller
     {
         // Response failed status
         //
-        $status = [ 'type' => 'error', 'message' => __('errors.error_while_trying_logout')];
+        $status = [ 'type' => 'error', 'message' => trans('passport::errors.error_while_trying_logout')];
 
         // Trying to log out all devices on broker
         //
@@ -110,7 +110,7 @@ class BrokerController extends Controller
 
             // Response success status
             //
-            $status = [ 'type' => 'success', 'message' => __('messages.session_successfully_logout')];
+            $status = [ 'type' => 'success', 'message' => trans('passport::messages.session_successfully_logout')];
         }
 
         // Redirect with status message
@@ -131,7 +131,7 @@ class BrokerController extends Controller
     {
         // Response failed status
         //
-        $status = [ 'type' => 'error', 'message' => __('errors.error_while_trying_logout')];
+        $status = [ 'type' => 'error', 'message' => trans('passport::errors.error_while_trying_logout')];
 
         // Trying to log out other devices on broker
         //
@@ -139,7 +139,7 @@ class BrokerController extends Controller
 
             // Response success status
             //
-            $status = [ 'type' => 'success', 'message' => __('messages.session_successfully_logout')];
+            $status = [ 'type' => 'success', 'message' => trans('passport::messages.session_successfully_logout')];
         }
 
         // Redirect with status message

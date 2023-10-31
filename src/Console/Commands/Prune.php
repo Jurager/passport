@@ -20,18 +20,27 @@ class Prune extends Command
      *
      * @var string
      */
-    protected $description = 'Send a marketing email to a user';
+    protected $description = 'Prune expired history entries';
 
     /**
      * Execute the console command.
      *
      * @param History $history
-     * @return mixed
+     * @return bool
      */
-    public function handle(History $history): mixed
+    public function handle(History $history): bool
     {
+
         if ( Schema::hasTable($history->getTable()) ) {
-            return $history->where('expires_at', '<=', now())->delete();
+
+            $history = $history->where('expires_at', '<=', now());
+            $counted = $history->count();
+
+            $history->delete();
+
+            $this->info('Successfully pruned '.$counted.' history entries');
+
+            return true;
         }
 
         return false;

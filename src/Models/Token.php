@@ -4,28 +4,28 @@ namespace Jurager\Passport\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
- * @property int $user_id
- * @property int $region_id
- * @property bool $request
- * @property float $balance
- * @property float $percent
- * @property bool $mode
- * @property string $referral
+ * @property int $tokenable_id
+ * @property string $tokenable_type
+ * @property string $name
+ * @property string $token
+ * @property string $last_used_at
+ * @property string $expires_at
  * @property string $crated_at
  * @property string $updated_at
- * @property int $active_count
+ * @property string $deleted_at
  *
  * @mixin Builder
  */
 class Token extends Model
 {
 
-    use SoftDeletes;
+    use SoftDeletes, Prunable;
 
     /**
      * The attributes that should be cast to native types.
@@ -62,5 +62,13 @@ class Token extends Model
     public function tokenable(): MorphTo
     {
         return $this->morphTo('tokenable');
+    }
+
+    /**
+     * Determines the prunable query.
+     */
+    public function prunable()
+    {
+        return $this->where('expires_at', '<=', now());
     }
 }

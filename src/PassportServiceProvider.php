@@ -8,6 +8,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 use Jurager\Passport\Console\Commands\Prune;
+use Jurager\Passport\Models\Token;
 
 class PassportServiceProvider extends ServiceProvider
 {
@@ -92,6 +93,12 @@ class PassportServiceProvider extends ServiceProvider
                 // Run prunable command
                 //
                 $schedule->command('history:prune')->everyMinute();
+
+                // Run prunable model command
+                //
+                $schedule->command('model:prune', [
+                    '--model' => [Token::class],
+                ])->everyMinute();
             });
         }
     }

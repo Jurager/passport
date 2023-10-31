@@ -2,12 +2,22 @@
 
 namespace Jurager\Passport\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Session;
 use Jurager\Passport\Session\ServerSessionManager;
 
+/**
+ * @property int $id
+ * @property string $app_id
+ * @property string $secret
+ * @property string $crated_at
+ * @property string $updated_at
+ *
+ * @mixin Builder
+ */
 class Broker extends Model
 {
     use SoftDeletes;

@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,6 +10,29 @@ use Illuminate\Support\Facades\Session;
 use Jurager\Passport\Session\ServerSessionManager;
 use Exception;
 
+/**
+ * @property int $id
+ * @property int $authenticatable_id
+ * @property string $authenticatable_type
+ * @property string $tokenable_type
+ * @property string $user_agent
+ * @property string $ip
+ * @property string $device_type
+ * @property string $device
+ * @property string $platform
+ * @property string $browser
+ * @property string $city
+ * @property string $region
+ * @property string $country
+ * @property string $remember_token
+ * @property string $expires_at
+ * @property string $session_id
+ * @property string $crated_at
+ * @property string $updated_at
+ * @property string $deleted_at
+ *
+ * @mixin Builder
+ */
 class History extends Model
 {
     use SoftDeletes;

@@ -4,7 +4,7 @@ namespace Jurager\Passport\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\MassPrunable;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Token extends Model
 {
 
-    use SoftDeletes, MassPrunable;
+    use SoftDeletes, Prunable;
 
     /**
      * The attributes that should be cast to native types.

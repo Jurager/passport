@@ -4,6 +4,7 @@ namespace Jurager\Passport\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Session;
@@ -35,7 +36,7 @@ use Exception;
  */
 class History extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Prunable;
 
     /**
      * The attributes that should be mass fillable.
@@ -131,5 +132,15 @@ class History extends Model
 
         // Delete login
         return $this->delete();
+    }
+
+    /**
+     * Get the prunable model query.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function prunable()
+    {
+        return static::where('expires_at', '<=', now());
     }
 }

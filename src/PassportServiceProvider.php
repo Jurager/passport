@@ -7,7 +7,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
-use Jurager\Passport\Console\Commands\Prune;
+use Jurager\Passport\Models\History;
 use Jurager\Passport\Models\Token;
 
 class PassportServiceProvider extends ServiceProvider
@@ -48,11 +48,11 @@ class PassportServiceProvider extends ServiceProvider
 
         // Empty 'broker.client_id' indicates that we are working as server
         //
-        $migrations_folder = !config('passport.broker.client_id') ? 'server' : 'broker';
+        $mode = !config('passport.broker.client_id') ? 'server' : 'broker';
 
         // Load Migrations
         //
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations/'.$migrations_folder);
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations/'.$mode);
 
         // Add Guard
         //
@@ -78,27 +78,22 @@ class PassportServiceProvider extends ServiceProvider
         //
         if ($this->app->runningInConsole()) {
 
-            // Register command
-            //
-            $this->commands([ Prune::class]);
-
             // Wait until the application booted
             //
-            $this->app->booted(function () {
+            $this->app->booted(function () use ($mode) {
 
                 // Create new schedule
                 //
                 $schedule = $this->app->make(Schedule::class);
 
-                // Run prunable command
+                // Run prunable commands
                 //
-                $schedule->command('history:prune')->everyMinute();
+                $model = ($mode === 'client') ? Token::class : History::class;
 
                 // Run prunable model command
                 //
-                $schedule->command('model:prune', [
-                    '--model' => [Token::class],
-                ])->everyMinute();
+                $schedule->command('model:prune', ['--model' => [ $model ]])->everyMinute();
+
             });
         }
     }

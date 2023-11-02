@@ -5,7 +5,7 @@ namespace Jurager\Passport\Events;
 use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
 
-class AuthFailed
+class Unauthenticated
 {
     use SerializesModels;
 

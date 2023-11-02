@@ -4,7 +4,7 @@ namespace Jurager\Passport\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Prunable;
+use Illuminate\Database\Eloquent\MassPrunable;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Token extends Model
 {
 
-    use SoftDeletes, Prunable;
+    use SoftDeletes, MassPrunable;
 
     /**
      * The attributes that should be cast to native types.
@@ -65,10 +65,12 @@ class Token extends Model
     }
 
     /**
-     * Determines the prunable query.
+     * Get the prunable model query.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function prunable()
     {
-        return $this->where('expires_at', '<=', now());
+        return static::where('expires_at', '<=', now());
     }
 }

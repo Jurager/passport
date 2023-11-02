@@ -125,10 +125,7 @@ return [
             | Float describing the number of seconds to wait while trying to connect
             | to the provider's API.
             |
-            | If the request takes more time, the IP address lookup will be ignored
-            | and the Jurager\Passport\Events\FailedApiCall will be
-            | dispatched, receiving the attribute $exception containing the
-            | GuzzleHttp\Exception\TransferException.
+            | If the request takes more time, the IP address lookup will be ignored.
             |
             | Use 0 to wait indefinitely.
             |

@@ -147,10 +147,6 @@ class ServerController extends Controller
             //
             $user->history()->save($history);
 
-            //  Succeeded auth event
-            //
-            event(new Events\AuthSucceeded($user, $request));
-
             // Return current user information
             //
             return response()->json($this->userInfo($user, $request));
@@ -158,7 +154,7 @@ class ServerController extends Controller
 
         //  Failed auth event
         //
-        event(new Events\AuthFailed($this->loginCredentials($request), $request));
+        event(new Events\Unauthenticated($this->loginCredentials($request), $request));
 
         //  Return unauthenticated response
         //

@@ -4,7 +4,6 @@ namespace Jurager\Passport\Traits;
 
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
-use Jurager\Passport\Events\FailedApiCall;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
 use JsonException;
@@ -12,9 +11,9 @@ use JsonException;
 trait MakesApiCalls
 {
     /**
-     * @var Client $httpClient
+     * @var Client $http
      */
-    protected Client $httpClient;
+    protected Client $http;
 
     /**
      * @var Collection|null
@@ -28,7 +27,7 @@ trait MakesApiCalls
      */
     public function __construct()
     {
-        $this->httpClient = new Client([
+        $this->http = new Client([
             'connect_timeout' => config('passport.server.lookup.timeout'),
         ]);
 
@@ -45,13 +44,11 @@ trait MakesApiCalls
     {
         try {
 
-            $response = $this->httpClient->send($this->getRequest());
+            $response = $this->http->send($this->getRequest());
 
             return collect(json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR));
 
         } catch (TransferException|JsonException $e) {
-
-            event(new FailedApiCall($e));
 
             return null;
         }

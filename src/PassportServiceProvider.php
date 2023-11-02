@@ -88,7 +88,7 @@ class PassportServiceProvider extends ServiceProvider
 
                 // Run prunable commands
                 //
-                $model = ($mode === 'client') ? Token::class : History::class;
+                $model = ($mode === 'broker') ? Token::class : History::class;
 
                 // Run prunable model command
                 //

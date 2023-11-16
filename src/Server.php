@@ -108,7 +108,7 @@ class Server
      * @return string
      * @throw \Jurager\Passport\Exceptions\InvalidSessionIdException
      */
-    public function validateBrokerSessionId(string $sid): string
+    public function validateBrokerSessionId(string|null $sid): string
     {
         // Get broker and token from session
         //
@@ -171,10 +171,10 @@ class Server
     /**
      * Return broker info from sid
      *
-     * @param string $sid
+     * @param string|null $sid
      * @return array
      */
-    public function getBrokerInfoFromSessionId(string $sid): array
+    public function getBrokerInfoFromSessionId(string|null $sid): array
     {
         // Check session matching
         //
@@ -198,9 +198,9 @@ class Server
      * Retrieve broker session id from request
      *
      * @param $request
-     * @return string
+     * @return string|null
      */
-    public function getBrokerSessionId($request): string
+    public function getBrokerSessionId($request): string|null
     {
         // Get bearer token from request
         //

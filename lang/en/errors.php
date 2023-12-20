@@ -4,6 +4,7 @@ return [
     'invalid_client_id' => 'Invalid client id.',
     'invalid_checksum' => 'Invalid checksum.',
     'invalid_session_id' => 'Invalid session id',
+    'not_authorized' => 'Not authorized',
     'checksum_failed' => 'Checksum failed: Client IP address may have changed',
     'not_attached' => 'Client broker not attached',
     'command_not_callable' => 'Command can\'t be executed.',
@@ -11,4 +12,5 @@ return [
     'invalid_server_model_field' => 'Invalid server model field id. Please make sure the server field id is defined in config.',
     'invalid_server_model_secret' => 'Invalid server model field secret. Please make sure the server field secret is defined in config.',
     'provider_not_selected' => 'Choose a supported address lookup provider.',
+    'error_while_trying_logout' => 'Error while trying to logout'
 ];

@@ -156,9 +156,10 @@ class ServerController extends Controller
         //
         event(new Events\Unauthenticated($this->loginCredentials($request), $request));
 
-        //  Return unauthenticated response
+
+        // Unauthorized exception
         //
-        return response()->json([], 401);
+        return response()->json(['code' => 'unauthorized' ], 401);
     }
 
     /**
@@ -183,9 +184,9 @@ class ServerController extends Controller
             //
             if (!$callback) {
 
-                //  Return unauthenticated response
+                // Unauthorized exception
                 //
-                return response()->json([], 401);
+                return response()->json(['code' => 'unauthorized' ], 401);
             }
 
             // Return current user information
@@ -193,9 +194,9 @@ class ServerController extends Controller
             return response()->json($this->userInfo($callback, $request));
         }
 
-        //  Return unauthenticated response
+        // Unauthorized exception
         //
-        return response()->json([], 401);
+        return response()->json(['code' => 'unauthorized' ], 401);
     }
 
     /**
@@ -248,9 +249,9 @@ class ServerController extends Controller
             return response()->json([], 400);
         }
 
-        //  Return unauthenticated response
+        // Unauthorized exception
         //
-        return response()->json([], 401);
+        return response()->json(['code' => 'unauthorized' ], 401);
     }
 
     /**

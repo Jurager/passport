@@ -159,7 +159,8 @@ class ServerController extends Controller
 
         // Unauthorized exception
         //
-        return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
+        //return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
+        return response()->json([], 401);
     }
 
     /**
@@ -186,7 +187,8 @@ class ServerController extends Controller
 
                 // Unauthorized exception
                 //
-                return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
+                //return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
+                return response()->json([], 401);
             }
 
             // Return current user information
@@ -196,7 +198,8 @@ class ServerController extends Controller
 
         // Unauthorized exception
         //
-        return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
+        //return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
+        return response()->json([], 401);
     }
 
     /**
@@ -251,7 +254,8 @@ class ServerController extends Controller
 
         // Unauthorized exception
         //
-        return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
+        //return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
+        return response()->json([], 401);
     }
 
     /**

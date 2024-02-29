@@ -11,23 +11,18 @@ class Unauthenticated
 
     /**
      * The credentials.
-     *
-     * @var array
      */
     public array $credentials;
 
     /**
      * The request object.
-     *
-     * @var Request|null
      */
     public ?Request $request;
 
     /**
      * Create a new event instance.
      *
-     * @param $credentials
-     * @param null $request
+     * @param  null  $request
      */
     public function __construct($credentials, $request = null)
     {

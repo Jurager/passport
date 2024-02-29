@@ -7,9 +7,6 @@ use Jurager\Passport\Models\Token;
 
 trait HasTokens
 {
-    /**
-     * @return mixed
-     */
     public function tokens(): mixed
     {
         return $this->morphMany(Token::class, 'tokenable');
@@ -17,16 +14,12 @@ trait HasTokens
 
     /**
      * Create new token for simple authorization
-     *
-     * @param $name
-     * @param $expires
-     * @return string
      */
     public function createToken($name, $expires): string
     {
         $this->tokens()->create([
-            'name'  => $name,
-            'expires_at' => $expires ? now()->addMinutes($expires) : NULL,
+            'name' => $name,
+            'expires_at' => $expires ? now()->addMinutes($expires) : null,
             'token' => hash('sha256', $plainTextToken = Str::random(40)),
         ]);
 
@@ -35,9 +28,6 @@ trait HasTokens
 
     /**
      * Remove user created token
-     *
-     * @param $token_id
-     * @return bool
      */
     public function removeToken($token_id): bool
     {

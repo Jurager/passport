@@ -4,10 +4,10 @@ namespace Jurager\Passport\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Jurager\Passport\Server;
-use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\InvalidClientException;
+use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\UnauthorizedException;
+use Jurager\Passport\Server;
 
 class ValidateBroker
 {
@@ -20,10 +20,6 @@ class ValidateBroker
 
     /**
      * Handle an incoming request.
-     *
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
      */
     public function handle(Request $request, Closure $next): mixed
     {

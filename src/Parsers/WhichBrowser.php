@@ -2,15 +2,12 @@
 
 namespace Jurager\Passport\Parsers;
 
-use Jurager\Passport\Interfaces\UserAgentParser;
 use Illuminate\Support\Facades\Request;
+use Jurager\Passport\Interfaces\UserAgentParser;
 use WhichBrowser\Parser;
 
 class WhichBrowser implements UserAgentParser
 {
-    /**
-     * @var Parser
-     */
     protected Parser $parser;
 
     /**
@@ -23,8 +20,6 @@ class WhichBrowser implements UserAgentParser
 
     /**
      * Get the device name.
-     *
-     * @return string|null
      */
     public function getDevice(): ?string
     {
@@ -33,8 +28,6 @@ class WhichBrowser implements UserAgentParser
 
     /**
      * Get the device name by manufacturer and model.
-     *
-     * @return string|null
      */
     protected function getDeviceByManufacturerAndModel(): ?string
     {
@@ -43,8 +36,6 @@ class WhichBrowser implements UserAgentParser
 
     /**
      * Get the device type.
-     *
-     * @return string|null
      */
     public function getDeviceType(): ?string
     {
@@ -53,8 +44,6 @@ class WhichBrowser implements UserAgentParser
 
     /**
      * Get the platform name.
-     *
-     * @return string|null
      */
     public function getPlatform(): ?string
     {
@@ -63,8 +52,6 @@ class WhichBrowser implements UserAgentParser
 
     /**
      * Get the browser name.
-     *
-     * @return string|null
      */
     public function getBrowser(): ?string
     {

@@ -2,20 +2,20 @@
 
 namespace Jurager\Passport;
 
-use Jurager\Passport\Models\Token;
-use Illuminate\Auth\Events\Authenticated;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Auth\Events\Attempting;
+use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
-use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
+use Jurager\Passport\Models\Token;
 
 class PassportGuard implements Guard
 {
@@ -25,41 +25,28 @@ class PassportGuard implements Guard
      * The name of the guard. Typically, "web".
      *
      * Corresponds to guard name in authentication configuration.
-     *
-     * @var string
      */
     protected string $name;
 
     /**
      * The user provider implementation.
-     *
-     * @var Broker
      */
     protected Broker $broker;
 
     /**
      * The request instance.
-     *
-     * @var \Symfony\Component\HttpFoundation\Request|Request|null
      */
     protected \Symfony\Component\HttpFoundation\Request|Request|null $request;
 
     /**
      * The event dispatcher instance.
-     *
-     * @var Dispatcher
      */
     protected Dispatcher $events;
 
     /**
      * Create a new authentication guard.
-     *
-     * @param string $name
-     * @param UserProvider $provider
-     * @param Broker $broker
-     * @param Request|null $request
      */
-    public function __construct(string $name, UserProvider $provider, Broker $broker, Request $request = null)
+    public function __construct(string $name, UserProvider $provider, Broker $broker, ?Request $request = null)
     {
         $this->name = $name;
         $this->provider = $provider;
@@ -70,16 +57,15 @@ class PassportGuard implements Guard
     /**
      * Get the currently authenticated user.
      *
-     * @return Authenticatable|null
      * @throws GuzzleException
      * @throws JsonException
      */
-    public function user() : Authenticatable|null
+    public function user(): ?Authenticatable
     {
         // All routes that need to be authenticated should use AttachBroker middleware
         // Otherwise need a workaround with exception on pages, that not uses this middleware
         //
-        if(is_null($this->user) && !$this->broker->isAttached()) {
+        if (is_null($this->user) && ! $this->broker->isAttached()) {
             return null;
         }
 
@@ -97,9 +83,6 @@ class PassportGuard implements Guard
     /**
      * Attempt to authenticate a user using the given credentials.
      *
-     * @param array $credentials
-     * @param bool $remember
-     * @return Authenticatable|bool|null
      * @throws GuzzleException|JsonException
      */
     public function attempt(array $credentials = [], bool $remember = false): Authenticatable|bool|null
@@ -136,9 +119,6 @@ class PassportGuard implements Guard
 
     /**
      * Log a user into the application using the payload.
-     *
-     * @param array $payload
-     * @return Authenticatable|bool|null
      */
     public function loginFromPayload(array $payload): Authenticatable|bool|null
     {
@@ -148,7 +128,7 @@ class PassportGuard implements Guard
 
         // Call authenticated event
         //
-        if($this->user) {
+        if ($this->user) {
             $this->fireAuthenticatedEvent($this->user);
         }
 
@@ -159,15 +139,12 @@ class PassportGuard implements Guard
 
     /**
      * Log a user into the application using the bearer token.
-     *
-     * @param string $token
-     * @return Authenticatable|bool|null
      */
     public function loginFromToken(string $token): Authenticatable|bool|null
     {
         // If there is an authorization header
         //
-        if($token) {
+        if ($token) {
 
             // Hash it
             //
@@ -179,7 +156,7 @@ class PassportGuard implements Guard
 
             // Token found, trying to authenticate user by its id
             //
-            if($access_token && (! $access_token->expires_at || ! $access_token->expires_at->isPast()) ) {
+            if ($access_token && (! $access_token->expires_at || ! $access_token->expires_at->isPast())) {
 
                 // Update token last usage timestamp
                 //
@@ -201,19 +178,16 @@ class PassportGuard implements Guard
 
     /**
      * Retrieve user from payload
-     *
-     * @param mixed $payload
-     * @return Authenticatable|bool|null
      */
     protected function retrieveFromPayload(mixed $payload): Authenticatable|bool|null
     {
-        if (!$this->usernameExistsInPayload($payload)) {
+        if (! $this->usernameExistsInPayload($payload)) {
             return false;
         }
 
         $user = $this->retrieveByCredentials($payload);
 
-        if (!$user) {
+        if (! $user) {
             $userCreateStrategy = config('passport.user_create_strategy');
 
             if (is_callable($userCreateStrategy) && $userCreateStrategy($payload)) {
@@ -226,9 +200,6 @@ class PassportGuard implements Guard
 
     /**
      * Retrieve user by credentials from payload
-     *
-     * @param mixed $payload
-     * @return Authenticatable|null
      */
     protected function retrieveByCredentials(mixed $payload): ?Authenticatable
     {
@@ -239,9 +210,6 @@ class PassportGuard implements Guard
 
     /**
      * Check if config broker username exists in payload
-     *
-     * @param mixed $payload
-     * @return bool
      */
     protected function usernameExistsInPayload(mixed $payload): bool
     {
@@ -252,9 +220,6 @@ class PassportGuard implements Guard
 
     /**
      * Validate a user's credentials.
-     *
-     * @param  array  $credentials
-     * @return bool
      */
     public function validate(array $credentials = []): bool
     {
@@ -270,7 +235,6 @@ class PassportGuard implements Guard
     /**
      * Logout user.
      *
-     * @return void
      * @throws GuzzleException|JsonException
      */
     public function logout(): void
@@ -295,8 +259,6 @@ class PassportGuard implements Guard
 
     /**
      * Get the current request instance.
-     *
-     * @return Request|\Symfony\Component\HttpFoundation\Request
      */
     public function getRequest(): Request|\Symfony\Component\HttpFoundation\Request
     {
@@ -306,7 +268,6 @@ class PassportGuard implements Guard
     /**
      * Set the current request instance.
      *
-     * @param Request $request
      * @return $this
      */
     public function setRequest(Request $request): static
@@ -318,8 +279,6 @@ class PassportGuard implements Guard
 
     /**
      * Get the event dispatcher instance.
-     *
-     * @return Dispatcher
      */
     public function getDispatcher(): Dispatcher
     {
@@ -328,9 +287,6 @@ class PassportGuard implements Guard
 
     /**
      * Set the event dispatcher instance.
-     *
-     * @param Dispatcher $events
-     * @return void
      */
     public function setDispatcher(Dispatcher $events): void
     {
@@ -339,10 +295,6 @@ class PassportGuard implements Guard
 
     /**
      * Fire the attempt event with the arguments.
-     *
-     * @param  array  $credentials
-     * @param bool $remember
-     * @return void
      */
     protected function fireAttemptEvent(array $credentials, bool $remember = false): void
     {
@@ -351,10 +303,6 @@ class PassportGuard implements Guard
 
     /**
      * Fire the login event if the dispatcher is set.
-     *
-     * @param Authenticatable $user
-     * @param bool $remember
-     * @return void
      */
     protected function fireLoginEvent(Authenticatable $user, bool $remember = false): void
     {
@@ -363,9 +311,6 @@ class PassportGuard implements Guard
 
     /**
      * Fire the authenticated event if the dispatcher is set.
-     *
-     * @param Authenticatable $user
-     * @return void
      */
     protected function fireAuthenticatedEvent(Authenticatable $user): void
     {
@@ -374,10 +319,6 @@ class PassportGuard implements Guard
 
     /**
      * Fire the failed authentication attempt event with the given arguments.
-     *
-     * @param Authenticatable|null $user
-     * @param  array  $credentials
-     * @return void
      */
     protected function fireFailedEvent(?Authenticatable $user, array $credentials): void
     {

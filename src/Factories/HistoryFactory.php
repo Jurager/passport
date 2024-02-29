@@ -4,16 +4,11 @@ namespace Jurager\Passport\Factories;
 
 use Jurager\Passport\Models\History;
 use Jurager\Passport\RequestContext;
-use Illuminate\Auth\Events\Login as LoginEvent;
-use Illuminate\Support\Facades\Log;
 
 class HistoryFactory
 {
     /**
      * Build a new Login.
-     *
-     * @param RequestContext $context
-     * @return History
      */
     public static function build(RequestContext $context): History
     {
@@ -30,7 +25,7 @@ class HistoryFactory
             'device' => $parser->getDevice(),
             'platform' => $parser->getPlatform(),
             'browser' => $parser->getBrowser(),
-            'expires_at' => date("Y-m-d H:i:s", strtotime('+'.config('session.lifetime').' minutes')),
+            'expires_at' => date('Y-m-d H:i:s', strtotime('+'.config('session.lifetime').' minutes')),
             'session_id' => session()->getId(),
         ]);
 

@@ -2,6 +2,13 @@
 
 namespace Jurager\Passport\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use JsonException;
 use Jurager\Passport\Encryption;
 use Jurager\Passport\Events;
 use Jurager\Passport\Factories\HistoryFactory;
@@ -11,38 +18,18 @@ use Jurager\Passport\Http\Middleware\ValidateBroker;
 use Jurager\Passport\RequestContext;
 use Jurager\Passport\Server;
 use Jurager\Passport\Session\ServerSessionManager;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use JsonException;
 
 class ServerController extends Controller
 {
     use Authenticate;
 
-    /**
-     * @var Server
-     */
     protected Server $server;
 
-    /**
-     * @var ServerSessionManager
-     */
     protected ServerSessionManager $storage;
 
-    /**
-     * @var Encryption
-     */
     protected Encryption $encryption;
 
-    /**
-     * @param Server $server
-     * @param ServerSessionManager $storage
-     */
     public function __construct(Server $server, ServerSessionManager $storage)
     {
         $this->middleware(ValidateBroker::class)->except('attach');
@@ -55,9 +42,6 @@ class ServerController extends Controller
 
     /**
      * Attach client broker to server
-     *
-     * @param Request $request
-     * @return Response|JsonResponse|RedirectResponse
      */
     public function attach(Request $request): Response|JsonResponse|RedirectResponse
     {
@@ -65,21 +49,21 @@ class ServerController extends Controller
             'broker' => 'required|string',
             'token' => 'required|string',
             'checksum' => 'required|string',
-            'return_url' => 'nullable|string'
+            'return_url' => 'nullable|string',
         ]);
 
-         if ($validator->fails()) {
-            return response($validator->errors() . '', 400);
+        if ($validator->fails()) {
+            return response($validator->errors().'', 400);
         }
 
         $broker_id = $request->input('broker');
-        $token     = $request->input('token');
-        $checksum  = $request->input('checksum');
+        $token = $request->input('token');
+        $checksum = $request->input('checksum');
         $return_url = $request->input('return_url');
 
         // Compare checksums
         //
-        if (!$this->server->verifyAttachChecksum($broker_id, $token, $checksum)) {
+        if (! $this->server->verifyAttachChecksum($broker_id, $token, $checksum)) {
 
             // Failed checksum comprehension
             //
@@ -96,7 +80,7 @@ class ServerController extends Controller
 
         // Response, if request not containing redirecting route
         //
-        if (!$return_url) {
+        if (! $return_url) {
             return response()->json(['success' => 'attached']);
         }
 
@@ -108,8 +92,6 @@ class ServerController extends Controller
     /**
      * Login
      *
-     * @param Request $request
-     * @return JsonResponse
      * @throws JsonException
      */
     public function login(Request $request): JsonResponse
@@ -156,7 +138,6 @@ class ServerController extends Controller
         //
         event(new Events\Unauthenticated($this->loginCredentials($request), $request));
 
-
         // Unauthorized exception
         //
         //return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
@@ -165,9 +146,6 @@ class ServerController extends Controller
 
     /**
      * Get user profile
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function profile(Request $request): JsonResponse
     {
@@ -175,7 +153,7 @@ class ServerController extends Controller
         //
         $user = Auth::guard()->user();
 
-        if($user) {
+        if ($user) {
 
             // Additional verification
             //
@@ -183,7 +161,7 @@ class ServerController extends Controller
 
             // Failed verification
             //
-            if (!$callback) {
+            if (! $callback) {
 
                 // Unauthorized exception
                 //
@@ -204,9 +182,6 @@ class ServerController extends Controller
 
     /**
      * Logout user
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function logout(Request $request): JsonResponse
     {
@@ -220,21 +195,21 @@ class ServerController extends Controller
 
         // Check user authorisation
         //
-        if($user) {
+        if ($user) {
 
             // Check accepted method
             //
-            if(in_array($method = $request->get('method'), $methods, true)) {
+            if (in_array($method = $request->get('method'), $methods, true)) {
 
                 // By session identifier
                 //
-                if(($method === 'id') && !$user->logoutById($request->get('id'))) {
+                if (($method === 'id') && ! $user->logoutById($request->get('id'))) {
                     return response()->json(['error' => true]);
                 }
 
                 // By all or others method
                 //
-                if(($method === 'all' || $method === 'others') && !$user->{'logout'.ucfirst($method)}()) {
+                if (($method === 'all' || $method === 'others') && ! $user->{'logout'.ucfirst($method)}()) {
                     return response()->json(['error' => true]);
                 }
 
@@ -260,10 +235,6 @@ class ServerController extends Controller
 
     /**
      * Run command
-     *
-     * @param Request $request
-     * @param $command
-     * @return JsonResponse
      */
     public function commands(Request $request, $command): JsonResponse
     {
@@ -273,7 +244,7 @@ class ServerController extends Controller
 
         // Command not found in configuration
         //
-        if (!array_key_exists($command, $commands)) {
+        if (! array_key_exists($command, $commands)) {
             return response()->json(['message' => trans('passport::errors.command_not_found')], 404);
         }
 

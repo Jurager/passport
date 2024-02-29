@@ -2,11 +2,11 @@
 
 namespace Jurager\Passport;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Console\Scheduling\Schedule;
 use Jurager\Passport\Models\History;
 use Jurager\Passport\Models\Token;
 
@@ -18,23 +18,19 @@ class PassportServiceProvider extends ServiceProvider
      * @return void
      */
 
-     /**
+    /**
      * The middleware aliases.
-     *
-     * @var array
      */
     protected array $routeMiddleware = [];
 
     /**
      * The middleware groups.
-     *
-     * @var array
      */
     protected array $middlewareGroups = [
         'passport' => [
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
-            StartSession::class
+            StartSession::class,
         ],
     ];
 
@@ -43,16 +39,16 @@ class PassportServiceProvider extends ServiceProvider
         // Publish Config
         //
         $this->publishes([
-            __DIR__ . '/../config/passport.php' => config_path('passport.php'),
+            __DIR__.'/../config/passport.php' => config_path('passport.php'),
         ]);
 
         // Empty 'broker.client_id' indicates that we are working as server
         //
-        $mode = !config('passport.broker.client_id') ? 'server' : 'broker';
+        $mode = ! config('passport.broker.client_id') ? 'server' : 'broker';
 
         // Load Migrations
         //
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations/'.$mode);
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations/'.$mode);
 
         // Add Guard
         //
@@ -68,7 +64,7 @@ class PassportServiceProvider extends ServiceProvider
 
         // Attach Routes
         //
-        $this->loadRoutesFrom(__DIR__ . '/../routes/passport.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/passport.php');
 
         // Load Translations
         //
@@ -92,7 +88,7 @@ class PassportServiceProvider extends ServiceProvider
 
                 // Run prunable model command
                 //
-                $schedule->command('model:prune', ['--model' => [ $model ]])->everyMinute();
+                $schedule->command('model:prune', ['--model' => [$model]])->everyMinute();
 
             });
         }
@@ -100,18 +96,14 @@ class PassportServiceProvider extends ServiceProvider
 
     /**
      * Register the application services.
-     *
-     * @return void
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/passport.php', 'passport');
+        $this->mergeConfigFrom(__DIR__.'/../config/passport.php', 'passport');
     }
 
     /**
      * Extend Laravel Auth.
-     *
-     * @return void
      */
     protected function extendAuthGuard(): void
     {
@@ -139,8 +131,6 @@ class PassportServiceProvider extends ServiceProvider
 
     /**
      * Register route middlewares.
-     *
-     * @return void
      */
     protected function registerRouteMiddlewares(): void
     {
@@ -151,8 +141,6 @@ class PassportServiceProvider extends ServiceProvider
 
     /**
      * Register middleware groups.
-     *
-     * @return void
      */
     protected function registerMiddlewareGroups(): void
     {

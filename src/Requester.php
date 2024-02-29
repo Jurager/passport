@@ -2,17 +2,16 @@
 
 namespace Jurager\Passport;
 
-use GuzzleHttp\Psr7;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7;
+use Illuminate\Support\Facades\Log;
 use JsonException;
-use Jurager\Passport\Session\ClientSessionManager;
-use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\InvalidClientException;
+use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\NotAttachedException;
 use Jurager\Passport\Exceptions\UnauthorizedException;
-use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
 class Requester
@@ -27,12 +26,6 @@ class Requester
     /**
      * Generate new checksum
      *
-     * @param $sid
-     * @param $method
-     * @param $url
-     * @param array $params
-     * @param array $headers
-     * @return bool|string|array
      * @throws GuzzleException
      * @throws JsonException
      */
@@ -40,14 +33,14 @@ class Requester
     {
         try {
             $headers = array_merge($headers, [
-                'Authorization' => 'Bearer ' . $sid,
-                'Accept' => 'application/json'
+                'Authorization' => 'Bearer '.$sid,
+                'Accept' => 'application/json',
             ]);
 
             $response = $this->client->request($method, $url, [
                 'query' => $method === 'GET' ? $params : [],
                 'form_params' => $method === 'POST' ? $params : [],
-                'headers' => $headers
+                'headers' => $headers,
             ]);
 
             return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -84,8 +77,7 @@ class Requester
      * @throw Jurager\Passport\Exceptions\InvalidClientException
      * @throw Jurager\Passport\Exceptions\UnauthorizedException
      * @throw Jurager\Passport\Exceptions\NotAttachedException
-     * @param $request
-     * @param $response
+     *
      * @throws JsonException
      * @throws NotAttachedException
      * @throws UnauthorizedException
@@ -93,7 +85,7 @@ class Requester
     protected function throwException($request, $response): void
     {
         $status = $response->getStatusCode();
-        $body   = $response->getBody();
+        $body = $response->getBody();
         $body->rewind();
 
         $jsonResponse = json_decode($body->getContents(), true, 512, JSON_THROW_ON_ERROR);

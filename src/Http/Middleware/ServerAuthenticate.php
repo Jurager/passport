@@ -9,9 +9,9 @@ use JsonException;
 use Jurager\Passport\Events;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\UnauthorizedException;
+use Jurager\Passport\Models\History;
 use Jurager\Passport\Server;
 use Jurager\Passport\Session\ServerSessionManager;
-use Jurager\Passport\Models\History;
 
 class ServerAuthenticate
 {
@@ -28,10 +28,8 @@ class ServerAuthenticate
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
-     * @param null $guard
-     * @return mixed
+     * @param  null  $guard
+     *
      * @throws JsonException
      */
     public function handle(Request $request, Closure $next, $guard = null): mixed
@@ -46,7 +44,7 @@ class ServerAuthenticate
 
         // Check if session exists in storage
         //
-        if (!$this->storage->has($sid)) {
+        if (! $this->storage->has($sid)) {
 
             // Broker must be attached before authenticating users
             //
@@ -75,19 +73,19 @@ class ServerAuthenticate
             // Update expires_at date in history table
             //
             History::where('session_id', $this->storage->get($sid))
-                ->update(['expires_at' => date("Y-m-d H:i:s", strtotime('+'.config('session.lifetime').' minutes'))]);
+                ->update(['expires_at' => date('Y-m-d H:i:s', strtotime('+'.config('session.lifetime').' minutes'))]);
 
             // Next
             //
             return $next($request);
 
-        } catch(InvalidSessionIdException $e) {
+        } catch (InvalidSessionIdException $e) {
 
             // Invalid session exception
             //
             return response()->json(['code' => 'invalid_session_id', 'message' => $e->getMessage()], 403);
 
-        } catch(UnauthorizedException $e) {
+        } catch (UnauthorizedException $e) {
 
             // Unauthorized exception
             //
@@ -96,8 +94,6 @@ class ServerAuthenticate
     }
 
     /**
-     * @param $guard
-     * @param $sid
      * @return false|mixed
      */
     protected function check($guard, $sid): mixed
@@ -106,7 +102,7 @@ class ServerAuthenticate
         //
         $attributes = json_decode($this->storage->getUserData($sid), true);
 
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
 
             // Retrieve user by credentials from payload
             //

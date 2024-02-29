@@ -2,7 +2,6 @@
 
 namespace Jurager\Passport\Session;
 
-
 class ClientSessionManager extends AbstractSessionManager
 {
     /**

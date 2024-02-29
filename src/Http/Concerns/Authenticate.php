@@ -3,10 +3,10 @@
 namespace Jurager\Passport\Http\Concerns;
 
 use Illuminate\Contracts\Auth\Authenticatable;
-use Jurager\Passport\Events;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use JsonException;
+use Jurager\Passport\Events;
 
 trait Authenticate
 {
@@ -47,9 +47,6 @@ trait Authenticate
 
     /**
      * Attempt login
-     *
-     * @param Request $request
-     * @return Authenticatable|null
      */
     protected function attemptLogin(Request $request): ?Authenticatable
     {
@@ -71,32 +68,22 @@ trait Authenticate
 
     /**
      * Return login credentials
-     *
-     * @param Request $request
-     * @return array
      */
     protected function loginCredentials(Request $request): array
     {
         return $request->only($this->username($request), 'password');
     }
 
-     /**
+    /**
      * Return username
-     *
-     * @param Request $request
-     *
-     * @return string
      */
     protected function username(Request $request): string
     {
         return $request->input('login', 'email');
     }
 
-     /**
+    /**
      * Return session credentials
-     *
-     * @param Request $request
-     * @return array
      */
     protected function sessionCredentials(Request $request): array
     {
@@ -108,10 +95,6 @@ trait Authenticate
 
     /**
      * Return user info
-     *
-     * @param mixed $user
-     * @param Request $request
-     * @return mixed
      */
     protected function userInfo(mixed $user, Request $request): mixed
     {
@@ -139,10 +122,6 @@ trait Authenticate
 
     /**
      * Do additional verification by calling after_authenticating closure.
-     *
-     * @param Authenticatable $user
-     * @param Request $request
-     * @return Authenticatable|null
      */
     protected function afterAuthenticatingUser(Authenticatable $user, Request $request): ?Authenticatable
     {
@@ -156,7 +135,7 @@ trait Authenticate
 
         // Return closure if it is callable
         //
-        if (is_callable($closure) && !$closure($user, $broker, $request)) {
+        if (is_callable($closure) && ! $closure($user, $broker, $request)) {
 
             // Reset user to null if closure return false
             //

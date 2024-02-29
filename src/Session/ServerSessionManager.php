@@ -16,9 +16,6 @@ class ServerSessionManager extends AbstractSessionManager
 
     /**
      * Set user session data
-     *
-     * @param string $sid
-     * @param array|string $value
      */
     public function setUserData(string $sid, array|string $value): void
     {
@@ -33,9 +30,6 @@ class ServerSessionManager extends AbstractSessionManager
 
     /**
      * Retrieve user session data
-     *
-     * @param string $sid
-     * @return array|string|null
      */
     public function getUserData(string $sid): array|string|null
     {
@@ -49,9 +43,6 @@ class ServerSessionManager extends AbstractSessionManager
 
     /**
      * Remove user data from session
-     *
-     * @param string $sid
-     * @return void
      */
     public function deleteUserData(string $sid): void
     {
@@ -64,9 +55,6 @@ class ServerSessionManager extends AbstractSessionManager
 
     /**
      * Start a new session by resetting the session value
-     *
-     * @param string $sid
-     * @return void
      */
     public function start(string $sid): void
     {
@@ -77,9 +65,6 @@ class ServerSessionManager extends AbstractSessionManager
 
     /**
      * Update expiration date by updating session
-     *
-     * @param string $sid
-     * @return void
      */
     public function refresh(string $sid): void
     {

@@ -2,34 +2,21 @@
 
 namespace Jurager\Passport;
 
+use Illuminate\Http\Request;
 use Jurager\Passport\Exceptions\InvalidServerException;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
-
-use Illuminate\Http\Request;
 
 /**
  * Class Server
  */
 class Server
 {
-    /**
-     * @var Encryption
-     */
     protected Encryption $encryption;
 
-    /**
-     * @var
-     */
     private mixed $model;
 
-    /**
-     * @var string
-     */
     private string $id_field;
 
-    /**
-     * @var string
-     */
     private string $secret_field;
 
     /**
@@ -55,7 +42,7 @@ class Server
 
         // Model brokers not found
         //
-        if (!class_exists($this->model)) {
+        if (! class_exists($this->model)) {
             throw new InvalidSessionIdException("Class $this->model does not exist");
         }
 
@@ -72,12 +59,9 @@ class Server
         }
     }
 
-
     /**
      * Find broker by id
      *
-     * @param $id
-     * @return mixed
      * @throw \Jurager\Passport\Exceptions\InvalidSessionIdException
      */
     public function findBrokerById($id): mixed
@@ -88,7 +72,7 @@ class Server
 
         // Check if broker exists
         //
-        if (!$model) {
+        if (! $model) {
 
             // Broker not exists exception
             //
@@ -103,12 +87,10 @@ class Server
     /**
      * Validate broker session id
      *
-     * @param string $sid
      *
-     * @return string
      * @throw \Jurager\Passport\Exceptions\InvalidSessionIdException
      */
-    public function validateBrokerSessionId(string|null $sid): string
+    public function validateBrokerSessionId(?string $sid): string
     {
         // Get broker and token from session
         //
@@ -127,11 +109,6 @@ class Server
 
     /**
      * Generate session id
-     *
-     * @param string $broker_id
-     * @param string $token
-     *
-     * @return string
      */
     public function generateSessionId(string $broker_id, string $token): string
     {
@@ -150,12 +127,6 @@ class Server
 
     /**
      * Verify attach checksum
-     *
-     * @param string $broker_id
-     * @param string $checksum
-     * @param string $token
-     *
-     * @return string
      */
     public function verifyAttachChecksum(string $broker_id, string $token, string $checksum): string
     {
@@ -170,15 +141,12 @@ class Server
 
     /**
      * Return broker info from sid
-     *
-     * @param string|null $sid
-     * @return array
      */
-    public function getBrokerInfoFromSessionId(string|null $sid): array
+    public function getBrokerInfoFromSessionId(?string $sid): array
     {
         // Check session matching
         //
-        if (!preg_match('/^Passport-(\w*+)-(\w*+)-([a-z\d]*+)$/', $sid, $matches)) {
+        if (! preg_match('/^Passport-(\w*+)-(\w*+)-([a-z\d]*+)$/', $sid, $matches)) {
 
             // Invalid session identification exception
             //
@@ -196,21 +164,18 @@ class Server
 
     /**
      * Retrieve broker session id from request
-     *
-     * @param $request
-     * @return string|null
      */
-    public function getBrokerSessionId($request): string|null
+    public function getBrokerSessionId($request): ?string
     {
         // Get bearer token from request
         //
         $token = $request->bearerToken();
 
-        if (!$token) {
+        if (! $token) {
             $token = $request->input('access_token');
         }
 
-        if (!$token) {
+        if (! $token) {
             $token = $request->input('sso_session');
         }
 
@@ -219,10 +184,6 @@ class Server
 
     /**
      * Return broker model from Http Request
-     *
-     * @param Request $request
-     *
-     * @return mixed
      */
     public function getBrokerFromRequest(Request $request): mixed
     {

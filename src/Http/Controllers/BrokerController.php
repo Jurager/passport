@@ -2,35 +2,27 @@
 
 namespace Jurager\Passport\Http\Controllers;
 
-use Jurager\Passport\Broker;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
+use Jurager\Passport\Broker;
 
 class BrokerController extends Controller
 {
-    /**
-     * @var Broker
-     */
     protected Broker $broker;
 
     /**
      * Constructor
-     *
-     * @param Broker $broker
      */
     public function __construct(Broker $broker)
     {
-        $this->broker  = $broker;
+        $this->broker = $broker;
     }
 
     /**
      * Attach client to server
-     *
-     * @param Request $request
-     * @return RedirectResponse
      */
     public function attach(Request $request): RedirectResponse
     {
@@ -50,11 +42,11 @@ class BrokerController extends Controller
 
         // Get the server attachment route
         //
-        $attach_url = $this->broker->server_url . '/attach?' . http_build_query([
-            'broker'   => $this->broker->client_id,
-            'token'    => $token,
+        $attach_url = $this->broker->server_url.'/attach?'.http_build_query([
+            'broker' => $this->broker->client_id,
+            'token' => $token,
             'checksum' => $checksum,
-            ...$params
+            ...$params,
         ]);
 
         // Redirect to server attachment route
@@ -65,8 +57,6 @@ class BrokerController extends Controller
     /**
      * Destroy a session / Revoke an access token by its ID.
      *
-     * @param Request $request
-     * @return RedirectResponse
      * @throws GuzzleException
      * @throws JsonException
      */
@@ -74,15 +64,15 @@ class BrokerController extends Controller
     {
         // Response failed status
         //
-        $status = [ 'type' => 'error', 'message' => trans('passport::errors.error_while_trying_logout')];
+        $status = ['type' => 'error', 'message' => trans('passport::errors.error_while_trying_logout')];
 
         // Trying to log out broker
         //
-        if($this->broker->logout($request, 'id')){
+        if ($this->broker->logout($request, 'id')) {
 
             // Response success status
             //
-            $status = [ 'type' => 'success', 'message' => trans('passport::messages.session_successfully_logout')];
+            $status = ['type' => 'success', 'message' => trans('passport::messages.session_successfully_logout')];
         }
 
         // Redirect with status message
@@ -93,8 +83,6 @@ class BrokerController extends Controller
     /**
      * Destroy all sessions / Revoke all access tokens.
      *
-     * @param Request $request
-     * @return RedirectResponse
      * @throws GuzzleException
      * @throws JsonException
      */
@@ -102,15 +90,15 @@ class BrokerController extends Controller
     {
         // Response failed status
         //
-        $status = [ 'type' => 'error', 'message' => trans('passport::errors.error_while_trying_logout')];
+        $status = ['type' => 'error', 'message' => trans('passport::errors.error_while_trying_logout')];
 
         // Trying to log out all devices on broker
         //
-        if($this->broker->logout($request, 'all')) {
+        if ($this->broker->logout($request, 'all')) {
 
             // Response success status
             //
-            $status = [ 'type' => 'success', 'message' => trans('passport::messages.session_successfully_logout')];
+            $status = ['type' => 'success', 'message' => trans('passport::messages.session_successfully_logout')];
         }
 
         // Redirect with status message
@@ -118,12 +106,9 @@ class BrokerController extends Controller
         return redirect()->back()->with('status', $status);
     }
 
-
     /**
      * Destroy all sessions / Revoke all access tokens, except the current one.
      *
-     * @param Request $request
-     * @return RedirectResponse
      * @throws GuzzleException
      * @throws JsonException
      */
@@ -131,15 +116,15 @@ class BrokerController extends Controller
     {
         // Response failed status
         //
-        $status = [ 'type' => 'error', 'message' => trans('passport::errors.error_while_trying_logout')];
+        $status = ['type' => 'error', 'message' => trans('passport::errors.error_while_trying_logout')];
 
         // Trying to log out other devices on broker
         //
-        if($this->broker->logout($request, 'others')) {
+        if ($this->broker->logout($request, 'others')) {
 
             // Response success status
             //
-            $status = [ 'type' => 'success', 'message' => trans('passport::messages.session_successfully_logout')];
+            $status = ['type' => 'success', 'message' => trans('passport::messages.session_successfully_logout')];
         }
 
         // Redirect with status message

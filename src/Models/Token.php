@@ -24,8 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Token extends Model
 {
-
-    use SoftDeletes, Prunable;
+    use Prunable, SoftDeletes;
 
     /**
      * The attributes that should be cast to native types.
@@ -42,11 +41,8 @@ class Token extends Model
      *
      * @var array
      */
-    protected $fillable = [ 'name', 'token', 'last_used_at', 'expires_at' ];
+    protected $fillable = ['name', 'token', 'last_used_at', 'expires_at'];
 
-    /**
-     * @param array $attributes
-     */
     public function __construct(array $attributes = [])
     {
         $this->setTable(config('passport.tokens_table_name'));
@@ -56,8 +52,6 @@ class Token extends Model
 
     /**
      * Get the tokenable model that the access token belongs to.
-     *
-     * @return MorphTo
      */
     public function tokenable(): MorphTo
     {

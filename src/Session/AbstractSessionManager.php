@@ -13,7 +13,6 @@ abstract class AbstractSessionManager
 
     /**
      * Return the session configuration ttl
-     * @return int
      */
     protected function getSessionTTL(): int
     {
@@ -22,7 +21,6 @@ abstract class AbstractSessionManager
 
     /**
      * Check if session ttl is forever, means if its value is null
-     * @return bool
      */
     protected function isTTLForever(): bool
     {
@@ -32,9 +30,9 @@ abstract class AbstractSessionManager
     /**
      * Set session value in the cache
      *
-     * @param $key string
-     * @param $value string
-     * @param $forever bool
+     * @param  $key  string
+     * @param  $value  string
+     * @param  $forever  bool
      */
     public function set(string $key, string $value, bool $forever = false): void
     {
@@ -49,20 +47,15 @@ abstract class AbstractSessionManager
     /**
      * Return session value of the key $key
      *
-     * @param string $key
-     * @param string|array|null $default
      * @return string|array|null $key
      */
-    public function get(string $key, string|array $default = null): string|array|null
+    public function get(string $key, string|array|null $default = null): string|array|null
     {
         return $this->store()->get($key, $default);
     }
 
     /**
      * Check session exists in storage
-     *
-     * @param $key
-     * @return bool
      */
     public function has($key): bool
     {

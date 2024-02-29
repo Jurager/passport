@@ -3,14 +3,11 @@
 namespace Jurager\Passport\Parsers;
 
 use Illuminate\Support\Facades\Request;
-use Jurager\Passport\Interfaces\UserAgentParser;
 use Jenssegers\Agent\Agent as Parser;
+use Jurager\Passport\Interfaces\UserAgentParser;
 
 class Agent implements UserAgentParser
 {
-    /**
-     * @var Parser
-     */
     protected Parser $parser;
 
     /**
@@ -24,8 +21,6 @@ class Agent implements UserAgentParser
 
     /**
      * Get the device name.
-     *
-     * @return string|null
      */
     public function getDevice(): ?string
     {
@@ -36,8 +31,6 @@ class Agent implements UserAgentParser
 
     /**
      * Get the device type.
-     *
-     * @return string|null
      */
     public function getDeviceType(): ?string
     {
@@ -54,8 +47,6 @@ class Agent implements UserAgentParser
 
     /**
      * Get the platform name.
-     *
-     * @return string|null
      */
     public function getPlatform(): ?string
     {
@@ -64,8 +55,6 @@ class Agent implements UserAgentParser
 
     /**
      * Get the browser name.
-     *
-     * @return string|null
      */
     public function getBrowser(): ?string
     {

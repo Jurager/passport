@@ -2,17 +2,15 @@
 
 namespace Jurager\Passport\Factories;
 
+use Exception;
 use Jurager\Passport\Parsers\Agent;
 use Jurager\Passport\Parsers\WhichBrowser;
-use Exception;
 
 class ParserFactory
 {
     /**
      * Build a new user-agent parser.
      *
-     * @param string $name
-     * @return Agent|WhichBrowser
      * @throws Exception
      */
     public static function build(string $name): Agent|WhichBrowser

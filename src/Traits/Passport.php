@@ -8,10 +8,6 @@ use Jurager\Passport\Models\History;
 
 trait Passport
 {
-
-    /**
-     * @return mixed
-     */
     public function history(): mixed
     {
         return $this->morphMany(History::class, 'authenticatable');
@@ -19,8 +15,6 @@ trait Passport
 
     /**
      * Get the current user's login.
-     *
-     * @return mixed
      */
     public function current(): mixed
     {
@@ -31,11 +25,8 @@ trait Passport
 
     /**
      * Destroy a session by identifier.
-     *
-     * @param int|null $history_id
-     * @return bool
      */
-    public function logoutById(int $history_id = null): bool
+    public function logoutById(?int $history_id = null): bool
     {
         // Find the login entry by identifier or current session
         //
@@ -43,7 +34,7 @@ trait Passport
 
         // If found try to revoke session
         //
-        return $history && !empty($history->revoke());
+        return $history && ! empty($history->revoke());
     }
 
     /**
@@ -77,8 +68,6 @@ trait Passport
 
     /**
      * Destroy all sessions.
-     *
-     * @return bool
      */
     public function logoutAll(): bool
     {

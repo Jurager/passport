@@ -9,8 +9,6 @@ interface Provider
 {
     /**
      * Get the Guzzle request.
-     *
-     * @return Request
      */
     public function getRequest(): Request;
 
@@ -23,22 +21,16 @@ interface Provider
 
     /**
      * Get the country name.
-     *
-     * @return string
      */
     public function getCountry(): string;
 
     /**
      * Get the region name.
-     *
-     * @return string
      */
     public function getRegion(): string;
 
     /**
      * Get the city name.
-     *
-     * @return string
      */
     public function getCity(): string;
 }

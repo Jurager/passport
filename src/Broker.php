@@ -2,34 +2,22 @@
 
 namespace Jurager\Passport;
 
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Http\Request;
+use JsonException;
 use Jurager\Passport\Exceptions\InvalidClientException;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
-use Illuminate\Http\Request;
-use Jurager\Passport\Session\ClientSessionManager;
-use GuzzleHttp\Exception\GuzzleException;
-use JsonException;
 use Jurager\Passport\Exceptions\NotAttachedException;
+use Jurager\Passport\Session\ClientSessionManager;
 
 class Broker
 {
-    /**
-     * @var Encryption
-     */
     protected Encryption $encryption;
 
-    /**
-     * @var ClientSessionManager
-     */
     protected ClientSessionManager $storage;
 
-    /**
-     * @var Requester
-     */
     protected Requester $requester;
 
-    /**
-     * @var Request
-     */
     protected Request $request;
 
     /**
@@ -49,20 +37,18 @@ class Broker
 
     /**
      * Constructor
-     *
-     * @param Request $request
      */
     public function __construct(Request $request)
     {
         $this->encryption = new Encryption;
         $this->storage = new ClientSessionManager;
-        $this->requester  = new Requester();
+        $this->requester = new Requester();
 
         $this->request = $request;
 
-        $this->client_id     = config('passport.broker.client_id');
+        $this->client_id = config('passport.broker.client_id');
         $this->client_secret = config('passport.broker.client_secret');
-        $this->server_url    = config('passport.broker.server_url');
+        $this->server_url = config('passport.broker.server_url');
 
         if (empty($this->client_id)) {
             throw new InvalidClientException('Invalid client id. Please make sure the client id is defined in config.');
@@ -79,8 +65,6 @@ class Broker
 
     /**
      * Generate an unique session token
-     *
-     * @return string
      */
     public function generateClientToken(): string
     {
@@ -103,8 +87,6 @@ class Broker
 
     /**
      * Return session token
-     *
-     * @return string|array|null
      */
     public function getClientToken(): string|array|null
     {
@@ -123,27 +105,24 @@ class Broker
 
     /**
      * Return the session name used to store session id.
-     *
-     * @return string
      */
     public function sessionName(): string
     {
         // Return session name based on client id
         //
-        return 'sso_token_' . preg_replace('/[_\W]+/', '_', strtolower($this->client_id));
+        return 'sso_token_'.preg_replace('/[_\W]+/', '_', strtolower($this->client_id));
     }
 
     /**
      * Return the session id
      *
-     * @param string|null $token The client generated token
-     * @return string
+     * @param  string|null  $token  The client generated token
      */
-    public function sessionId(string|null $token): string
+    public function sessionId(?string $token): string
     {
         // Client must be attached
         //
-        if (!$token) {
+        if (! $token) {
 
             // Throw not attached exception with 403 status code
             //
@@ -161,21 +140,16 @@ class Broker
 
     /**
      * Check if session is attached
-     *
-     * @return bool
      */
     public function isAttached(): bool
     {
         // Check if client token is exists
         //
-        return !is_null($this->getClientToken());
+        return ! is_null($this->getClientToken());
     }
 
     /**
      * Generate the attachment checksum. Use the encryption algorithm.
-     *
-     * @param string $token
-     * @return string
      */
     public function generateAttachChecksum(string $token): string
     {
@@ -187,18 +161,15 @@ class Broker
     /**
      * Send login request
      *
-     * @param array $credentials
-     * @param Request $request
      *
-     * @return bool|array
      * @throws GuzzleException
      * @throws JsonException
      */
     public function login(array $credentials, Request $request): bool|array
     {
-        $url   = $this->server_url . '/login';
+        $url = $this->server_url.'/login';
         $token = $this->getClientToken();
-        $sid   = $this->sessionId($token);
+        $sid = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
         return $this->requester->request($sid, 'POST', $url, $credentials, $headers);
@@ -206,25 +177,22 @@ class Broker
 
     /**
      * Send profile request
-     * @param Request $request
      *
-     * @return bool|string|array
      * @throws GuzzleException
      * @throws JsonException
      */
     public function profile(Request $request): bool|string|array
     {
-        $url     = $this->server_url . '/profile';
-        $token   = $this->getClientToken();
-        $sid     = $this->sessionId($token);
+        $url = $this->server_url.'/profile';
+        $token = $this->getClientToken();
+        $sid = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
         try {
             $request = $this->requester->request($sid, 'GET', $url, [], $headers);
-        }
-        catch(NotAttachedException|InvalidSessionIdException $e) {
+        } catch (NotAttachedException|InvalidSessionIdException $e) {
 
-            if($this->request->bearerToken()) {
+            if ($this->request->bearerToken()) {
                 throw $e;
             }
 
@@ -242,17 +210,15 @@ class Broker
 
     /**
      * Send logout request
-     * @param Request $request
-     * @param $method
-     * @return bool
+     *
      * @throws GuzzleException
      * @throws JsonException
      */
     public function logout(Request $request, $method = null): bool
     {
-        $url   = $this->server_url . '/logout';
+        $url = $this->server_url.'/logout';
         $token = $this->getClientToken();
-        $sid   = $this->sessionId($token);
+        $sid = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
         // Addition request parameters
@@ -261,7 +227,7 @@ class Broker
 
         // If trying to log out user by history id
         //
-        if($method === 'id') {
+        if ($method === 'id') {
 
             // Append history id to request
             //
@@ -280,19 +246,17 @@ class Broker
     /**
      * Send a command request
      *
-     * @param string $command
-     * @param array $params
-     * @param Request $request
      *
      * @return false|string
+     *
      * @throws GuzzleException
      * @throws JsonException
      */
     public function commands(string $command, array $params, Request $request): bool|string
     {
-        $url   = $this->server_url . '/commands/' .$command;
+        $url = $this->server_url.'/commands/'.$command;
         $token = $this->getClientToken();
-        $sid   = $this->sessionId($token);
+        $sid = $this->sessionId($token);
         $headers = $this->agentHeaders($request);
 
         return $this->requester->request($sid, 'POST', $url, $params, $headers);
@@ -300,15 +264,12 @@ class Broker
 
     /**
      * Add agent headers
-     *
-     * @param Request $request
-     * @return array
      */
     protected function agentHeaders(Request $request): array
     {
         return [
-            'Passport-User-Agent'     => $request->userAgent(),
-            'Passport-Remote-Address' => config('passport.broker.uses_cloudflare') ? $request->header('CF-Connecting-IP') : $request->ip()
+            'Passport-User-Agent' => $request->userAgent(),
+            'Passport-Remote-Address' => config('passport.broker.uses_cloudflare') ? $request->header('CF-Connecting-IP') : $request->ip(),
         ];
     }
 }

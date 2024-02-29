@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Prunable;
@@ -9,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Session;
 use Jurager\Passport\Session\ServerSessionManager;
-use Exception;
 
 /**
  * @property int $id
@@ -36,7 +36,7 @@ use Exception;
  */
 class History extends Model
 {
-    use SoftDeletes, Prunable;
+    use Prunable, SoftDeletes;
 
     /**
      * The attributes that should be mass fillable.
@@ -72,9 +72,6 @@ class History extends Model
         'deleted_at',
     ];
 
-    /**
-     * @param array $attributes
-     */
     public function __construct(array $attributes = [])
     {
         $this->setTable(config('passport.history_table_name'));
@@ -82,9 +79,6 @@ class History extends Model
         parent::__construct($attributes);
     }
 
-    /**
-     * @return MorphTo
-     */
     public function authenticatable(): MorphTo
     {
         return $this->morphTo();
@@ -92,20 +86,16 @@ class History extends Model
 
     /**
      * Add "location" attribute.
-     *
-     * @return string|null
      */
     public function getLocationAttribute(): ?string
     {
-        $location = [ $this->city, $this->region, $this->country ];
+        $location = [$this->city, $this->region, $this->country];
 
         return array_filter($location) ? implode(', ', $location) : null;
     }
 
     /**
      * Add the "is_current" attribute.
-     *
-     * @return bool
      */
     public function getIsCurrentAttribute(): bool
     {
@@ -117,7 +107,6 @@ class History extends Model
     /**
      * Revoke the login.
      *
-     * @return bool|null
      * @throws Exception
      */
     public function revoke(): ?bool

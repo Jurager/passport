@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'session_successfully_logout' => 'Session successfully logout'
+    'session_successfully_logout' => 'Session successfully logout',
 ];

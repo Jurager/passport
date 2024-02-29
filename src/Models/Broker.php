@@ -4,10 +4,7 @@ namespace Jurager\Passport\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Session;
-use Jurager\Passport\Session\ServerSessionManager;
 
 /**
  * @property int $id
@@ -31,9 +28,6 @@ class Broker extends Model
         'secret',
     ];
 
-    /**
-     * @param array $attributes
-     */
     public function __construct(array $attributes = [])
     {
         $this->setTable(config('passport.brokers_table_name'));

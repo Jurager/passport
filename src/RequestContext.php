@@ -2,34 +2,25 @@
 
 namespace Jurager\Passport;
 
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
-use Jurager\Passport\Factories\ProviderFactory;
+use Illuminate\Support\Facades\Request;
 use Jurager\Passport\Factories\ParserFactory;
+use Jurager\Passport\Factories\ProviderFactory;
 use Jurager\Passport\Interfaces\Provider;
 use Jurager\Passport\Interfaces\UserAgentParser;
-use Illuminate\Support\Facades\Request;
-use Exception;
 
 class RequestContext
 {
-    /**
-     * @var UserAgentParser $parser
-     */
     protected UserAgentParser $parser;
 
     /**
-     * @var Provider $provider
+     * @var Provider
      */
     protected $provider;
 
-    /**
-     * @var string $userAgent
-     */
     public string $userAgent;
 
-    /**
-     * @var string|null $ip
-     */
     public ?string $ip;
 
     /**
@@ -58,8 +49,6 @@ class RequestContext
 
     /**
      * Get the parser used to parse the User-Agent header.
-     *
-     * @return UserAgentParser
      */
     public function parser(): UserAgentParser
     {
@@ -68,8 +57,6 @@ class RequestContext
 
     /**
      * Get the IP lookup result.
-     *
-     * @return Provider|null
      */
     public function ip(): ?Provider
     {

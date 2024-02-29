@@ -3,9 +3,9 @@
 namespace Jurager\Passport\Providers;
 
 use Illuminate\Support\Collection;
-use Jurager\Passport\Interfaces\Provider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
+use Jurager\Passport\Interfaces\Provider;
 
 class Ip2LocationLite implements Provider
 {
@@ -28,8 +28,6 @@ class Ip2LocationLite implements Provider
 
     /**
      * Get the Guzzle request.
-     *
-     * @return \GuzzleHttp\Psr7\Request
      */
     public function getRequest(): \GuzzleHttp\Psr7\Request
     {
@@ -37,8 +35,6 @@ class Ip2LocationLite implements Provider
 
     /**
      * Get the country name.
-     *
-     * @return string
      */
     public function getCountry(): string
     {
@@ -47,8 +43,6 @@ class Ip2LocationLite implements Provider
 
     /**
      * Get the region name.
-     *
-     * @return string
      */
     public function getRegion(): string
     {
@@ -57,19 +51,14 @@ class Ip2LocationLite implements Provider
 
     /**
      * Get the city name.
-     *
-     * @return string
      */
     public function getCity(): string
     {
         return $this->result->city_name;
     }
 
-
     /**
      * Get the result of the query.
-     *
-     * @return Collection|null
      */
     public function getResult(): ?Collection
     {

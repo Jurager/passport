@@ -116,7 +116,6 @@ return [
 
             'provider' => 'ip-api',
 
-
             /*
             |--------------------------------------------------------------------------
             | Timeout
@@ -132,7 +131,6 @@ return [
             */
 
             'timeout' => 1.0,
-
 
             /*
             |--------------------------------------------------------------------------
@@ -201,7 +199,6 @@ return [
 
         'client_id' => env('PASSPORT_BROKER_CLIENT_ID'),
 
-
         /*
         |--------------------------------------------------------------------------
         | Broker Secret
@@ -213,7 +210,6 @@ return [
 
         'client_secret' => env('PASSPORT_BROKER_CLIENT_SECRET'),
 
-
         /*
         |--------------------------------------------------------------------------
         | Broker Client Username
@@ -224,7 +220,6 @@ return [
         */
 
         'client_username' => env('PASSPORT_BROKER_CLIENT_USERNAME', 'email'),
-
 
         /*
         |--------------------------------------------------------------------------
@@ -287,14 +282,14 @@ return [
     'tokens_table_name' => env('PASSPORT_TOKENS_TABLE', 'access_tokens'),
 
     /**
-    * Enable debug mode
-    */
+     * Enable debug mode
+     */
     'debug' => env('PASSPORT_DEBUG', false),
 
     /**
-    * Session time to live, default to 10 minutes.
-    * Set to null to store forever
-    */
+     * Session time to live, default to 10 minutes.
+     * Set to null to store forever
+     */
     'storage_ttl' => env('PASSPORT_STORAGE_TTL', 600),
 
     /**
@@ -349,13 +344,13 @@ return [
      * user role.
      */
     'commands' => [
-        /**
-         * Should return an array
-         * 'hasRole' => function($user, $broker, $request) {
-         *     $role = $request->input('role');
-         *     $success = $user->roles->contains($role);
-         *     return ['success' => $success];
-         * }
-         */
-    ]
+    /**
+     * Should return an array
+     * 'hasRole' => function($user, $broker, $request) {
+     *     $role = $request->input('role');
+     *     $success = $user->roles->contains($role);
+     *     return ['success' => $success];
+     * }
+     */
+    ],
 ];

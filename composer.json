@@ -35,7 +35,7 @@
         "illuminate/queue": "~9.0|~10.0|~11.0",
         "illuminate/console": "~9.0|~10.0|~11.0",
         "guzzlehttp/guzzle": "~6.0|~7.0",
-        "guzzlehttp/psr7": "~2.0"
+        "guzzlehttp/psr7": "^2.4.5"
     },
     "autoload": {
         "psr-4": {

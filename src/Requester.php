@@ -7,11 +7,12 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7;
 use Illuminate\Support\Facades\Log;
-use JsonException;
 use Jurager\Passport\Exceptions\InvalidClientException;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\NotAttachedException;
 use Jurager\Passport\Exceptions\UnauthorizedException;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
 class Requester
@@ -27,7 +28,6 @@ class Requester
      * Generate new checksum
      *
      * @throws GuzzleException
-     * @throws JsonException
      */
     public function request($sid, $method, $url, array $params = [], array $headers = []): bool|string|array
     {
@@ -43,9 +43,9 @@ class Requester
                 'headers' => $headers,
             ]);
 
-            return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            return json_decode($response->getBody()->getContents(), true);
 
-        } catch (RequestException|JsonException $e) {
+        } catch (RequestException $e) {
 
             $req = $e->getRequest();
             $res = $e->getResponse();
@@ -78,26 +78,23 @@ class Requester
      * @throw Jurager\Passport\Exceptions\UnauthorizedException
      * @throw Jurager\Passport\Exceptions\NotAttachedException
      *
-     * @throws JsonException
      * @throws NotAttachedException
      * @throws UnauthorizedException
      */
-    protected function throwException($request, $response): void
+    protected function throwException(RequestInterface $request, ResponseInterface $response): void
     {
         $status = $response->getStatusCode();
-        $body = $response->getBody();
-        $body->rewind();
 
-        $jsonResponse = json_decode($body->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $data = json_decode($response->getBody()->getContents(), true);
 
-        if ($jsonResponse && array_key_exists('code', $jsonResponse)) {
+        if ($data && array_key_exists('code', $data)) {
 
-            throw match ($jsonResponse['code']) {
-                'invalid_session_id' => new InvalidSessionIdException($jsonResponse['message'], $status),
-                'invalid_client_id' => new InvalidClientException($jsonResponse['message']),
-                'not_attached' => new NotAttachedException($status, $jsonResponse['message']),
-                'unauthorized' => new UnauthorizedException($status, $jsonResponse['message']),
-                default => new RuntimeException($jsonResponse['message']),
+            throw match ($data['code']) {
+                'invalid_session_id' => new InvalidSessionIdException($data['message'], $status),
+                'invalid_client_id' => new InvalidClientException($data['message']),
+                'not_attached' => new NotAttachedException($status, $data['message']),
+                'unauthorized' => new UnauthorizedException($status, $data['message']),
+                default => new RuntimeException($data['message']),
             };
         }
     }

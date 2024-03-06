@@ -11,8 +11,6 @@ use Jurager\Passport\Exceptions\InvalidClientException;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\NotAttachedException;
 use Jurager\Passport\Exceptions\UnauthorizedException;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
 class Requester
@@ -81,11 +79,13 @@ class Requester
      * @throws NotAttachedException
      * @throws UnauthorizedException
      */
-    protected function throwException(RequestInterface $request, ResponseInterface $response): void
+    protected function throwException($request, $response): void
     {
         $status = $response->getStatusCode();
+        $body = $response->getBody();
+        $body->rewind();
 
-        $data = json_decode($response->getBody()->getContents(), true);
+        $data = json_decode($body->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         if ($data && array_key_exists('code', $data)) {
 

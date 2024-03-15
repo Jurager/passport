@@ -23,11 +23,13 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('region')->nullable();
             $table->string('country')->nullable();
-            $table->string('session_id')->index()->nullable();
+            $table->string('session_id')->nullable();
             $table->string('remember_token')->nullable();
             $table->datetime('expires_at');
 
             $table->timestamps();
+
+            $table->unique(['session_id', 'authenticatable_id', 'authenticatable_type']);
 
             $table->softDeletes();
         });

@@ -62,30 +62,24 @@ class ServerController extends Controller
         $return_url = $request->input('return_url');
 
         // Compare checksums
-        //
         if (! $this->server->verifyAttachChecksum($broker_id, $token, $checksum)) {
 
             // Failed checksum comprehension
-            //
             return response(trans('passport::errors.invalid_checksum'), 400);
         }
 
         // Generate new session
-        //
         $sid = $this->server->generateSessionId($broker_id, $token);
 
         // Start a new session
-        //
         $this->storage->start($sid);
 
         // Response, if request not containing redirecting route
-        //
         if (! $return_url) {
             return response()->json(['success' => 'attached']);
         }
 
         // Redirect to
-        //
         return redirect()->away($return_url);
     }
 
@@ -97,49 +91,38 @@ class ServerController extends Controller
     public function login(Request $request): JsonResponse
     {
         // Retrieve broker session from request
-        //
         $sid = $this->server->getBrokerSessionId($request);
 
         // Check if session exists in storage
-        //
         if (is_null($this->storage->get($sid))) {
 
             // Broker must be attached before authenticating users
-            //
             return response()->json(['code' => 'not_attached', 'message' => trans('passport::errors.not_attached')], 403);
         }
 
         // Authenticate user from request
-        //
         if ($this->authenticate($request, $this)) {
 
             // Get the currently authenticated user
-            //
             $user = Auth::guard()->user();
 
             // Get request information
-            //
             $context = new RequestContext;
 
             // Build a new history
-            //
             $history = HistoryFactory::build($context);
 
             // Attach the login to the user and save it
-            //
             $user->history()->save($history);
 
             // Return current user information
-            //
             return response()->json($this->userInfo($user, $request));
         }
 
         //  Failed auth event
-        //
         event(new Events\Unauthenticated($this->loginCredentials($request), $request));
 
         // Unauthorized exception
-        //
         //return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
         return response()->json([], 401);
     }
@@ -150,32 +133,26 @@ class ServerController extends Controller
     public function profile(Request $request): JsonResponse
     {
         // Get authorized account
-        //
         $user = Auth::guard()->user();
 
         if ($user) {
 
             // Additional verification
-            //
             $callback = $this->afterAuthenticatingUser($user, $request);
 
             // Failed verification
-            //
             if (! $callback) {
 
                 // Unauthorized exception
-                //
                 //return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
                 return response()->json([], 401);
             }
 
             // Return current user information
-            //
             return response()->json($this->userInfo($callback, $request));
         }
 
         // Unauthorized exception
-        //
         //return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
         return response()->json([], 401);
     }
@@ -186,49 +163,39 @@ class ServerController extends Controller
     public function logout(Request $request): JsonResponse
     {
         // Get authorized account
-        //
         $user = Auth::guard()->user();
 
         // Available methods
-        //
         $methods = ['id', 'all', 'others'];
 
         // Check user authorisation
-        //
         if ($user) {
 
             // Check accepted method
-            //
             if (in_array($method = $request->get('method'), $methods, true)) {
 
                 // By session identifier
-                //
                 if (($method === 'id') && ! $user->logoutById($request->get('id'))) {
                     return response()->json(['error' => true]);
                 }
 
                 // By all or others method
-                //
                 if (($method === 'all' || $method === 'others') && ! $user->{'logout'.ucfirst($method)}()) {
                     return response()->json(['error' => true]);
                 }
 
-                //  Succeeded logout event
-                //
+                // Succeeded logout event
                 event(new Events\Logout($user));
 
-                //  Succeeded logout response
-                //
+                // Succeeded logout response
                 return response()->json(['success' => true]);
             }
 
-            //  Return bad request response
-            //
+            // Return bad request response
             return response()->json([], 400);
         }
 
         // Unauthorized exception
-        //
         //return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
         return response()->json([], 401);
     }
@@ -239,27 +206,22 @@ class ServerController extends Controller
     public function commands(Request $request, $command): JsonResponse
     {
         // Retrieve commands from configuration
-        //
         $commands = config('passport.commands', []);
 
         // Command not found in configuration
-        //
         if (! array_key_exists($command, $commands)) {
             return response()->json(['message' => trans('passport::errors.command_not_found')], 404);
         }
 
         // Create closure
-        //
         $closure = $commands[$command];
 
         // Return closure if it is callable
-        //
         if (is_callable($closure)) {
             return response()->json($closure($this->server, $request));
         }
 
         // Return closure not callable
-        //
         return response()->json(['message' => trans('passport::errors.command_not_callable')], 400);
     }
 }

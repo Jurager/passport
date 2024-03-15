@@ -19,7 +19,6 @@ trait Passport
     public function current(): mixed
     {
         // Find current authenticated use history entry
-        //
         return $this->history()->where('session_id', Session::getId())->first();
     }
 
@@ -29,41 +28,30 @@ trait Passport
     public function logoutById(?int $history_id = null): bool
     {
         // Find the login entry by identifier or current session
-        //
         $history = $history_id ? $this->history()->find($history_id) : $this->current();
 
         // If found try to revoke session
-        //
         return $history && ! empty($history->revoke());
     }
 
     /**
      * Destroy all sessions, except the current one.
      *
-     * @return mixed
+     * @return bool
      */
     public function logoutOthers(): bool
     {
         $histories = $this->history()->where(function (Builder $query) {
-            return $query->where('session_id', '!=', Session::getId())->orWhereNull('session_id');
+            return $query->where('session_id', '!=', Session::getId());
         })->get();
 
-        // If it has histories items
-        //
-        if ($histories) {
+        $histories->each(static function ($history) {
 
             // Session is revoked by history
-            //
-            foreach ($histories as $history) {
-                $history->revoke();
-            }
+            $history->revoke();
+        });
 
-            // Success
-            //
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     /**
@@ -72,24 +60,14 @@ trait Passport
     public function logoutAll(): bool
     {
         // Get all user histories items
-        //
         $histories = $this->history()->get();
 
-        // If it has histories items
-        //
-        if ($histories) {
+        $histories->each(static function ($history) {
 
             // Session is revoked by history
-            //
-            foreach ($histories as $history) {
-                $history->revoke();
-            }
+            $history->revoke();
+        });
 
-            // Success
-            //
-            return true;
-        }
-
-        return false;
+        return true;
     }
 }

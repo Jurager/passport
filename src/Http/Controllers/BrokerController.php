@@ -29,19 +29,15 @@ class BrokerController extends Controller
         $params = $request->except(['broker', 'token', 'checksum']);
 
         // Generate an unique session token
-        //
         $token = $this->broker->generateClientToken();
 
         // Save session token in storage
-        //
         $this->broker->saveClientToken($token);
 
         // Generate the attachment checksum
-        //
         $checksum = $this->broker->generateAttachChecksum($token);
 
         // Get the server attachment route
-        //
         $attach_url = $this->broker->server_url.'/attach?'.http_build_query([
             'broker' => $this->broker->client_id,
             'token' => $token,
@@ -50,7 +46,6 @@ class BrokerController extends Controller
         ]);
 
         // Redirect to server attachment route
-        //
         return redirect()->away($attach_url, 307);
     }
 
@@ -63,20 +58,16 @@ class BrokerController extends Controller
     public function logoutById(Request $request): RedirectResponse
     {
         // Response failed status
-        //
         $status = ['type' => 'error', 'message' => trans('passport::errors.error_while_trying_logout')];
 
         // Trying to log out broker
-        //
         if ($this->broker->logout($request, 'id')) {
 
             // Response success status
-            //
             $status = ['type' => 'success', 'message' => trans('passport::messages.session_successfully_logout')];
         }
 
         // Redirect with status message
-        //
         return redirect()->back()->with('status', $status);
     }
 
@@ -89,20 +80,16 @@ class BrokerController extends Controller
     public function logoutAll(Request $request): RedirectResponse
     {
         // Response failed status
-        //
         $status = ['type' => 'error', 'message' => trans('passport::errors.error_while_trying_logout')];
 
         // Trying to log out all devices on broker
-        //
         if ($this->broker->logout($request, 'all')) {
 
             // Response success status
-            //
             $status = ['type' => 'success', 'message' => trans('passport::messages.session_successfully_logout')];
         }
 
         // Redirect with status message
-        //
         return redirect()->back()->with('status', $status);
     }
 
@@ -115,20 +102,16 @@ class BrokerController extends Controller
     public function logoutOthers(Request $request): RedirectResponse
     {
         // Response failed status
-        //
         $status = ['type' => 'error', 'message' => trans('passport::errors.error_while_trying_logout')];
 
         // Trying to log out other devices on broker
-        //
         if ($this->broker->logout($request, 'others')) {
 
             // Response success status
-            //
             $status = ['type' => 'success', 'message' => trans('passport::messages.session_successfully_logout')];
         }
 
         // Redirect with status message
-        //
         return redirect()->back()->with('status', $status);
     }
 }

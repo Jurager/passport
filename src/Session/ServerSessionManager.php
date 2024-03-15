@@ -44,13 +44,12 @@ class ServerSessionManager extends AbstractSessionManager
     /**
      * Remove user data from session
      */
-    public function deleteUserData(string $sid): void
+    public function delete(string $sid): void
     {
-        Session::setId($sid);
-        Session::start();
+        $id = $this->get($sid);
 
-        Session::forget('sso_user');
-        Session::save();
+        Session::setId($id);
+        Session::invalidate();
     }
 
     /**

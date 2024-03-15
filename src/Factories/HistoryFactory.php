@@ -12,13 +12,14 @@ class HistoryFactory
      */
     public static function build(RequestContext $context): History
     {
-        $history = new History();
+        // Get the first history record matching the session_id or instantiate it.
+        $history =  History::firstOrNew(['session_id' =>  session()->getId()]);
 
+        // Parse the User-Agent header.
         $parser = $context->parser();
 
         // Fill in the common attributes
-        //
-        $history->fill([
+        $attributes = [
             'user_agent' => $context->userAgent,
             'ip' => $context->ip,
             'device_type' => $parser->getDeviceType(),
@@ -26,22 +27,20 @@ class HistoryFactory
             'platform' => $parser->getPlatform(),
             'browser' => $parser->getBrowser(),
             'expires_at' => date('Y-m-d H:i:s', strtotime('+'.config('session.lifetime').' minutes')),
-            'session_id' => session()->getId(),
-        ]);
+        ];
 
         // If geolocation data was received
-        //
         if ($geo = $context->ip()) {
 
             // Fill in the geolocation attributes
-            //
-            $history->fill([
+            $attributes = [
+                ...$attributes,
                 'city' => $geo->getCity(),
                 'region' => $geo->getRegion(),
-                'country' => $geo->getCountry(),
-            ]);
+                'country' => $geo->getCountry()
+            ];
         }
 
-        return $history;
+        return $history->fill($attributes);
     }
 }

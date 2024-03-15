@@ -28,12 +28,9 @@ class ProviderFactory
             if ($custom && array_key_exists($name, $custom)) {
 
                 // Use of a custom IP address lookup provider
-                //
                 if (! in_array(Provider::class, class_implements($custom[$name]), true)) {
 
-                    // The custom IP provider class doesn't
-                    // implement the required interface
-
+                    // The custom IP provider class doesn't implement the required interface
                     throw new CustomProviderException;
                 }
 
@@ -42,7 +39,6 @@ class ProviderFactory
             }
 
             // Use of an officially supported address lookup provider
-            //
             return match ($name) {
                 'ip2location-lite' => new Ip2LocationLite,
                 'ip-api' => new IpApi,

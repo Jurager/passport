@@ -65,6 +65,6 @@ class Token extends Model
      */
     public function prunable()
     {
-        return static::where('expires_at', '<=', now());
+        return $this->where('expires_at', '<=', now());
     }
 }

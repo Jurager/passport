@@ -20,10 +20,10 @@ trait HasTokens
         $this->tokens()->create([
             'name' => $name,
             'expires_at' => $expires ? now()->addMinutes($expires) : null,
-            'token' => hash('sha256', $plainTextToken = Str::random(40)),
+            'token' => hash('sha256', $token = Str::random(40)),
         ]);
 
-        return $plainTextToken;
+        return $token;
     }
 
     /**

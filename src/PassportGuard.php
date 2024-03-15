@@ -64,7 +64,6 @@ class PassportGuard implements Guard
     {
         // All routes that need to be authenticated should use AttachBroker middleware
         // Otherwise need a workaround with exception on pages, that not uses this middleware
-        //
         if (is_null($this->user) && ! $this->broker->isAttached()) {
             return null;
         }
@@ -88,7 +87,6 @@ class PassportGuard implements Guard
     public function attempt(array $credentials = [], bool $remember = false): Authenticatable|bool|null
     {
         // Call authentication attempting event
-        //
         $this->fireAttemptEvent($credentials, $remember);
 
         if ($remember) {
@@ -103,7 +101,6 @@ class PassportGuard implements Guard
             $this->fireLoginEvent($user);
 
             // Succeeded
-            //
             return $user;
         }
 
@@ -113,7 +110,6 @@ class PassportGuard implements Guard
         //$this->fireFailedEvent($user, $credentials);
 
         // Auth attempting failed
-        //
         return false;
     }
 
@@ -123,17 +119,13 @@ class PassportGuard implements Guard
     public function loginFromPayload(array $payload): Authenticatable|bool|null
     {
         // Retrieve user from payload
-        //
         $this->user = $this->retrieveFromPayload($payload);
 
         // Call authenticated event
-        //
         if ($this->user) {
             $this->fireAuthenticatedEvent($this->user);
         }
 
-        // Succeeded
-        //
         return $this->user;
     }
 
@@ -143,32 +135,24 @@ class PassportGuard implements Guard
     public function loginFromToken(string $token): Authenticatable|bool|null
     {
         // If there is an authorization header
-        //
         if ($token) {
 
             // Hash it
-            //
             $token = hash('sha256', $token);
 
             // First, look for the record with the token in the database
-            //
             $access_token = Token::query()->where('token', $token)->first();
 
             // Token found, trying to authenticate user by its id
-            //
             if ($access_token && (! $access_token->expires_at || ! $access_token->expires_at->isPast())) {
 
                 // Update token last usage timestamp
-                //
-                //
                 $access_token->forceFill(['last_used_at' => now()])->save();
 
                 // Update actual user
-                //
                 $this->user = $access_token->tokenable;
 
                 // Successfully authenticated
-                //
                 return $this->user;
             }
         }
@@ -224,11 +208,9 @@ class PassportGuard implements Guard
     public function validate(array $credentials = []): bool
     {
         // Retrieve a user by the given credentials.
-        //
         $user = $this->provider->retrieveByCredentials($credentials);
 
         // Exists
-        //
         return ! is_null($user) && $this->provider->validateCredentials($user, $credentials);
     }
 

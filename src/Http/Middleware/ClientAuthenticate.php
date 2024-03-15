@@ -90,7 +90,6 @@ class ClientAuthenticate implements AuthenticatesRequests
     protected function unauthenticated(Request $request): mixed
     {
         // Not authenticated message
-        //
         throw new AuthenticationException('Unauthenticated.', redirectTo: $this->redirectTo($request));
     }
 
@@ -104,7 +103,6 @@ class ClientAuthenticate implements AuthenticatesRequests
         if(!$request->expectsJson()) {
 
             // Redirect to authentication page
-            //
             return redirect(config('passport.broker.auth_url').'?continue='.$request->fullUrl())->send();
         }
     }

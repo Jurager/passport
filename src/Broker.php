@@ -69,7 +69,6 @@ class Broker
     public function generateClientToken(): string
     {
         // Return random client token
-        //
         return $this->encryption->randomToken();
     }
 
@@ -81,7 +80,6 @@ class Broker
         $key = $this->sessionName();
 
         // Save client token in cookie
-        //
         $this->storage->set($key, $token);
     }
 
@@ -109,7 +107,6 @@ class Broker
     public function sessionName(): string
     {
         // Return session name based on client id
-        //
         return 'sso_token_'.preg_replace('/[_\W]+/', '_', strtolower($this->client_id));
     }
 
@@ -121,20 +118,16 @@ class Broker
     public function sessionId(?string $token): string
     {
         // Client must be attached
-        //
         if (! $token) {
 
             // Throw not attached exception with 403 status code
-            //
             throw new NotAttachedException(403, 'Client broker not attached.');
         }
 
         // Generate new client checksum
-        //
         $checksum = $this->encryption->generateChecksum('session', $token, $this->client_secret);
 
         // Return session id string
-        //
         return "Passport-$this->client_id-$token-$checksum";
     }
 
@@ -144,7 +137,6 @@ class Broker
     public function isAttached(): bool
     {
         // Check if client token is exists
-        //
         return ! is_null($this->getClientToken());
     }
 
@@ -154,7 +146,6 @@ class Broker
     public function generateAttachChecksum(string $token): string
     {
         // Create new checksum based on client secret and token
-        //
         return $this->encryption->generateChecksum('attach', $token, $this->client_secret);
     }
 
@@ -197,11 +188,9 @@ class Broker
             }
 
             // Purge old session data
-            //
             $this->storage->purge();
 
             // Request not completed
-            //
             return false;
         }
 
@@ -222,24 +211,19 @@ class Broker
         $headers = $this->agentHeaders($request);
 
         // Addition request parameters
-        //
         $params = [];
 
         // If trying to log out user by history id
-        //
         if ($method === 'id') {
 
             // Append history id to request
-            //
             $params['id'] = $request->id;
         }
 
         // Make request to the authorisation server
-        //
         $response = $this->requester->request($sid, 'POST', $url, array_merge(['method' => $method], $params), $headers);
 
         // Successfully logged out
-        //
         return array_key_exists('success', $response);
     }
 

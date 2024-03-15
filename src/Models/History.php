@@ -100,7 +100,6 @@ class History extends Model
     public function getIsCurrentAttribute(): bool
     {
         // Check the session is current
-        //
         return $this->session_id === Session::getId();
     }
 
@@ -116,7 +115,7 @@ class History extends Model
         if ($this->session_id) {
 
             // Destroy session
-            $storage->deleteUserData($this->session_id);
+            $storage->delete($this->session_id);
         }
 
         // Delete login
@@ -130,6 +129,6 @@ class History extends Model
      */
     public function prunable()
     {
-        return static::where('expires_at', '<=', now());
+        return $this->where('expires_at', '<=', now());
     }
 }

@@ -14,6 +14,9 @@ class ClientSessionManager extends AbstractSessionManager
 
     public function purge()
     {
-        return app()->session->invalidate();
+        $this->store()->regenerateToken();
+        $this->store()->invalidate();
+
+        return true;
     }
 }

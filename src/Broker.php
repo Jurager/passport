@@ -98,7 +98,7 @@ class Broker
     {
         $key = $this->sessionName();
 
-        $this->storage->forget($key);
+        $this->storage->purge();
     }
 
     /**

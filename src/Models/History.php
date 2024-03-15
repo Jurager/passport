@@ -115,7 +115,7 @@ class History extends Model
         if ($this->session_id) {
 
             // Destroy session
-            $storage->delete($this->session_id);
+            $storage->deleteUserData($this->session_id);
         }
 
         // Delete login

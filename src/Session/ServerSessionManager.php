@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport\Session;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class ServerSessionManager extends AbstractSessionManager
@@ -44,12 +45,13 @@ class ServerSessionManager extends AbstractSessionManager
     /**
      * Remove user data from session
      */
-    public function delete(string $id): void
+    public function deleteUserData(string $id): void
     {
         Session::setId($id);
         Session::start();
-        
-        Session::invalidate();
+
+        Session::forget('sso_user');
+        Session::save();
     }
 
     /**

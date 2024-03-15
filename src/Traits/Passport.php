@@ -31,7 +31,7 @@ trait Passport
         $history = $history_id ? $this->history()->find($history_id) : $this->current();
 
         // If found try to revoke session
-        return $history && ! empty($history->revoke());
+        return ($history &&  !empty($history->revoke()));
     }
 
     /**

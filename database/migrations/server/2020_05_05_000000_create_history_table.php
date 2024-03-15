@@ -29,8 +29,6 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->unique(['session_id', 'authenticatable_id', 'authenticatable_type']);
-
             $table->softDeletes();
         });
     }

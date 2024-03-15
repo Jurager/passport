@@ -47,6 +47,8 @@ class ServerSessionManager extends AbstractSessionManager
     public function delete(string $id): void
     {
         Session::setId($id);
+        Session::start();
+        
         Session::invalidate();
     }
 

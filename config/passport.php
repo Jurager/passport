@@ -339,6 +339,15 @@ return [
     'user_create_strategy' => null,
 
     /**
+     * Closure that update the user in the client local database.
+     * E.g. 'user_update_strategy' => function ($user, $data) {
+     *    $result = array_diff_key($payload, array_flip(['id']));
+     *    return $user::update($result);
+     * }
+     */
+    'user_update_strategy' => null,
+
+    /**
      * Commands are customs additional methods that could be called
      * from the client. For example if you want to check the authenticated
      * user role.

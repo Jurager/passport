@@ -179,6 +179,12 @@ class PassportGuard implements Guard
             }
         }
 
+        $userUpdateStrategy = config('passport.user_update_strategy');
+
+        if (is_callable($userUpdateStrategy)) {
+            $userUpdateStrategy($user, $payload);
+        }
+
         return $user;
     }
 

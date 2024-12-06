@@ -126,7 +126,7 @@ class Server
     public function getBrokerInfoFromSessionId(?string $sid): array
     {
         // Check session matching
-        if (! preg_match('/^Passport-(\w*+)-(\w*+)-([a-z\d]*+)$/', $sid, $matches)) {
+        if (! preg_match('/^Passport-([\w\-]+)-([a-f\d]+)-([a-f\d]+)$/i', $sid, $matches)) {
 
             // Invalid session identification exception
             throw new InvalidSessionIdException(trans('passport::errors.invalid_session_id'));

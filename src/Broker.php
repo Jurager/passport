@@ -106,8 +106,9 @@ class Broker
      */
     public function sessionName(): string
     {
+
         // Return session name based on client id
-        return 'sso_token_'.preg_replace('/[_\W]+/', '_', strtolower($this->client_id));
+        return 'sso_token_'.preg_replace('/[^a-z\d\-_:]/', '_', strtolower($this->client_id));
     }
 
     /**

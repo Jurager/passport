@@ -63,7 +63,7 @@ class ServerController extends Controller
 
         // Compare checksums
         try {
-            $this->server->verifyAttachChecksum($broker_id, $token, $checksum)
+            $this->server->verifyAttachChecksum($broker_id, $token, $checksum);
         } catch (\Exception $e) {
             return response(trans('passport::errors.invalid_checksum'), 400);
         }

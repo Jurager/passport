@@ -62,12 +62,12 @@ class ServerController extends Controller
         $return_url = $request->input('return_url');
 
         // Compare checksums
-        if (! $this->server->verifyAttachChecksum($broker_id, $token, $checksum)) {
-
-            // Failed checksum comprehension
+        try {
+            $this->server->verifyAttachChecksum($broker_id, $token, $checksum)
+        } catch (\Exception $e) {
             return response(trans('passport::errors.invalid_checksum'), 400);
         }
-
+        
         // Generate new session
         $sid = $this->server->generateSessionId($broker_id, $token);
 

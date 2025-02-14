@@ -15,7 +15,7 @@ This Laravel package simplifies the implementation of single sign-on authenticat
 
 Requirements
 -------------------------------------------
-`PHP >= 8.1` and `Laravel 8.x or higher`
+`PHP >= 8.1` and `Laravel 9.x or higher`
 
 Installation
 -------------------------------------------

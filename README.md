@@ -24,11 +24,75 @@ Installation
 composer require jurager/passport
 ```
 
-Run the migrations
+Run migrations:
 
 ```sh
 php artisan migrate
 ```
+
+Register the middleware:
+
+
+<details>
+  <summary>Laravel 12 and newer</summary>
+  <p>In Laravel 12, middleware is registered in `bootstrap/app.php` using the `withMiddleware` method.</p>
+
+```php
+<?php
+
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Middleware;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        // ...
+    )
+    ->withMiddleware(static function (Middleware $middleware): void {
+        // Prepend session start and broker attach to the 'web' group
+        $middleware->web(prepend: [
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Jurager\Passport\Http\Middleware\AttachBroker::class
+        ]);
+
+        // Replace the default auth alias with package's version
+        $middleware->alias([
+            'auth' => \Jurager\Passport\Http\Middleware\ClientAuthenticate::class,
+        ]);
+    })
+    ->withExceptions(function ($exceptions) {
+        // ...
+    });
+```
+</details>
+
+<details>
+  <summary>Laravel 11 and earlier</summary>
+  <p>If your application still uses the classic HTTP kernel `app/Http/Kernel.php`, register middleware there.</p>
+
+Add middleware to the `web` group:
+
+```php
+protected $middlewareGroups = [
+    'web' => [
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Jurager\Passport\Http\Middleware\AttachBroker::class,
+        // ...
+     
+    ],
+];
+```
+   
+Replace the `auth` middleware alias with the package's version:
+
+```php
+protected $routeMiddleware = [
+    'auth' => \Jurager\Passport\Http\Middleware\ClientAuthenticate::class,
+    // ...
+];
+```
+</details>
 
 ## License
 

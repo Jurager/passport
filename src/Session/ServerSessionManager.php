@@ -16,11 +16,36 @@ class ServerSessionManager extends AbstractSessionManager
     }
 
     /**
+     * Return the session configuration ttl
+     */
+    protected function getSessionTTL(): int
+    {
+        $ttl = config('passport.storage_ttl');
+
+        if (is_null($ttl)) {
+            return config('session.lifetime') * 60;
+        }
+
+        // Ensure TTL is at least as long as session lifetime to prevent desync
+        $sessionLifetime = config('session.lifetime') * 60;
+
+        return max($ttl, $sessionLifetime);
+    }
+
+    /**
      * Set user session data
      */
     public function setUserData(string $sid, array|string $value): void
     {
         $id = $this->get($sid);
+
+        // Check if session still exists in cache
+        if (!$id) {
+            if (config('passport.debug')) {
+                Log::warning('SSO session expired in cache', ['sid' => $sid]);
+            }
+            return;
+        }
 
         Session::setId($id);
         Session::start();
@@ -35,6 +60,14 @@ class ServerSessionManager extends AbstractSessionManager
     public function getUserData(string $sid): array|string|null
     {
         $id = $this->get($sid);
+
+        // Check if session still exists in cache
+        if (!$id) {
+            if (config('passport.debug')) {
+                Log::warning('SSO session expired in cache', ['sid' => $sid]);
+            }
+            return null;
+        }
 
         Session::setId($id);
         Session::start();
@@ -70,6 +103,14 @@ class ServerSessionManager extends AbstractSessionManager
     public function refresh(string $sid): void
     {
         $id = $this->get($sid);
+
+        // Check if session still exists in cache
+        if (!$id) {
+            if (config('passport.debug')) {
+                Log::warning('Cannot refresh expired SSO session', ['sid' => $sid]);
+            }
+            return;
+        }
 
         $this->set($sid, $id);
     }

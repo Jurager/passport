@@ -26,6 +26,24 @@ class BrokerController extends Controller
      */
     public function attach(Request $request): RedirectResponse
     {
+        // Throttle attach attempts to prevent rapid re-attaching
+        $lastAttachTime = session('sso_last_attach_time', 0);
+        $throttleSeconds = config('passport.attach_throttle_seconds', 5);
+
+        if ((time() - $lastAttachTime) < $throttleSeconds) {
+            // Too soon, wait before re-attaching
+            if (config('passport.debug')) {
+                \Illuminate\Support\Facades\Log::warning('SSO attach throttled', [
+                    'last_attach' => $lastAttachTime,
+                    'current_time' => time(),
+                ]);
+            }
+            abort(429, 'Too many attach attempts. Please wait a moment.');
+        }
+
+        // Record attach timestamp
+        session(['sso_last_attach_time' => time()]);
+
         $params = $request->except(['broker', 'token', 'checksum']);
 
         // Generate an unique session token

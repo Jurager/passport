@@ -293,6 +293,18 @@ return [
     'storage_ttl' => env('PASSPORT_STORAGE_TTL', 600),
 
     /**
+     * Attach throttle in seconds - minimum time between attach attempts
+     * Prevents rapid re-attaching that can cause redirect loops
+     */
+    'attach_throttle_seconds' => env('PASSPORT_ATTACH_THROTTLE', 5),
+
+    /**
+     * Maximum redirect attempts before showing error
+     * Prevents infinite redirect loops between attach/auth
+     */
+    'max_redirect_attempts' => env('PASSPORT_MAX_REDIRECT_ATTEMPTS', 3),
+
+    /**
      * Prefix used to declare client routes
      */
     'routes_prefix_client' => env('PASSPORT_ROUTES_PREFIX_CLIENT', 'sso/client'),
@@ -362,4 +374,12 @@ return [
      * }
      */
     ],
+
+    /**
+     * Allowed redirect hosts to prevent open redirect attacks.
+     * List of allowed domains/hosts that can be used in return_url parameter.
+     * Example: ['example.com', 'app.example.com', 'trusted-site.com']
+     * Subdomains are automatically allowed (e.g., 'example.com' allows 'app.example.com')
+     */
+    'allowed_redirect_hosts' => env('PASSPORT_ALLOWED_REDIRECT_HOSTS') ? explode(',', env('PASSPORT_ALLOWED_REDIRECT_HOSTS')) : [],
 ];

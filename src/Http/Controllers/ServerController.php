@@ -49,17 +49,21 @@ class ServerController extends Controller
             'broker' => 'required|string',
             'token' => 'required|string',
             'checksum' => 'required|string',
-            'return_url' => 'nullable|string',
+            'return_url' => 'nullable|string|url',
         ]);
 
         if ($validator->fails()) {
-            return response($validator->errors().'', 400);
+            return response()->json(['errors' => $validator->errors()], 400);
         }
 
         $broker_id = $request->input('broker');
         $token = $request->input('token');
         $checksum = $request->input('checksum');
         $return_url = $request->input('return_url');
+
+        if ($return_url && !$this->isAllowedRedirectUrl($return_url)) {
+            return response(trans('passport::errors.invalid_return_url'), 400);
+        }
 
         // Compare checksums
         try {
@@ -223,5 +227,42 @@ class ServerController extends Controller
 
         // Return closure not callable
         return response()->json(['message' => trans('passport::errors.command_not_callable')], 400);
+    }
+
+    /**
+     * Validate if redirect URL is allowed to prevent open redirect attacks
+     */
+    protected function isAllowedRedirectUrl(?string $url): bool
+    {
+        if (empty($url)) {
+            return true;
+        }
+
+        // Parse the URL
+        $parsedUrl = parse_url($url);
+
+        // Allow relative URLs (no host)
+        if (!isset($parsedUrl['host'])) {
+            return true;
+        }
+
+        // Get allowed hosts from configuration
+        $allowedHosts = config('passport.allowed_redirect_hosts', []);
+
+        // If no hosts configured, allow all (backwards compatibility)
+        // In production, you should configure allowed hosts
+        if (empty($allowedHosts)) {
+            return true;
+        }
+
+        // Check if the host is in the allowed list
+        foreach ($allowedHosts as $allowedHost) {
+            $allowedHost = trim($allowedHost);
+            if ($parsedUrl['host'] === $allowedHost || str_ends_with($parsedUrl['host'], '.' . $allowedHost)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

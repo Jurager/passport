@@ -13,4 +13,5 @@ return [
     'invalid_server_model_secret' => 'Invalid server model field secret. Please make sure the server field secret is defined in config.',
     'provider_not_selected' => 'Choose a supported address lookup provider.',
     'error_while_trying_logout' => 'Error while trying to logout',
+    'invalid_return_url' => 'Invalid return URL. The redirect destination is not allowed.',
 ];

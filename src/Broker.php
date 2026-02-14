@@ -98,7 +98,7 @@ class Broker
     {
         $key = $this->sessionName();
 
-        $this->storage->purge();
+        $this->storage->forget($key);
     }
 
     /**
@@ -155,7 +155,6 @@ class Broker
      *
      *
      * @throws GuzzleException
-     * @throws JsonException
      */
     public function login(array $credentials, Request $request): bool|array
     {
@@ -171,7 +170,6 @@ class Broker
      * Send profile request
      *
      * @throws GuzzleException
-     * @throws JsonException
      */
     public function profile(Request $request): bool|string|array
     {
@@ -188,8 +186,8 @@ class Broker
                 throw $e;
             }
 
-            // Purge old session data
-            $this->storage->purge();
+            // Clear only SSO token, preserve other session data
+            $this->clearClientToken();
 
             // Request not completed
             return false;
@@ -202,7 +200,6 @@ class Broker
      * Send logout request
      *
      * @throws GuzzleException
-     * @throws JsonException
      */
     public function logout(Request $request, $method = null): bool
     {
@@ -235,7 +232,6 @@ class Broker
      * @return false|string
      *
      * @throws GuzzleException
-     * @throws JsonException
      */
     public function commands(string $command, array $params, Request $request): bool|string
     {

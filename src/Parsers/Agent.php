@@ -4,9 +4,9 @@ namespace Jurager\Passport\Parsers;
 
 use Illuminate\Support\Facades\Request;
 use Jenssegers\Agent\Agent as Parser;
-use Jurager\Passport\Interfaces\UserAgentParser;
+use Jurager\Passport\Interfaces\Parser;
 
-class Agent implements UserAgentParser
+class Agent implements Parser
 {
     protected Parser $parser;
 

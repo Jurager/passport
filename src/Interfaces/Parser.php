@@ -2,7 +2,7 @@
 
 namespace Jurager\Passport\Interfaces;
 
-interface UserAgentParser
+interface Parser
 {
     /**
      * Get the device name.

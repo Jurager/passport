@@ -8,11 +8,11 @@ use Illuminate\Support\Facades\Request;
 use Jurager\Passport\Factories\ParserFactory;
 use Jurager\Passport\Factories\ProviderFactory;
 use Jurager\Passport\Interfaces\Provider;
-use Jurager\Passport\Interfaces\UserAgentParser;
+use Jurager\Passport\Interfaces\Parser;
 
 class RequestContext
 {
-    protected UserAgentParser $parser;
+    protected Parser $parser;
 
     /**
      * @var Provider
@@ -46,7 +46,7 @@ class RequestContext
     /**
      * Get the parser used to parse the User-Agent header.
      */
-    public function parser(): UserAgentParser
+    public function parser(): Parser
     {
         return $this->parser;
     }

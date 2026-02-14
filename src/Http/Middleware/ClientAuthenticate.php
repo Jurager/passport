@@ -5,6 +5,7 @@ namespace Jurager\Passport\Http\Middleware;
 use Closure;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\NotAttachedException;
+use Jurager\Passport\Exceptions\RedirectLoopException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests;
@@ -69,6 +70,8 @@ class ClientAuthenticate implements AuthenticatesRequests
 
         try {
             if ($this->auth->guard()->check()) {
+                // Reset auth redirect counter on successful authentication
+                session()->forget('sso_auth_redirect_count');
                 return true;
             }
         }
@@ -101,8 +104,17 @@ class ClientAuthenticate implements AuthenticatesRequests
     protected function redirectTo(Request $request)
     {
         if(!$request->expectsJson()) {
+            // Prevent infinite redirect loops
+            $authRedirectCount = session('sso_auth_redirect_count', 0);
+            $maxAttempts = config('passport.max_redirect_attempts', 3);
 
-            // Redirect to authentication page
+            if ($authRedirectCount >= $maxAttempts) {
+                session()->forget('sso_auth_redirect_count');
+                throw new RedirectLoopException('SSO authentication', $authRedirectCount);
+            }
+
+            session(['sso_auth_redirect_count' => $authRedirectCount + 1]);
+
             return redirect(config('passport.broker.auth_url').'?continue='.$request->fullUrl())->send();
         }
     }

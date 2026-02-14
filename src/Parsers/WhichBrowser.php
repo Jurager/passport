@@ -3,10 +3,10 @@
 namespace Jurager\Passport\Parsers;
 
 use Illuminate\Support\Facades\Request;
-use Jurager\Passport\Interfaces\UserAgentParser;
+use Jurager\Passport\Interfaces\Parser;
 use WhichBrowser\Parser;
 
-class WhichBrowser implements UserAgentParser
+class WhichBrowser implements Parser
 {
     protected Parser $parser;
 

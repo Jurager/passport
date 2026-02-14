@@ -20,6 +20,9 @@ PASSPORT_STORAGE_TTL=600
 PASSPORT_DEBUG=false
 ```
 
+> [!NOTE]
+> If `allowed_redirect_hosts` is empty, all hosts are allowed (backwards compatible, not recommended for production).
+
 ## Recommended
 
 - Use HTTPS everywhere.

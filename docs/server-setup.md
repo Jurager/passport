@@ -2,9 +2,6 @@
 
 The server is the central auth authority. It registers brokers, validates sessions, and returns user payloads.
 
-> [!NOTE]
-> Even if you build an account-center UI, it should be a broker that talks to this server.
-
 ## Environment
 
 ```env
@@ -17,7 +14,7 @@ PASSPORT_ROUTES_PREFIX_SERVER=sso/server
 PASSPORT_DEBUG=false
 ```
 
-## Broker Registry
+## Drivers
 
 ### Database Driver
 
@@ -37,6 +34,9 @@ $broker = Broker::create([
 ### Array Driver
 
 Useful for local development and very small setups.
+
+> [!WARNING]
+> The array driver does not support soft deletes or broker metadata. Prefer the database driver for production.
 
 ```env
 PASSPORT_SERVER_DRIVER=array
@@ -100,3 +100,6 @@ PASSPORT_ALLOWED_REDIRECT_HOSTS=app.com,admin.app.com
 PASSPORT_ATTACH_THROTTLE=5
 PASSPORT_MAX_REDIRECT_ATTEMPTS=3
 ```
+
+> [!NOTE]
+> If `allowed_redirect_hosts` is empty, all hosts are allowed (backwards compatible, but not recommended for production).

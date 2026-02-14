@@ -20,8 +20,11 @@ This creates tables for brokers, history, and API tokens.
 
 Passport requires two middleware registrations:
 
-- `AttachBroker` in the `web` group (after `StartSession`).
+- `AttachBroker` in the `web` group.
 - `ClientAuthenticate` as the `auth` alias.
+
+> [!WARNING]
+> `AttachBroker` must run after `StartSession`. If sessions do not persist, the broker will never attach.
 
 ### Laravel 12+
 
@@ -70,10 +73,4 @@ class User extends Authenticatable
     use Passport;
     use HasTokens;
 }
-```
-
-## Publish Config (Optional)
-
-```bash
-php artisan vendor:publish --provider="Jurager\Passport\PassportServiceProvider"
 ```

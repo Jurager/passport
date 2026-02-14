@@ -51,13 +51,17 @@ Disable lookup:
 'lookup' => ['provider' => false],
 ```
 
+> [!NOTE]
+> IP lookup runs only in the environments listed in `server.lookup.environments`.
+
 ## Cloudflare IP
+
+Enable this when the broker is behind Cloudflare, otherwise you will see the proxy IP instead of the real client IP.
+
 
 ```env
 PASSPORT_BROKER_CLOUDFLARE=true
 ```
-
-Enable this when the broker is behind Cloudflare, otherwise you will see the proxy IP instead of the real client IP.
 
 ## Access History
 

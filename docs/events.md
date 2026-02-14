@@ -6,6 +6,9 @@ Passport fires package events on the server and Laravel auth events on brokers v
 
 These events are dispatched by the server when handling SSO requests.
 
+> [!NOTE]
+> Package events are only fired on the server application, not on brokers.
+
 - `Jurager\Passport\Events\Authenticated`
   - Fired after credentials are validated in `/login`.
   - Fired when an existing session is validated by `ServerAuthenticate` (for `/profile` and `/logout`).

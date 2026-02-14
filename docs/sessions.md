@@ -15,6 +15,9 @@ Passport uses two stores:
 
 This means server sessions rely on your cache driver, while broker sessions rely on your session driver.
 
+> [!NOTE]
+> If the cache store is volatile (like `array`), server sessions will be lost on restart.
+
 ## Supported Drivers
 
 Server side (cache): any Laravel cache driver (`file`, `redis`, `database`, `memcached`, etc.).

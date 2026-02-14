@@ -23,6 +23,9 @@ Typical real-world uses:
 
 Commands receive the server instance and the request. Return an array (JSON response).
 
+> [!NOTE]
+> Commands must return an array. The response is JSON-encoded for the broker.
+
 ## Call Commands (broker)
 
 ```php

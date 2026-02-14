@@ -13,6 +13,9 @@ php artisan vendor:publish --provider="Jurager\Passport\PassportServiceProvider"
 
 These options define how the server validates brokers and builds sessions.
 
+> [!WARNING]
+> If `driver=array` is used, brokers are loaded from config only. This is not recommended for production.
+
 ```php
 'server' => [
     'driver' => 'model', // model|array
@@ -39,6 +42,9 @@ See [Server Setup](server-setup.md) for the full flow.
 
 These options make the app act as a broker and talk to the server.
 
+> [!WARNING]
+> `client_id`, `client_secret`, and `server_url` are required for brokers. Missing values will throw an exception at runtime.
+
 ```php
 'broker' => [
     'client_id' => env('PASSPORT_BROKER_CLIENT_ID'),
@@ -53,6 +59,9 @@ These options make the app act as a broker and talk to the server.
 - `server_url` must include the server prefix, for example `https://sso.example.com/sso/server`.
 - `client_id` and `client_secret` must match a broker registered on the server.
 - `auth_url` routes users to a dedicated login broker, if used.
+
+> [!NOTE]
+> The broker user payload must include the configured `client_username` field (default: `email`), otherwise user sync will fail.
 
 See [Broker Setup](broker-setup.md) for the full flow.
 

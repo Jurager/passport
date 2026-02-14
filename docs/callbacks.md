@@ -18,6 +18,9 @@ Controls which fields the server returns to brokers. Called on the server when r
 },
 ```
 
+> [!NOTE]
+> The returned payload must include the broker username field (default: `email`).
+
 ### after_authenticating
 
 Runs after credentials are valid. Return `false` to deny login.
@@ -47,6 +50,9 @@ Creates a local user when a payload arrives and the user cannot be found locally
     ]);
 },
 ```
+
+> [!WARNING]
+> If the create strategy returns `null` or `false`, the broker will remain unauthenticated.
 
 You can also reference a class method:
 

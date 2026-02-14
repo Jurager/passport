@@ -25,6 +25,9 @@ How it decides:
 
 This means API calls can use bearer tokens, while browser requests use the server session.
 
+> [!NOTE]
+> If the broker is not attached, users will be redirected to `/sso/client/attach` before authentication can proceed.
+
 ## Route Examples
 
 ```php
@@ -46,7 +49,7 @@ Route::get('/api/user', function () {
 
 ## Token Auth
 
-Bearer tokens are supported by the same guard.
+Bearer tokens are supported by the same guard and bypass the SSO session.
 
 ```php
 $token = $request->bearerToken();
@@ -54,6 +57,9 @@ $user = Auth::guard()->loginFromToken($token);
 ```
 
 See [Tokens](tokens.md).
+
+> [!WARNING]
+> Token auth only works with tokens stored in the broker database. It does not call the SSO server.
 
 ## Broker API
 

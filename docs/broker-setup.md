@@ -41,6 +41,9 @@ Example:
 https://sso-server.com/sso/server
 ```
 
+> [!WARNING]
+> If the URL is wrong or missing the prefix, attach and profile requests will fail.
+
 ## Auth URL (Optional)
 
 If you host the login UI on a dedicated broker, set:
@@ -50,6 +53,9 @@ PASSPORT_BROKER_AUTH_URL=https://auth.myapp.com
 ```
 
 Unauthenticated users will be redirected there instead of the server.
+
+> [!NOTE]
+> If you set `PASSPORT_BROKER_AUTH_URL`, the login UI must exist at that broker.
 
 ## User Sync
 

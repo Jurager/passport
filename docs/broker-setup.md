@@ -5,6 +5,9 @@ A broker is a client app that delegates auth to the server and keeps a local use
 > [!NOTE]
 > Account-center apps are typical brokers that talk to the server.
 
+> [!WARNING]
+> Broker routes and migrations are loaded only when `PASSPORT_BROKER_CLIENT_ID` is set.
+
 ## Environment
 
 ```env
@@ -56,6 +59,12 @@ Unauthenticated users will be redirected there instead of the server.
 
 > [!NOTE]
 > If you set `PASSPORT_BROKER_AUTH_URL`, the login UI must exist at that broker.
+
+> [!NOTE]
+> The redirect includes a `continue` query parameter with the original URL.
+
+> [!WARNING]
+> For browser flows, you should set `PASSPORT_BROKER_AUTH_URL`. If it is empty, the middleware will redirect to a relative `?continue=...` URL and may loop.
 
 ## User Sync
 

@@ -2,19 +2,19 @@
 
 Common issues and how to fix them.
 
-## Redirect loops
+## Redirect Loops
 
 - Ensure `AttachBroker` is added once and after `StartSession`.
 - Verify sessions persist (`SESSION_DRIVER`).
 - Increase `PASSPORT_ATTACH_THROTTLE`.
 
-## Invalid checksum
+## Invalid Checksum
 
 - Ensure broker secret matches the server.
 - Check `PASSPORT_SERVER_ID_FIELD` and `PASSPORT_SERVER_SECRET_FIELD`.
 - Sync server clocks.
 
-## Session not found / broker not attached
+## Session not found / Broker not attached
 
 - Check session TTL (`PASSPORT_STORAGE_TTL`).
 - Confirm middleware registration.

@@ -2,6 +2,9 @@
 
 The server is the central auth authority. It registers brokers, validates sessions, and returns user payloads.
 
+> [!WARNING]
+> Server routes and migrations are loaded only when `PASSPORT_BROKER_CLIENT_ID` is empty. Do not set broker credentials in the server app.
+
 ## Environment
 
 ```env
@@ -13,6 +16,9 @@ PASSPORT_STORAGE_TTL=600
 PASSPORT_ROUTES_PREFIX_SERVER=sso/server
 PASSPORT_DEBUG=false
 ```
+
+> [!NOTE]
+> Set `PASSPORT_SERVER_ID_FIELD` to the actual broker id column (commonly `client_id`).
 
 ## Drivers
 
@@ -82,7 +88,7 @@ Use this to block access after credentials are valid.
 
 Default prefix: `sso/server`.
 
-- `GET|POST /attach`
+- `GET /attach`
 - `POST /login`
 - `GET /profile`
 - `POST /logout`

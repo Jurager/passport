@@ -16,6 +16,9 @@ php artisan migrate
 
 This creates tables for brokers, history, and API tokens.
 
+> [!NOTE]
+> Migrations are loaded based on `PASSPORT_BROKER_CLIENT_ID`. Keep it empty on the server, set it on brokers.
+
 ## Register Middleware
 
 Passport requires two middleware registrations:
@@ -74,3 +77,6 @@ class User extends Authenticatable
     use HasTokens;
 }
 ```
+
+> [!NOTE]
+> Use your existing User model. In most Laravel apps it extends `Illuminate\Foundation\Auth\User`.

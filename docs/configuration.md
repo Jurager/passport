@@ -9,12 +9,18 @@ php artisan vendor:publish --provider="Jurager\Passport\PassportServiceProvider"
 > [!NOTE]
 > There is no single "mode" flag. The role is determined by what you configure and which routes you expose.
 
+> [!WARNING]
+> When `PASSPORT_BROKER_CLIENT_ID` is set, server routes and migrations are not loaded. Use a separate app for the server.
+
 ## Server Configuration
 
 These options define how the server validates brokers and builds sessions.
 
 > [!WARNING]
 > If `driver=array` is used, brokers are loaded from config only. This is not recommended for production.
+
+> [!NOTE]
+> Set `id_field` and `secret_field` to match your broker model columns (commonly `client_id` and `secret`).
 
 ```php
 'server' => [
@@ -129,3 +135,6 @@ Example:
     'admin.app.com',
 ],
 ```
+
+> [!NOTE]
+> Subdomains are allowed if the parent domain is listed (for example `app.com` allows `admin.app.com`).

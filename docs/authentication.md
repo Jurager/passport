@@ -21,12 +21,18 @@ How it decides:
 2. If a bearer token exists, it tries token auth (`loginFromToken`).
 3. If no token, it calls the server `/profile` to validate the session.
 4. If the server returns a user payload, the broker syncs the user and proceeds.
-5. If not authenticated, it redirects to the auth URL or server login.
+5. If not authenticated, it redirects to the auth URL.
 
 This means API calls can use bearer tokens, while browser requests use the server session.
 
 > [!NOTE]
 > If the broker is not attached, users will be redirected to `/sso/client/attach` before authentication can proceed.
+
+> [!NOTE]
+> For non-JSON requests, unauthenticated users are redirected to `PASSPORT_BROKER_AUTH_URL` with a `continue` query parameter.
+
+> [!NOTE]
+> For JSON requests (`expectsJson`), Laravel returns a 401 response instead of redirecting.
 
 ## Route Examples
 
@@ -60,6 +66,10 @@ See [Tokens](tokens.md).
 
 > [!WARNING]
 > Token auth only works with tokens stored in the broker database. It does not call the SSO server.
+
+## Login Field
+
+By default, the server expects `email` and `password`. You can override the username field by sending a `login` parameter with the field name.
 
 ## Broker API
 

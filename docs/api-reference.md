@@ -46,7 +46,7 @@ Short reference for core classes and endpoints.
 
 Server prefix: `sso/server`
 
-- `GET|POST /attach`
+- `GET /attach`
 - `POST /login`
 - `GET /profile`
 - `POST /logout`

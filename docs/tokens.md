@@ -40,3 +40,6 @@ $user->removeToken($tokenId);
 ```bash
 php artisan model:prune --model="Jurager\Passport\Models\Token"
 ```
+
+> [!NOTE]
+> Passport registers a scheduled prune command, but you still need Laravel's scheduler running.

@@ -26,6 +26,9 @@ Commands receive the server instance and the request. Return an array (JSON resp
 > [!NOTE]
 > Commands must return an array. The response is JSON-encoded for the broker.
 
+> [!WARNING]
+> The commands endpoint does not enforce user authentication by default. Check `Auth::guard()->user()` inside your command if required.
+
 ## Call Commands (broker)
 
 ```php

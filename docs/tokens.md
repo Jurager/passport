@@ -2,6 +2,8 @@
 
 Personal access tokens allow API authentication without a password.
 
+Tokens are stored locally on the broker and are not shared across brokers.
+
 ## Setup
 
 ```php

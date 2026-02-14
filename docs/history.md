@@ -2,6 +2,8 @@
 
 Passport records login history with device and IP details. Geo lookup is optional.
 
+History records are created when the user logs in on the server.
+
 ## What Is Stored
 
 - Session id
@@ -51,9 +53,15 @@ Disable lookup:
 'lookup' => ['provider' => false],
 ```
 
+> [!NOTE]
+> The `server.lookup.environments` option is not enforced in code. If a provider is set, lookup runs.
+
 ## Cloudflare IP
 
 Enable this when the broker is behind Cloudflare, otherwise you will see the proxy IP instead of the real client IP.
+
+> [!NOTE]
+> The server reads IP and User-Agent from headers sent by the broker (`Passport-Remote-Address`, `Passport-User-Agent`).
 
 
 ```env

@@ -31,10 +31,15 @@ Configure these in Laravel's `config/cache.php` and `config/session.php`.
 PASSPORT_STORAGE_TTL=600
 ```
 
-Set to `null` for no expiration.
+This controls the SSO session TTL in the server cache.
 
-> [!NOTE]
-> On the server, TTL is never shorter than Laravel's session lifetime to avoid desync.
+Set to `null` to use Laravel's session lifetime.
+
+Notes:
+
+- On the server, TTL is never shorter than Laravel's session lifetime to avoid desync.
+- The broker token expires with the normal Laravel session lifetime.
+- History `expires_at` is based on Laravel's session lifetime, not `PASSPORT_STORAGE_TTL`.
 
 ## Access
 

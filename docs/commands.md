@@ -27,7 +27,10 @@ Commands receive the server instance and the request. Return an array (JSON resp
 > Commands must return an array. The response is JSON-encoded for the broker.
 
 > [!WARNING]
-> The commands endpoint does not enforce user authentication by default. Check `Auth::guard()->user()` inside your command if required.
+> The commands endpoint does not enforce user authentication by default. If you need a user, add `ServerAuthenticate` to the route or resolve the user from the server session.
+
+> [!NOTE]
+> The examples below assume an authenticated user is available.
 
 ## Call Commands (broker)
 

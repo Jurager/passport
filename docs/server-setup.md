@@ -18,9 +18,9 @@ PASSPORT_DEBUG=false
 
 ## Broker Registry
 
-### Database Driver (default)
+### Database Driver
 
-Store brokers in the `brokers` table.
+Store brokers in the `brokers` table. This is the default driver.
 
 ```php
 use Illuminate\Support\Str;
@@ -50,19 +50,6 @@ PASSPORT_SERVER_DRIVER=array
         'app2' => 'secret-for-app2',
     ],
 ],
-```
-
-## User Model
-
-Add the `Passport` trait to enable session helpers.
-
-```php
-use Jurager\Passport\Traits\Passport;
-
-class User extends Authenticatable
-{
-    use Passport;
-}
 ```
 
 ## User Payload

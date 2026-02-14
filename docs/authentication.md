@@ -82,7 +82,7 @@ $broker->logout($request, 'all');
 
 On a broker:
 
-- `POST /sso/client/logout/id`
+- `POST /sso/client/logout/{id}`
 - `POST /sso/client/logout/all`
 - `POST /sso/client/logout/others`
 

@@ -2,7 +2,16 @@
 
 Define server-side commands and call them from brokers. Useful for role checks or server-only data.
 
-## Define Commands (server)
+Typical real-world uses:
+
+- Centralized authorization checks.
+- Account-center actions (revoke sessions, tokens).
+- Server-only data (billing, flags, roles).
+- Consistent rules across all brokers.
+
+Commands are defined on the server as closures and called from brokers.
+
+## Define Commands
 
 ```php
 // config/passport.php
@@ -16,16 +25,34 @@ Define server-side commands and call them from brokers. Useful for role checks o
 
 Commands receive the server instance and the request. Return an array (JSON response).
 
-## Call Commands (broker)
+## Call Commands
 
 ```php
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
 use Jurager\Passport\Broker;
 
-$broker = app(Broker::class);
-$result = $broker->commands('hasRole', ['role' => 'admin'], $request);
-```
+class AdminController extends Controller
+{
+    public function __construct(private Broker $broker)
+    {
+    }
 
-## Live Examples
+    public function index(Request $request)
+    {
+        $result = $this->broker->commands('hasRole', [
+            'role' => 'admin',
+        ], $request);
+
+        if (!($result['has_role'] ?? false)) {
+            abort(403);
+        }
+
+        return view('admin.dashboard');
+    }
+}
+```
 
 ### Check permissions
 

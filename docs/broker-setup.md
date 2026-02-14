@@ -50,19 +50,6 @@ PASSPORT_BROKER_AUTH_URL=https://auth.myapp.com
 
 Unauthenticated users will be redirected there.
 
-## User Model
-
-```php
-use Jurager\Passport\Traits\Passport;
-use Jurager\Passport\Traits\HasTokens;
-
-class User extends Authenticatable
-{
-    use Passport;
-    use HasTokens;
-}
-```
-
 ## User Sync
 
 Define how users are created or updated on the broker.

@@ -55,6 +55,22 @@ protected $routeMiddleware = [
 ];
 ```
 
+## Add Traits
+
+Add the `Passport` trait to your User model.  
+If you use API tokens, also add `HasTokens`.
+
+```php
+use Jurager\Passport\Traits\Passport;
+use Jurager\Passport\Traits\HasTokens;
+
+class User extends Authenticatable
+{
+    use Passport;
+    use HasTokens;
+}
+```
+
 ## Publish Config (Optional)
 
 ```bash

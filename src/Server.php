@@ -38,7 +38,7 @@ class Server
 
         // Model brokers not found
         if (! class_exists($this->model)) {
-            throw new InvalidSessionIdException("Class $this->model does not exist");
+            throw new InvalidServerException("Class $this->model does not exist");
         }
 
         // Server model id field not found
@@ -66,7 +66,7 @@ class Server
         if (! $model) {
 
             // Broker not exists exception
-            throw new InvalidSessionIdException("Model $this->model with $this->id_field:$id not found");
+            throw new InvalidSessionIdException("Broker with $this->id_field:$id not found");
         }
 
         // Return broker model
@@ -125,6 +125,11 @@ class Server
      */
     public function getBrokerInfoFromSessionId(?string $sid): array
     {
+        // Check if session id is null or empty
+        if (empty($sid)) {
+            throw new InvalidSessionIdException(trans('passport::errors.invalid_session_id'));
+        }
+
         // Check session matching
         if (! preg_match('/^Passport-([\w\-]+)-([a-f\d]+)-([a-f\d]+)$/i', $sid, $matches)) {
 
@@ -142,7 +147,7 @@ class Server
     /**
      * Retrieve broker session id from request
      */
-    public function getBrokerSessionId($request): ?string
+    public function getBrokerSessionId(Request $request): ?string
     {
         // Get bearer token from request
         $token = $request->bearerToken();

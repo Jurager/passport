@@ -29,8 +29,10 @@ Passport requires two middleware registrations:
 > [!WARNING]
 > `AttachBroker` must run after `StartSession`. If sessions do not persist, the broker will never attach.
 
-### Laravel 12+
 
+{{< tabs items="Laravel 12+,Laravel 11 and earlier" >}}
+
+  {{< tab >}}
 ```php
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -47,10 +49,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     });
 ```
-
-### Laravel 11 and earlier
-
-```php
+  {{< /tab >}}
+  {{< tab >}}
+  ```php
 protected $middlewareGroups = [
     'web' => [
         \Illuminate\Session\Middleware\StartSession::class,
@@ -62,6 +63,9 @@ protected $routeMiddleware = [
     'auth' => \Jurager\Passport\Http\Middleware\ClientAuthenticate::class,
 ];
 ```
+  {{< /tab >}}
+
+{{< /tabs >}}
 
 ## Add Traits
 

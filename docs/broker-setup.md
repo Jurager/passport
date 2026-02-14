@@ -63,8 +63,8 @@ Unauthenticated users will be redirected there instead of the server.
 > [!NOTE]
 > The redirect includes a `continue` query parameter with the original URL.
 
-> [!WARNING]
-> For browser flows, you should set `PASSPORT_BROKER_AUTH_URL`. If it is empty, the middleware will redirect to a relative `?continue=...` URL and may loop.
+> [!NOTE]
+> If you do not have a separate auth UI service, leave this empty and use the broker's own `/login`.
 
 ## User Sync
 

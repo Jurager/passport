@@ -106,6 +106,12 @@ class ClientAuthenticate implements AuthenticatesRequests
     protected function redirectTo(Request $request): ?string
     {
         if (!$request->expectsJson()) {
+            $authUrl = config('passport.broker.auth_url');
+
+            if (empty($authUrl)) {
+                return null;
+            }
+
             // Prevent infinite redirect loops
             $authRedirectCount = session('sso_auth_redirect_count', 0);
             $maxAttempts = config('passport.max_redirect_attempts', 3);
@@ -117,7 +123,7 @@ class ClientAuthenticate implements AuthenticatesRequests
 
             session(['sso_auth_redirect_count' => $authRedirectCount + 1]);
 
-            return config('passport.broker.auth_url').'?continue='.$request->fullUrl();
+            return $authUrl.'?continue='.$request->fullUrl();
         }
 
         return null;

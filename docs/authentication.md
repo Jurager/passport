@@ -34,6 +34,9 @@ This means API calls can use bearer tokens, while browser requests use the serve
 > [!NOTE]
 > For JSON requests (`expectsJson`), Laravel returns a 401 response instead of redirecting.
 
+> [!NOTE]
+> If you do not have a separate auth UI service, leave `PASSPORT_BROKER_AUTH_URL` empty and use the broker's own `/login`.
+
 ## Route Examples
 
 ```php

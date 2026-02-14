@@ -6,8 +6,7 @@
 
 This Laravel package simplifies the implementation of single sign-on authentication. It features a centralized user repository and enables the creation of user models in brokers without disrupting app logic. Additionally, it provides methods for incorporating authentication history pages and terminating sessions for either all users or specific ones with ease
 
-> [!NOTE]
-> The documentation for this package is currently being written. For now, please refer to this readme for information on the functionality and usage of the package.
+Documentation: see `docs/index.md`.
 
 - [Requirements](#requirements)
 - [Installation](#installation)

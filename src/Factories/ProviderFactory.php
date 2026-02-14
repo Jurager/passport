@@ -15,9 +15,11 @@ class ProviderFactory
     /**
      * Build a new IP provider.
      *
+     * @param string|null $name
      * @return ProviderInterface|null
      *
-     * @throws Exception|GuzzleException
+     * @throws CustomProviderException
+     * @throws ProviderException
      */
     public static function build(?string $name): ?ProviderInterface
     {

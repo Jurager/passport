@@ -137,7 +137,7 @@ class Broker
      */
     public function isAttached(): bool
     {
-        // Check if client token is exists
+        // Check if client token is existing
         return ! is_null($this->getClientToken());
     }
 
@@ -155,6 +155,7 @@ class Broker
      *
      *
      * @throws GuzzleException
+     * @throws JsonException
      */
     public function login(array $credentials, Request $request): bool|array
     {
@@ -170,6 +171,7 @@ class Broker
      * Send profile request
      *
      * @throws GuzzleException
+     * @throws JsonException
      */
     public function profile(Request $request): bool|string|array
     {
@@ -200,6 +202,7 @@ class Broker
      * Send logout request
      *
      * @throws GuzzleException
+     * @throws JsonException
      */
     public function logout(Request $request, $method = null): bool
     {
@@ -218,7 +221,7 @@ class Broker
             $params['id'] = $request->id;
         }
 
-        // Make request to the authorisation server
+        // Make request to the authorization server
         $response = $this->requester->request($sid, 'POST', $url, array_merge(['method' => $method], $params), $headers);
 
         // Successfully logged out
@@ -232,6 +235,7 @@ class Broker
      * @return false|string
      *
      * @throws GuzzleException
+     * @throws JsonException
      */
     public function commands(string $command, array $params, Request $request): bool|string
     {

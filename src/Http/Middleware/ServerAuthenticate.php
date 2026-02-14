@@ -61,7 +61,8 @@ class ServerAuthenticate
                 $this->storage->refresh($sid);
 
                 // Update expires_at date in history table
-                History::where('session_id', $this->storage->get($sid))
+                History::query()
+                    ->where('session_id', $this->storage->get($sid))
                     ->update(['expires_at' => date('Y-m-d H:i:s', strtotime('+'.config('session.lifetime').' minutes'))]);
             }
 

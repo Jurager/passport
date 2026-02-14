@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use JsonException;
 use Jurager\Passport\Broker;
 
@@ -33,7 +34,7 @@ class BrokerController extends Controller
         if ((time() - $lastAttachTime) < $throttleSeconds) {
             // Too soon, wait before re-attaching
             if (config('passport.debug')) {
-                \Illuminate\Support\Facades\Log::warning('SSO attach throttled', [
+                Log::warning('SSO attach throttled', [
                     'last_attach' => $lastAttachTime,
                     'current_time' => time(),
                 ]);

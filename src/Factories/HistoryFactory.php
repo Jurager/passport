@@ -13,7 +13,8 @@ class HistoryFactory
     public static function build(RequestContext $context): History
     {
         // Get the first history record matching the session_id or instantiate it.
-        $history =  History::firstOrNew(['session_id' =>  session()->getId()]);
+        $history = History::query()
+            ->firstOrNew(['session_id' => session()->getId()]);
 
         // Parse the User-Agent header.
         $parser = $context->parser();

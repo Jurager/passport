@@ -7,6 +7,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 use Jurager\Passport\Exceptions\InvalidClientException;
 use Jurager\Passport\Exceptions\InvalidSessionIdException;
 use Jurager\Passport\Exceptions\NotAttachedException;
@@ -23,9 +24,15 @@ class Requester
     }
 
     /**
-     * Generate new checksum
+     * Make HTTP request to SSO server
      *
      * @throws GuzzleException
+     * @throws InvalidSessionIdException
+     * @throws InvalidClientException
+     * @throws NotAttachedException
+     * @throws UnauthorizedException
+     * @throws RuntimeException
+     * @throws JsonException
      */
     public function request($sid, $method, $url, array $params = [], array $headers = []): bool|string|array
     {
@@ -49,18 +56,15 @@ class Requester
             $res = $e->getResponse();
 
             // If debug is enabled in configuration
-            //
             if (config('passport.debug')) {
-                if ($req) {
-                    Log::debug(Psr7\Message::toString($req));
-                }
+                Log::debug(Psr7\Message::toString($req));
 
                 if ($res) {
                     Log::debug(Psr7\Message::toString($res));
                 }
             }
 
-            if ($req && $res) {
+            if ($res) {
                 $this->throwException($req, $res);
             }
 
@@ -69,15 +73,14 @@ class Requester
     }
 
     /**
-     * Trow exception base on request exception
+     * Throw exception based on request exception
      *
-     * @throw Jurager\Passport\Exceptions\InvalidSessionIdException
-     * @throw Jurager\Passport\Exceptions\InvalidClientException
-     * @throw Jurager\Passport\Exceptions\UnauthorizedException
-     * @throw Jurager\Passport\Exceptions\NotAttachedException
-     *
+     * @throws InvalidSessionIdException
+     * @throws InvalidClientException
      * @throws NotAttachedException
      * @throws UnauthorizedException
+     * @throws RuntimeException
+     * @throws JsonException
      */
     protected function throwException($request, $response): void
     {

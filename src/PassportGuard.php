@@ -57,6 +57,7 @@ class PassportGuard implements Guard
     /**
      * Get the currently authenticated user.
      *
+     * @return Authenticatable|null
      * @throws GuzzleException
      * @throws JsonException
      */

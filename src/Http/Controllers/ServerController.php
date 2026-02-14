@@ -2,6 +2,7 @@
 
 namespace Jurager\Passport\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -70,7 +71,7 @@ class ServerController extends Controller
             if (!$this->server->verifyAttachChecksum($broker_id, $token, $checksum)) {
                 return response(trans('passport::errors.invalid_checksum'), 400);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Broker not found or other error
             return response($e->getMessage(), 400);
         }
@@ -175,14 +176,14 @@ class ServerController extends Controller
         // Available methods
         $methods = ['id', 'all', 'others'];
 
-        // Check user authorisation
+        // Check user authorization
         if ($user) {
 
             // Check accepted method
-            if (in_array($method = $request->get('method'), $methods, true)) {
+            if (in_array($method = $request->input('method'), $methods, true)) {
 
                 // By session identifier
-                if (($method === 'id') && ! $user->logoutById($request->get('id'))) {
+                if (($method === 'id') && ! $user->logoutById($request->input('id'))) {
                     return response()->json(['error' => true]);
                 }
 

@@ -102,7 +102,7 @@ class ClientAuthenticate implements AuthenticatesRequests
      * @param Request $request
      * @return void
      */
-    protected function redirectTo(Request $request)
+    protected function redirectTo(Request $request): void
     {
         if(!$request->expectsJson()) {
             // Prevent infinite redirect loops

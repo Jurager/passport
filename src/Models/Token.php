@@ -63,7 +63,7 @@ class Token extends Model
      *
      * @return Builder
      */
-    public function prunable()
+    public function prunable(): Builder
     {
         return $this->where('expires_at', '<=', now());
     }

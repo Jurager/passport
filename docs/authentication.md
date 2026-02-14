@@ -25,14 +25,11 @@ How it decides:
 
 This means API calls can use bearer tokens, while browser requests use the server session.
 
-> [!NOTE]
-> If the broker is not attached, users will be redirected to `/sso/client/attach` before authentication can proceed.
+Authentication behavior:
 
-> [!NOTE]
-> For non-JSON requests, unauthenticated users are redirected to `PASSPORT_BROKER_AUTH_URL` with a `continue` query parameter.
-
-> [!NOTE]
-> For JSON requests (`expectsJson`), Laravel returns a 401 response instead of redirecting.
+- If the broker is not attached, users are redirected to `/sso/client/attach` first.
+- For non-JSON requests, unauthenticated users are redirected to `PASSPORT_BROKER_AUTH_URL` with a `continue` query parameter.
+- For JSON requests (`expectsJson`), Laravel returns a 401 instead of redirecting.
 
 > [!NOTE]
 > If you do not have a separate auth UI service, leave `PASSPORT_BROKER_AUTH_URL` empty and use the broker's own `/login`.

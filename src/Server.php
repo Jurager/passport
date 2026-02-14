@@ -111,12 +111,12 @@ class Server
     /**
      * Verify attach checksum
      */
-    public function verifyAttachChecksum(string $broker_id, string $token, string $checksum): string
+    public function verifyAttachChecksum(string $broker_id, string $token, string $checksum): bool
     {
         // Get broker secret field
         $secret = $this->findBrokerById($broker_id)->{$this->secret_field};
 
-        // Return generated checksum
+        // Return verification result
         return $this->encryption->verifyChecksum('attach', $token, $secret, $checksum);
     }
 

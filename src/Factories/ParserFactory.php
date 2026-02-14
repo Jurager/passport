@@ -3,6 +3,7 @@
 namespace Jurager\Passport\Factories;
 
 use Exception;
+use Jurager\Passport\Interfaces\ParserInterface;
 use Jurager\Passport\Parsers\Agent;
 use Jurager\Passport\Parsers\WhichBrowser;
 
@@ -13,7 +14,7 @@ class ParserFactory
      *
      * @throws Exception
      */
-    public static function build(string $name): Agent|WhichBrowser
+    public static function build(string $name): ParserInterface
     {
         return match ($name) {
             'agent' => new Agent(),

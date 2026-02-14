@@ -205,7 +205,7 @@ class PassportGuard implements Guard
     {
         $username = config('passport.broker.client_username', 'email');
 
-        return array_key_exists($username, $payload);
+        return is_array($payload) && array_key_exists($username, $payload);
     }
 
     /**
@@ -286,7 +286,9 @@ class PassportGuard implements Guard
      */
     protected function fireAttemptEvent(array $credentials, bool $remember = false): void
     {
-        $this->events->dispatch(new Attempting($this->name, $credentials, $remember));
+        if (isset($this->events)) {
+            $this->events->dispatch(new Attempting($this->name, $credentials, $remember));
+        }
     }
 
     /**
@@ -294,7 +296,9 @@ class PassportGuard implements Guard
      */
     protected function fireLoginEvent(Authenticatable $user, bool $remember = false): void
     {
-        $this->events->dispatch(new Login($this->name, $user, $remember));
+        if (isset($this->events)) {
+            $this->events->dispatch(new Login($this->name, $user, $remember));
+        }
     }
 
     /**
@@ -302,7 +306,9 @@ class PassportGuard implements Guard
      */
     protected function fireAuthenticatedEvent(Authenticatable $user): void
     {
-        $this->events->dispatch(new Authenticated($this->name, $user));
+        if (isset($this->events)) {
+            $this->events->dispatch(new Authenticated($this->name, $user));
+        }
     }
 
     /**
@@ -310,6 +316,8 @@ class PassportGuard implements Guard
      */
     protected function fireFailedEvent(?Authenticatable $user, array $credentials): void
     {
-        $this->events->dispatch(new Failed($this->name, $user, $credentials));
+        if (isset($this->events)) {
+            $this->events->dispatch(new Failed($this->name, $user, $credentials));
+        }
     }
 }

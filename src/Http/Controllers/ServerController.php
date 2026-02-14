@@ -65,11 +65,14 @@ class ServerController extends Controller
             return response(trans('passport::errors.invalid_return_url'), 400);
         }
 
-        // Compare checksums
+        // Verify broker and checksum
         try {
-            $this->server->verifyAttachChecksum($broker_id, $token, $checksum);
+            if (!$this->server->verifyAttachChecksum($broker_id, $token, $checksum)) {
+                return response(trans('passport::errors.invalid_checksum'), 400);
+            }
         } catch (\Exception $e) {
-            return response(trans('passport::errors.invalid_checksum'), 400);
+            // Broker not found or other error
+            return response($e->getMessage(), 400);
         }
         
         // Generate new session
@@ -213,7 +216,7 @@ class ServerController extends Controller
         $commands = config('passport.commands', []);
 
         // Command not found in configuration
-        if (! array_key_exists($command, $commands)) {
+        if (! is_array($commands) || ! array_key_exists($command, $commands)) {
             return response()->json(['message' => trans('passport::errors.command_not_found')], 404);
         }
 

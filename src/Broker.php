@@ -222,7 +222,7 @@ class Broker
         $response = $this->requester->request($sid, 'POST', $url, array_merge(['method' => $method], $params), $headers);
 
         // Successfully logged out
-        return array_key_exists('success', $response);
+        return is_array($response) && array_key_exists('success', $response);
     }
 
     /**

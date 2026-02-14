@@ -100,6 +100,7 @@ class ClientAuthenticate implements AuthenticatesRequests
      * Get the path the user should be redirected to when they are not authenticated.
      *
      * @param Request $request
+     * @return void
      */
     protected function redirectTo(Request $request)
     {
@@ -115,7 +116,7 @@ class ClientAuthenticate implements AuthenticatesRequests
 
             session(['sso_auth_redirect_count' => $authRedirectCount + 1]);
 
-            return redirect(config('passport.broker.auth_url').'?continue='.$request->fullUrl())->send();
+            redirect(config('passport.broker.auth_url').'?continue='.$request->fullUrl())->send();
         }
     }
 }

@@ -15,9 +15,9 @@ use RuntimeException;
 
 class Requester
 {
-    protected mixed $client;
+    protected Client $client;
 
-    public function __construct($client = null)
+    public function __construct()
     {
         $this->client = new Client;
     }
@@ -87,7 +87,7 @@ class Requester
 
         $data = json_decode($body->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        if ($data && array_key_exists('code', $data)) {
+        if (is_array($data) && array_key_exists('code', $data)) {
 
             throw match ($data['code']) {
                 'invalid_session_id' => new InvalidSessionIdException($data['message'], $status),

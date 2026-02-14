@@ -3,10 +3,10 @@
 namespace Jurager\Passport\Parsers;
 
 use Illuminate\Support\Facades\Request;
-use Jurager\Passport\Interfaces\Parser;
+use Jurager\Passport\Interfaces\ParserInterface;
 use WhichBrowser\Parser;
 
-class WhichBrowser implements Parser
+class WhichBrowser implements ParserInterface
 {
     protected Parser $parser;
 
@@ -15,7 +15,7 @@ class WhichBrowser implements Parser
      */
     public function __construct()
     {
-        $this->parser = new Parser(Request::header('Passport-User-Agent'));
+        $this->parser = new Parser(Request::header('Passport-User-Agent') ?? '');
     }
 
     /**

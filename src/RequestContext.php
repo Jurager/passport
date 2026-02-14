@@ -7,17 +7,14 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Request;
 use Jurager\Passport\Factories\ParserFactory;
 use Jurager\Passport\Factories\ProviderFactory;
-use Jurager\Passport\Interfaces\Provider;
-use Jurager\Passport\Interfaces\Parser;
+use Jurager\Passport\Interfaces\ProviderInterface;
+use Jurager\Passport\Interfaces\ParserInterface;
 
 class RequestContext
 {
-    protected Parser $parser;
+    protected ParserInterface $parser;
 
-    /**
-     * @var Provider
-     */
-    protected $provider;
+    protected ?ProviderInterface $provider;
 
     public string $userAgent;
 
@@ -37,7 +34,7 @@ class RequestContext
         $this->provider = ProviderFactory::build(config('passport.server.lookup.provider'));
 
         // Detect User-Agent
-        $this->userAgent = Request::header('Passport-User-Agent');
+        $this->userAgent = Request::header('Passport-User-Agent') ?? '';
 
         // Detect Remote IP
         $this->ip = Request::header('Passport-Remote-Address');
@@ -46,7 +43,7 @@ class RequestContext
     /**
      * Get the parser used to parse the User-Agent header.
      */
-    public function parser(): Parser
+    public function parser(): ParserInterface
     {
         return $this->parser;
     }
@@ -54,7 +51,7 @@ class RequestContext
     /**
      * Get the IP lookup result.
      */
-    public function ip(): ?Provider
+    public function ip(): ?ProviderInterface
     {
         if ($this->provider && $this->provider->getResult()) {
             return $this->provider;

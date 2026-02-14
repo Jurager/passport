@@ -5,7 +5,7 @@ namespace Jurager\Passport\Interfaces;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Collection;
 
-interface Provider
+interface ProviderInterface
 {
     /**
      * Get the Guzzle request.
@@ -15,7 +15,7 @@ interface Provider
     /**
      * Get the result of the query.
      *
-     * @return Provider|null
+     * @return Collection|null
      */
     public function getResult(): ?Collection;
 

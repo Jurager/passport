@@ -1,6 +1,6 @@
 # API Tokens
 
-Personal access tokens for API authentication.
+Personal access tokens allow API authentication without a password.
 
 ## Setup
 
@@ -19,7 +19,8 @@ class User extends Authenticatable
 $token = $user->createToken('api-token', 60); // minutes
 ```
 
-The plain token is shown only once. Store it immediately.
+> [!NOTE]
+> The plain token is shown only once. Store it immediately.
 
 ## Use Token
 

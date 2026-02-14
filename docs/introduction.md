@@ -1,6 +1,6 @@
 # Introduction
 
-Jurager/Passport provides Single Sign-On (SSO) for Laravel through a server (auth authority) and brokers (client apps).
+Jurager/Passport provides Single Sign-On (SSO) for Laravel using a server (auth authority) and one or more brokers (client apps).
 
 ## Concepts
 
@@ -12,7 +12,7 @@ Jurager/Passport provides Single Sign-On (SSO) for Laravel through a server (aut
 1. Broker attaches to the server using a token and checksum.
 2. User logs in on the server.
 3. Broker pulls the profile on each request to keep the session in sync.
-4. Logout revokes the server session (and ends broker access).
+4. Logout revokes the server session.
 
 ## When To Use
 
@@ -20,7 +20,8 @@ Jurager/Passport provides Single Sign-On (SSO) for Laravel through a server (aut
 - Centralized user store with separate frontends.
 - Shared sessions across internal services.
 
-An account-center app (similar to accounts.google.com) should be a broker. It still talks to a separate server that owns the user store and sessions.
+> [!NOTE]
+> An account-center app (session management UI) is a broker that talks to a separate server.
 
 ## Requirements
 

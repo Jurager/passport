@@ -17,7 +17,7 @@ This means server sessions rely on your cache driver, while broker sessions rely
 
 ## Supported Drivers
 
-Server side (cache): any Laravel cache driver (`file`, `redis`, `database`, `memcached`, etc.).  
+Server side (cache): any Laravel cache driver (`file`, `redis`, `database`, `memcached`, etc.).
 Broker side (session): any Laravel session driver (`file`, `database`, `redis`, `cookie`, etc.).
 
 Configure these in Laravel's `config/cache.php` and `config/session.php`.
@@ -30,7 +30,8 @@ PASSPORT_STORAGE_TTL=600
 
 Set to `null` for no expiration.
 
-Note: on the server, TTL is never shorter than Laravel's session lifetime to avoid desync.
+> [!NOTE]
+> On the server, TTL is never shorter than Laravel's session lifetime to avoid desync.
 
 ## Access
 
@@ -52,7 +53,7 @@ $user->logoutAll();
 
 Default prefix: `sso/client`.
 
-- `POST /logout/id`
+- `POST /logout/{id}`
 - `POST /logout/all`
 - `POST /logout/others`
 

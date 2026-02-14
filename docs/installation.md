@@ -1,5 +1,7 @@
 # Installation
 
+You may install Passport using Composer, run migrations, and register middleware.
+
 ## Install
 
 ```bash
@@ -12,11 +14,11 @@ composer require jurager/passport
 php artisan migrate
 ```
 
-Creates tables for brokers, history, and API tokens.
+This creates tables for brokers, history, and API tokens.
 
 ## Register Middleware
 
-The package needs two middleware registrations:
+Passport requires two middleware registrations:
 
 - `AttachBroker` in the `web` group (after `StartSession`).
 - `ClientAuthenticate` as the `auth` alias.
@@ -57,8 +59,7 @@ protected $routeMiddleware = [
 
 ## Add Traits
 
-Add the `Passport` trait to your User model.  
-If you use API tokens, also add `HasTokens`.
+Add the `Passport` trait to your User model. If you use API tokens, also add `HasTokens`.
 
 ```php
 use Jurager\Passport\Traits\Passport;

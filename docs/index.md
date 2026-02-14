@@ -1,30 +1,30 @@
-# Jurager/Passport
+# Documentation
 
-Single Sign-On (SSO) for Laravel with a central server and multiple broker apps.
+This documentation explains how to install, configure, and use Jurager/Passport.
 
-## Get Started
+## Getting Started
 
-- [Introduction](introduction.md) - What the package does and core concepts.
+- [Introduction](introduction.md) - Concepts and when to use the package.
 - [Installation](installation.md) - Install, migrate, and register middleware.
-- [Server Setup](server-setup.md) - Configure the auth server and brokers.
-- [Broker Setup](broker-setup.md) - Configure client apps and user sync.
-- [Authentication](authentication.md) - Flow, guard usage, and broker API.
+- [Configuration](configuration.md) - Choose server or broker and configure options.
 
 ## Guides
 
-- [Configuration](configuration.md) - Config options and defaults.
+- [Server Setup](server-setup.md) - Configure brokers, payloads, and server settings.
+- [Broker Setup](broker-setup.md) - Configure the client app and user sync.
+- [Authentication](authentication.md) - Flow and middleware behavior.
+- [Sessions](sessions.md) - Storage, TTL, and logout helpers.
+- [Tokens](tokens.md) - API tokens and usage.
+- [History](history.md) - Device, IP, and geolocation data.
 - [Callbacks](callbacks.md) - Payload and user sync hooks.
-- [Sessions](sessions.md) - Session history and logout helpers.
-- [Tokens](tokens.md) - API token creation and usage.
-- [History](history.md) - Device and IP data, geo lookup.
-- [Events](events.md) - Package events and listeners.
-- [Security](security.md) - Built-in checks and best practices.
+- [Commands](commands.md) - Server commands called from brokers.
+- [Events](events.md) - Package and Laravel auth events.
 
 ## Reference
 
 - [Models](models.md) - Broker, History, and Token models.
-- [Traits](traits.md) - Passport and HasTokens helpers.
-- [Commands](commands.md) - Server commands called by brokers.
-- [API Reference](api-reference.md) - Classes and endpoints summary.
+- [Traits](traits.md) - Passport, HasTokens, MakesApiCalls.
+- [Security](security.md) - Redirect safety and best practices.
 - [Troubleshooting](troubleshooting.md) - Common issues and fixes.
-- [Upgrade Guide](upgrade-guide.md) - Upgrade steps and compatibility.
+- [Upgrade Guide](upgrade-guide.md) - Updating the package.
+- [API Reference](api-reference.md) - Class and endpoint summary.

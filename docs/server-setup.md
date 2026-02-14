@@ -1,8 +1,9 @@
 # Server Setup
 
-Configure the central SSO server: broker registry, user payload, and security.
+The server is the central auth authority. It registers brokers, validates sessions, and returns user payloads.
 
-The server is a dedicated auth authority. Even if you build an account-center UI, it should be a broker that talks to this server.
+> [!NOTE]
+> Even if you build an account-center UI, it should be a broker that talks to this server.
 
 ## Environment
 
@@ -35,7 +36,7 @@ $broker = Broker::create([
 
 ### Array Driver
 
-Good for local dev, not ideal for production.
+Useful for local development and very small setups.
 
 ```env
 PASSPORT_SERVER_DRIVER=array
@@ -87,10 +88,10 @@ Default prefix: `sso/server`.
 - `POST /logout`
 - `POST /commands/{command}`
 
-## Optional: History Enrichment
+## History Enrichment (Optional)
 
 - User-Agent parser: `PASSPORT_SERVER_PARSER=agent|whichbrowser`
-- IP lookup: see `history.md` for `server.lookup` options.
+- IP lookup: see [History](history.md)
 
 ## Security
 
@@ -99,7 +100,3 @@ PASSPORT_ALLOWED_REDIRECT_HOSTS=app.com,admin.app.com
 PASSPORT_ATTACH_THROTTLE=5
 PASSPORT_MAX_REDIRECT_ATTEMPTS=3
 ```
-
-## Custom Commands
-
-Define commands on the server and call them from brokers. See [Commands](commands.md).

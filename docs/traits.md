@@ -1,8 +1,10 @@
 # Traits
 
+Passport ships traits that add SSO and token helpers to your User model.
+
 ## Passport
 
-Adds session helpers to the User model:
+Adds session helpers:
 
 - `history()`
 - `current()`

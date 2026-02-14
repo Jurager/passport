@@ -1,5 +1,7 @@
 # Troubleshooting
 
+Common issues and how to fix them.
+
 ## Redirect loops
 
 - Ensure `AttachBroker` is added once and after `StartSession`.

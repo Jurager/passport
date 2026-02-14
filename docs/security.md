@@ -1,5 +1,7 @@
 # Security
 
+Passport includes several protections by default and allows you to lock down redirects and attach behavior.
+
 ## Built-in
 
 - Checksum validation for broker sessions.

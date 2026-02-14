@@ -6,9 +6,7 @@ Callbacks let you customize payloads and user sync without overriding package co
 
 ### user_info
 
-Controls which fields the server returns to brokers.
-
-Called on the server when responding to `/login` and `/profile`.
+Controls which fields the server returns to brokers. Called on the server when responding to `/login` and `/profile`.
 
 ```php
 'user_info' => function ($user, $broker, $request) {
@@ -38,9 +36,7 @@ Many apps rely on a local User model for authorization, relationships, and UI. T
 
 ### user_create_strategy
 
-Creates a local user when the broker receives a new payload.
-
-Called on the broker when a payload arrives and the user cannot be found locally by credentials.
+Creates a local user when a payload arrives and the user cannot be found locally by credentials.
 
 ```php
 'user_create_strategy' => function ($data) {
@@ -90,9 +86,7 @@ class PassportUserStrategy
 
 ### user_update_strategy
 
-Updates a local user on each login/profile sync.
-
-Called on the broker after a payload is resolved, even if the user already exists.
+Updates a local user on each login/profile sync. Called on the broker after a payload is resolved, even if the user already exists.
 
 ```php
 'user_update_strategy' => function ($user, $data) {

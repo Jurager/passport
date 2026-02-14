@@ -6,7 +6,7 @@ Passport provides three Eloquent models. You can extend them and point config to
 
 `Jurager\Passport\Models\Broker` stores registered brokers on the server.
 
-Fields: `client_id`, `secret`, `name`, timestamps, soft deletes.
+Fields include `client_id`, `secret`, `name`, timestamps, and soft deletes.
 
 ```env
 PASSPORT_BROKERS_TABLE=brokers
@@ -14,14 +14,14 @@ PASSPORT_BROKERS_TABLE=brokers
 
 Notes:
 - `secret` is hidden from JSON output.
-- `client_id` is used to identify the broker.
-- You can override id/secret fields with `PASSPORT_SERVER_ID_FIELD` and `PASSPORT_SERVER_SECRET_FIELD`.
+- `client_id` identifies the broker.
+- Field names can be changed via `PASSPORT_SERVER_ID_FIELD` and `PASSPORT_SERVER_SECRET_FIELD`.
 
 ## History
 
 `Jurager\Passport\Models\History` stores login sessions.
 
-Fields: `session_id`, `user_agent`, `ip`, device/browser info, optional geo fields, `expires_at`, timestamps, soft deletes.
+Fields include `session_id`, `user_agent`, `ip`, device/browser info, optional geo fields, `expires_at`, timestamps, and soft deletes.
 
 ```env
 PASSPORT_HISTORY_TABLE=history
@@ -38,7 +38,7 @@ Methods:
 
 `Jurager\Passport\Models\Token` stores API tokens.
 
-Fields: `name`, hashed `token`, `last_used_at`, `expires_at`, timestamps, soft deletes.
+Fields include `name`, hashed `token`, `last_used_at`, `expires_at`, timestamps, and soft deletes.
 
 ```env
 PASSPORT_TOKENS_TABLE=access_tokens

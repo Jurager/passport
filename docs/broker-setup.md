@@ -1,8 +1,9 @@
 # Broker Setup
 
-Configure a broker (client app) that delegates auth to the server.
+A broker is a client app that delegates auth to the server and keeps a local user session.
 
-Account-center apps (session management UI) are typical brokers that talk to the server.
+> [!NOTE]
+> Account-center apps are typical brokers that talk to the server.
 
 ## Environment
 
@@ -48,7 +49,7 @@ If you host the login UI on a dedicated broker, set:
 PASSPORT_BROKER_AUTH_URL=https://auth.myapp.com
 ```
 
-Unauthenticated users will be redirected there.
+Unauthenticated users will be redirected there instead of the server.
 
 ## User Sync
 
@@ -79,7 +80,7 @@ Define how users are created or updated on the broker.
 Default prefix: `sso/client`.
 
 - `GET /attach`
-- `POST /logout/id`
+- `POST /logout/{id}`
 - `POST /logout/all`
 - `POST /logout/others`
 
@@ -87,8 +88,3 @@ Default prefix: `sso/client`.
 
 - `AttachBroker` goes after `StartSession` in the `web` group.
 - `ClientAuthenticate` replaces the `auth` alias.
-
-## Next
-
-- [Authentication](authentication.md)
-- [Sessions](sessions.md)

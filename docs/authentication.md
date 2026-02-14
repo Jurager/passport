@@ -25,18 +25,6 @@ How it decides:
 
 This means API calls can use bearer tokens, while browser requests use the server session.
 
-## Guard Usage
-
-```php
-use Illuminate\Support\Facades\Auth;
-
-if (Auth::guard()->attempt($credentials)) {
-    return redirect()->intended('/dashboard');
-}
-
-$user = Auth::guard()->user();
-```
-
 ## Route Examples
 
 ```php
@@ -49,6 +37,8 @@ Route::middleware('auth')->group(function () {
 ```
 
 ```php
+use Illuminate\Support\Facades\Auth;
+
 Route::get('/api/user', function () {
     return Auth::user();
 })->middleware('auth');

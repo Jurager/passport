@@ -1,6 +1,6 @@
 # Commands
 
-Define server-side commands and call them from brokers. Useful for role checks or server-only data.
+Commands are defined on the server as closures and called from brokers. Use them for role checks or server-only data.
 
 Typical real-world uses:
 
@@ -9,9 +9,7 @@ Typical real-world uses:
 - Server-only data (billing, flags, roles).
 - Consistent rules across all brokers.
 
-Commands are defined on the server as closures and called from brokers.
-
-## Define Commands
+## Define Commands (server)
 
 ```php
 // config/passport.php
@@ -25,7 +23,7 @@ Commands are defined on the server as closures and called from brokers.
 
 Commands receive the server instance and the request. Return an array (JSON response).
 
-## Call Commands
+## Call Commands (broker)
 
 ```php
 namespace App\Http\Controllers;
@@ -76,7 +74,7 @@ $result = $broker->commands('hasPermission', [
     'permission' => 'reports.view',
 ], $request);
 
-if (!$result['allowed']) {
+if (!($result['allowed'] ?? false)) {
     abort(403);
 }
 ```

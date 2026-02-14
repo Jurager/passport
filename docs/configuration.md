@@ -1,26 +1,13 @@
 # Configuration
 
-Publish the config file:
+After publishing the config file, decide whether the app is a server or a broker and configure the matching section.
 
 ```bash
 php artisan vendor:publish --provider="Jurager\Passport\PassportServiceProvider"
 ```
 
-Most options can be overridden with environment variables.
-
-After publishing, decide which role this app plays and configure the matching section:
-
-- Server: configure `server` options and server routes.
-- Broker: configure `broker` options and broker routes.
-
-## How Mode Is Chosen
-
-The package does not have a single "mode" flag. Your app becomes a server or a broker based on what you configure:
-
-- **Server** is enabled when you configure server options and expose server routes.
-- **Broker** is enabled when you set broker credentials and server URL.
-
-You can run only server, only broker, or both in the same codebase, but you still need a separate server instance for real SSO. An account-center app is a broker that talks to the server.
+> [!NOTE]
+> There is no single "mode" flag. The role is determined by what you configure and which routes you expose.
 
 ## Server Configuration
 
@@ -42,7 +29,11 @@ These options define how the server validates brokers and builds sessions.
 ],
 ```
 
-See [Server Setup](server-setup.md) for full server configuration flow.
+- `driver=model` uses the brokers table; `driver=array` uses the config list.
+- `id_field` and `secret_field` must match your broker model fields.
+- `parser` and `lookup` only affect history enrichment.
+
+See [Server Setup](server-setup.md) for the full flow.
 
 ## Broker Configuration
 
@@ -59,11 +50,15 @@ These options make the app act as a broker and talk to the server.
 ],
 ```
 
-See [Broker Setup](broker-setup.md) for full broker configuration flow.
+- `server_url` must include the server prefix, for example `https://sso.example.com/sso/server`.
+- `client_id` and `client_secret` must match a broker registered on the server.
+- `auth_url` routes users to a dedicated login broker, if used.
+
+See [Broker Setup](broker-setup.md) for the full flow.
 
 ## Tables
 
-You can change table names if they conflict with your schema or naming rules.
+You may change table names to fit your schema conventions.
 
 ```php
 'brokers_table_name' => 'brokers',
@@ -86,8 +81,7 @@ Route prefixes let you mount SSO endpoints under custom paths.
 
 ## Callbacks
 
-Use callbacks for custom payloads and user sync. These are executed on the server
-(`user_info`, `after_authenticating`) or broker (`user_create_strategy`, `user_update_strategy`).
+Callbacks customize payloads and user sync.
 
 ```php
 'user_info' => null,
@@ -96,19 +90,11 @@ Use callbacks for custom payloads and user sync. These are executed on the serve
 'user_update_strategy' => null,
 ```
 
-Common cases:
-
-- `user_info` to add roles/permissions for brokers.
-- `after_authenticating` to block unverified users or inactive accounts.
-- `user_create_strategy` to create local users on brokers.
-- `user_update_strategy` to keep broker data in sync.
-
 See [Callbacks](callbacks.md) for full usage.
 
 ## Commands
 
-Commands are server-side endpoints that brokers can call for authorization checks
-or server-only data. They receive the request and return a JSON payload.
+Commands are server-side closures that brokers can call.
 
 ```php
 'commands' => [],
@@ -120,13 +106,11 @@ See [Commands](commands.md) for full usage.
 
 `allowed_redirect_hosts` restricts where users can be redirected after auth and attach flows.
 
-When a broker sends a `return_url` (the originally requested page), the server validates the host before redirecting back. If the host is not allowed, the server blocks the redirect.
+When a broker sends a `return_url`, the server validates the host before redirecting. If the host is not allowed, the server returns a 400 error.
 
 ```php
 'allowed_redirect_hosts' => [],
 ```
-
-If the host is not in the list, the server returns a 400 error instead of redirecting.
 
 Example:
 

@@ -55,6 +55,6 @@ Server prefix: `sso/server`
 Broker prefix: `sso/client`
 
 - `GET /attach`
-- `POST /logout/id`
+- `POST /logout/{id}`
 - `POST /logout/all`
 - `POST /logout/others`

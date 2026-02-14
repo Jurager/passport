@@ -68,16 +68,19 @@ class ServerController extends Controller
 
         // Verify broker and checksum
         try {
-            if (!$this->server->verifyAttachChecksum($broker_id, $token, $checksum)) {
+            // Find broker once to avoid duplicate DB queries
+            $broker = $this->server->findBrokerById($broker_id);
+
+            if (!$this->server->verifyAttachChecksum($broker, $token, $checksum)) {
                 return response(trans('passport::errors.invalid_checksum'), 400);
             }
+
+            // Generate new session using the same broker instance
+            $sid = $this->server->generateSessionId($broker, $token);
         } catch (Exception $e) {
             // Broker not found or other error
             return response($e->getMessage(), 400);
         }
-
-        // Generate new session
-        $sid = $this->server->generateSessionId($broker_id, $token);
 
         // Start a new session
         $this->storage->start($sid);

@@ -84,8 +84,11 @@ class Server
         // Get broker and token from session
         [$broker_id, $token] = $this->getBrokerInfoFromSessionId($sid);
 
+        // Find broker model once to avoid duplicate queries
+        $broker = $this->findBrokerById($broker_id);
+
         // Compare checksum with session
-        if ($this->generateSessionId($broker_id, $token) !== $sid) {
+        if ($this->generateSessionId($broker, $token) !== $sid) {
             throw new InvalidSessionIdException(trans('passport::errors.checksum_failed'));
         }
 
@@ -95,11 +98,16 @@ class Server
 
     /**
      * Generate session id
+     *
+     * @param mixed $broker Broker model instance
+     * @param string $token Session token
+     * @return string Session identification
      */
-    public function generateSessionId(string $broker_id, string $token): string
+    public function generateSessionId(mixed $broker, string $token): string
     {
-        // Get broker secret field
-        $secret = $this->findBrokerById($broker_id)->{$this->secret_field};
+        // Get broker id and secret from model
+        $broker_id = $broker->{$this->id_field};
+        $secret = $broker->{$this->secret_field};
 
         // Generate broker checksum
         $checksum = $this->encryption->generateChecksum('session', $token, $secret);
@@ -110,11 +118,16 @@ class Server
 
     /**
      * Verify attach checksum
+     *
+     * @param mixed $broker Broker model instance
+     * @param string $token Attach token
+     * @param string $checksum Checksum to verify
+     * @return bool Verification result
      */
-    public function verifyAttachChecksum(string $broker_id, string $token, string $checksum): bool
+    public function verifyAttachChecksum(mixed $broker, string $token, string $checksum): bool
     {
-        // Get broker secret field
-        $secret = $this->findBrokerById($broker_id)->{$this->secret_field};
+        // Get broker secret from model
+        $secret = $broker->{$this->secret_field};
 
         // Return verification result
         return $this->encryption->verifyChecksum('attach', $token, $secret, $checksum);

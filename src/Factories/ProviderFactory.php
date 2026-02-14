@@ -2,8 +2,6 @@
 
 namespace Jurager\Passport\Factories;
 
-use Exception;
-use GuzzleHttp\Exception\GuzzleException;
 use Jurager\Passport\Exceptions\CustomProviderException;
 use Jurager\Passport\Exceptions\ProviderException;
 use Jurager\Passport\Interfaces\ProviderInterface;
@@ -23,7 +21,7 @@ class ProviderFactory
      */
     public static function build(?string $name): ?ProviderInterface
     {
-        if (! config('passport.server.lookup.provider') || ! $name) {
+        if (! $name || ! config('passport.server.lookup.provider')) {
             return null;
         }
 
@@ -35,17 +33,17 @@ class ProviderFactory
             if (! in_array(ProviderInterface::class, class_implements($custom[$name]), true)) {
 
                 // The custom IP provider class doesn't implement the required interface
-                throw new CustomProviderException;
+                throw new CustomProviderException();
             }
 
-            return new $custom[$name];
+            return new $custom[$name]();
 
         }
 
         // Use of an officially supported address lookup provider
         return match ($name) {
-            'ip2location-lite' => new Ip2LocationLite,
-            'ip-api' => new IpApi,
+            'ip2location-lite' => new Ip2LocationLite(),
+            'ip-api' => new IpApi(),
             default => throw new ProviderException(trans('passport::errors.provider_not_selected')),
         };
     }

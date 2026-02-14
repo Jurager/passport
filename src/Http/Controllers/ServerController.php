@@ -38,7 +38,7 @@ class ServerController extends Controller
 
         $this->server = $server;
         $this->storage = $storage;
-        $this->encryption = new Encryption;
+        $this->encryption = new Encryption();
     }
 
     /**
@@ -75,7 +75,7 @@ class ServerController extends Controller
             // Broker not found or other error
             return response($e->getMessage(), 400);
         }
-        
+
         // Generate new session
         $sid = $this->server->generateSessionId($broker_id, $token);
 
@@ -114,8 +114,13 @@ class ServerController extends Controller
             // Get the currently authenticated user
             $user = Auth::guard()->user();
 
+            // Ensure user was successfully retrieved
+            if (!$user) {
+                return response()->json([], 401);
+            }
+
             // Get request information
-            $context = new RequestContext;
+            $context = new RequestContext();
 
             // Build a new history
             $history = HistoryFactory::build($context);
@@ -131,7 +136,6 @@ class ServerController extends Controller
         event(new Events\Unauthenticated($this->loginCredentials($request), $request));
 
         // Unauthorized exception
-        //return response()->json(['code' => 'unauthorized', 'message' => trans('passport::errors.not_authorized') ], 401);
         return response()->json([], 401);
     }
 

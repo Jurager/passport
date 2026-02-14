@@ -39,7 +39,16 @@ class Agent implements ParserInterface
         }
 
         if ($this->parser->isMobile()) {
-            return $this->parser->isTablet() ? 'tablet' : ($this->parser->isPhone() ? 'phone' : 'mobile');
+
+            if ($this->parser->isTablet()) {
+                return 'tablet';
+            }
+
+            if ($this->parser->isPhone()) {
+                return 'phone';
+            }
+
+            return 'mobile';
         }
 
         return null;

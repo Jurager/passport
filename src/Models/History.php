@@ -36,7 +36,8 @@ use Jurager\Passport\Session\ServerSessionManager;
  */
 class History extends Model
 {
-    use Prunable, SoftDeletes;
+    use Prunable;
+    use SoftDeletes;
 
     /**
      * The attributes that should be mass fillable.

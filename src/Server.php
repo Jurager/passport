@@ -25,7 +25,7 @@ class Server
     public function __construct()
     {
         // Encryption
-        $this->encryption = new Encryption;
+        $this->encryption = new Encryption();
 
         // Broker model
         $this->model = config('passport.server.model');

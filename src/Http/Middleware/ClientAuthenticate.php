@@ -64,18 +64,19 @@ class ClientAuthenticate implements AuthenticatesRequests
      */
     protected function authenticate(Request $request): mixed
     {
-        if($token = $request->bearerToken()) {
+        if ($token = $request->bearerToken()) {
             $this->auth->guard()->loginFromToken($token);
         }
 
         try {
             if ($this->auth->guard()->check()) {
+
                 // Reset auth redirect counter on successful authentication
                 session()->forget('sso_auth_redirect_count');
+
                 return true;
             }
-        }
-        catch (InvalidSessionIdException) {
+        } catch (InvalidSessionIdException) {
             throw new NotAttachedException(403, 'Client broker not attached.');
         }
 
@@ -100,11 +101,11 @@ class ClientAuthenticate implements AuthenticatesRequests
      * Get the path the user should be redirected to when they are not authenticated.
      *
      * @param Request $request
-     * @return void
+     * @return string|null
      */
-    protected function redirectTo(Request $request): void
+    protected function redirectTo(Request $request): ?string
     {
-        if(!$request->expectsJson()) {
+        if (!$request->expectsJson()) {
             // Prevent infinite redirect loops
             $authRedirectCount = session('sso_auth_redirect_count', 0);
             $maxAttempts = config('passport.max_redirect_attempts', 3);
@@ -116,7 +117,9 @@ class ClientAuthenticate implements AuthenticatesRequests
 
             session(['sso_auth_redirect_count' => $authRedirectCount + 1]);
 
-            redirect(config('passport.broker.auth_url').'?continue='.$request->fullUrl())->send();
+            return config('passport.broker.auth_url').'?continue='.$request->fullUrl();
         }
+
+        return null;
     }
 }

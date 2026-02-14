@@ -24,7 +24,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Token extends Model
 {
-    use Prunable, SoftDeletes;
+    use Prunable;
+    use SoftDeletes;
 
     /**
      * The attributes that should be cast to native types.

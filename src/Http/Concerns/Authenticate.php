@@ -50,6 +50,11 @@ trait Authenticate
             // Retrieve current user
             $user = Auth::guard()->user();
 
+            // Check if user was successfully retrieved
+            if (!$user) {
+                return null;
+            }
+
             // Return with additional verification
             return $this->afterAuthenticatingUser($user, $request);
         }

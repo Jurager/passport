@@ -40,8 +40,8 @@ class Broker
      */
     public function __construct(Request $request)
     {
-        $this->encryption = new Encryption;
-        $this->storage = new ClientSessionManager;
+        $this->encryption = new Encryption();
+        $this->storage = new ClientSessionManager();
         $this->requester = new Requester();
 
         $this->request = $request;
@@ -181,7 +181,7 @@ class Broker
         $headers = $this->agentHeaders($request);
 
         try {
-            $request = $this->requester->request($sid, 'GET', $url, [], $headers);
+            $response = $this->requester->request($sid, 'GET', $url, [], $headers);
         } catch (NotAttachedException|InvalidSessionIdException $e) {
 
             if ($this->request->bearerToken()) {
@@ -195,7 +195,7 @@ class Broker
             return false;
         }
 
-        return $request;
+        return $response;
     }
 
     /**

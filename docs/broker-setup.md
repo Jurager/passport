@@ -3,7 +3,7 @@ title: Broker Setup
 weight: 50
 ---
 
-# Broker Setup
+## Broker Setup
 
 A broker is a client app that delegates auth to the server and keeps a local user session.
 

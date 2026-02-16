@@ -3,7 +3,7 @@ title: Callbacks
 weight: 100
 ---
 
-# Callbacks
+## Callbacks
 
 Callbacks let you customize payloads and user sync without overriding package code.
 

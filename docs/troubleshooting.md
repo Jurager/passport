@@ -3,7 +3,7 @@ title: Troubleshooting
 weight: 160
 ---
 
-# Troubleshooting
+## Troubleshooting
 
 Common issues and how to fix them.
 

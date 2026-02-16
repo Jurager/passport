@@ -3,7 +3,7 @@ title: Sessions
 weight: 70
 ---
 
-# Sessions
+## Sessions
 
 Passport stores session history for each login and provides helpers to revoke sessions.
 

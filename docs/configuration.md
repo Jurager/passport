@@ -3,7 +3,7 @@ title: Configuration
 weight: 30
 ---
 
-# Configuration
+## Configuration
 
 After publishing the config file, decide whether the app is a server or a broker and configure the matching section.
 

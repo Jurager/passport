@@ -3,7 +3,7 @@ title: Api Reference
 weight: 180
 ---
 
-# API Reference
+## API Reference
 
 Short reference for core classes and endpoints.
 

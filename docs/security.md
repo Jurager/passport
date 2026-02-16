@@ -3,7 +3,7 @@ title: Security
 weight: 150
 ---
 
-## Security
+# Security
 
 Passport includes several protections by default and allows you to lock down redirects and attach behavior.
 

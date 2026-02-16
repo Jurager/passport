@@ -3,7 +3,7 @@ title: Tokens
 weight: 80
 ---
 
-## Tokens
+# Tokens
 
 Personal access tokens allow API authentication without a password.
 

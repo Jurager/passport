@@ -3,7 +3,7 @@ title: Index
 weight: 1
 ---
 
-## Documentation
+# Documentation
 
 This documentation explains how to install, configure, and use Jurager/Passport.
 

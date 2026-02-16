@@ -3,7 +3,7 @@ title: Commands
 weight: 110
 ---
 
-## Commands
+# Commands
 
 Commands are defined on the server as closures and called from brokers. Use them for role checks or server-only data.
 

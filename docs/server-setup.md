@@ -3,7 +3,7 @@ title: Server Setup
 weight: 40
 ---
 
-## Server Setup
+# Server Setup
 
 The server is the central auth authority. It registers brokers, validates sessions, and returns user payloads.
 

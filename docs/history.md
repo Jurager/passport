@@ -3,7 +3,7 @@ title: History
 weight: 90
 ---
 
-## History and Geolocation
+# History and Geolocation
 
 Passport records login history with device and IP details. Geo lookup is optional.
 
@@ -27,7 +27,7 @@ Install a parser:
 
 ```bash
 composer require jenssegers/agent
-## or
+# or
 composer require whichbrowser/parser
 ```
 

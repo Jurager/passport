@@ -3,7 +3,7 @@ title: Upgrade Guide
 weight: 170
 ---
 
-## Upgrade Guide
+# Upgrade Guide
 
 Use this checklist when upgrading the package.
 

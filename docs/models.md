@@ -3,7 +3,7 @@ title: Models
 weight: 130
 ---
 
-## Models
+# Models
 
 Passport provides three Eloquent models. You can extend them and point config to your custom classes.
 

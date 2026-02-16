@@ -1,3 +1,7 @@
+---
+title: Api Reference
+---
+
 # API Reference
 
 Short reference for core classes and endpoints.

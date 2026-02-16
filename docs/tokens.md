@@ -1,3 +1,7 @@
+---
+title: Tokens
+---
+
 # Tokens
 
 Personal access tokens allow API authentication without a password.

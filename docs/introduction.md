@@ -1,3 +1,7 @@
+---
+title: Introduction
+---
+
 # Introduction
 
 Jurager/Passport provides Single Sign-On (SSO) for Laravel using a server (auth authority) and one or more brokers (client apps).

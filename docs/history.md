@@ -1,3 +1,7 @@
+---
+title: History
+---
+
 # History and Geolocation
 
 Passport records login history with device and IP details. Geo lookup is optional.

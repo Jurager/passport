@@ -1,3 +1,7 @@
+---
+title: Authentication
+---
+
 # Authentication
 
 SSO auth is handled by the server, while brokers keep local sessions.

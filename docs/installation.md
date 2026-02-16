@@ -1,3 +1,7 @@
+---
+title: Installation
+---
+
 # Installation
 
 You may install Passport using Composer, run migrations, and register middleware.

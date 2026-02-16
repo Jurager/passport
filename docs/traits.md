@@ -1,3 +1,7 @@
+---
+title: Traits
+---
+
 # Traits
 
 Passport ships traits that add SSO and token helpers to your User model.

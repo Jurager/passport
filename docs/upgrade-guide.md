@@ -1,3 +1,7 @@
+---
+title: Upgrade Guide
+---
+
 # Upgrade Guide
 
 Use this checklist when upgrading the package.

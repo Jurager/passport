@@ -1,3 +1,7 @@
+---
+title: Events
+---
+
 # Events
 
 Passport fires package events on the server and Laravel auth events on brokers via the custom guard.

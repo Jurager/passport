@@ -1,9 +1,7 @@
 ---
-title: Index
+title: Documentation
 weight: 1
 ---
-
-# Documentation
 
 This documentation explains how to install, configure, and use Jurager/Passport.
 

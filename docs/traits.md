@@ -1,5 +1,6 @@
 ---
 title: Traits
+weight: 140
 ---
 
 # Traits

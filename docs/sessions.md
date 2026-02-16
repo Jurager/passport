@@ -1,5 +1,6 @@
 ---
 title: Sessions
+weight: 70
 ---
 
 # Sessions

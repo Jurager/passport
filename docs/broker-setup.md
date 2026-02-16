@@ -1,5 +1,6 @@
 ---
 title: Broker Setup
+weight: 50
 ---
 
 # Broker Setup

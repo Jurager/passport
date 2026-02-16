@@ -1,5 +1,6 @@
 ---
 title: Events
+weight: 120
 ---
 
 # Events

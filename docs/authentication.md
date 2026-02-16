@@ -1,5 +1,6 @@
 ---
 title: Authentication
+weight: 60
 ---
 
 # Authentication

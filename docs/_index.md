@@ -1,5 +1,6 @@
 ---
 title: Index
+weight: 1
 ---
 
 # Documentation

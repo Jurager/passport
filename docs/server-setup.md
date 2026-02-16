@@ -1,5 +1,6 @@
 ---
 title: Server Setup
+weight: 40
 ---
 
 # Server Setup

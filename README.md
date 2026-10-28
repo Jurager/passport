@@ -3,6 +3,7 @@
 [![Total Downloads](https://poser.pugx.org/jurager/passport/downloads)](https://packagist.org/packages/jurager/passport)
 [![PHP Version Require](https://poser.pugx.org/jurager/passport/require/php)](https://packagist.org/packages/jurager/passport)
 [![License](https://poser.pugx.org/jurager/passport/license)](https://packagist.org/packages/jurager/passport)
+[![Total Downloads](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/jurager01)
 
 This Laravel package simplifies the implementation of single sign-on authentication. It features a centralized user repository and enables the creation of user models in brokers without disrupting app logic. Additionally, it provides methods for incorporating authentication history pages and terminating sessions for either all users or specific ones with ease
 
